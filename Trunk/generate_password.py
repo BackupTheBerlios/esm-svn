@@ -27,7 +27,7 @@
 #   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 __author__ = "Jan Gottschick"
-__revision__ = "$Rev$"[4,-2]
+__revision__ = "$Rev$"[6:-2]
 
 import sys
 import sha
