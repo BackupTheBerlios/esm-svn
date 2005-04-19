@@ -1,0 +1,63 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#extends SearchTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Bank'
+#attr activeSubmenuPoint = ''
+
+#attr subMenuPoints = [
+  {'tmpl':'BankNew','condition':1,'title':'Neu','link':'BankNew','role':'manager'},
+  {'tmpl':'PrintTransfers','condition':1,'title':'Ausdruck','link':'PrintBankTransfers?accounts=BK*','role':'editor'},
+  ]
+
+#attr fieldkeys = ['BankNr','Bank','KontoNr','BLZ','TelefonService','Ansprechpartner','TelefonAnsprechpartner']
+#attr fields = {
+  'BankNr':{'title':'Nr','width':'5%','type':''},
+  'Bank':{'title':'Bank','width':'25%','type':''},
+  'KontoNr':{'title':'KontoNr','width':'20%','type':''},
+  'BLZ':{'title':'BLZ','width':'10%','type':''},
+  'TelefonService':{'title':'Tel (S)','width':'15%','type':''},
+  'Ansprechpartner':{'title':'Kontakt','width':'15%','type':''},
+  'TelefonAnsprechpartner':{'title':'TelefonAnsprechpartner','width':'15%','type':''},
+  }
+
+#attr linkFields = ['BankNr']
+#attr linkPattern = 'BankLedger?account=BK'
+
+#attr tableStore = 'AccountsBK'
+#attr tableTitle = 'Bankkonten'
+
+#attr alphaSearchFields = ['Bank','Ansprechpartner']
+#attr numericSearchFields = ['BankNr','BLZ']
+#attr searchPage = 'BankLedgerSearch'
+
+##################################################################################

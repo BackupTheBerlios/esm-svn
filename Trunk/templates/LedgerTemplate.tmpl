@@ -1,0 +1,326 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#import string
+#from esm import misc
+
+#extends SiteTemplate
+
+#implements writeContent
+##################################################################################
+
+#attr titles = []
+
+#attr fields1 = []
+
+#attr fields2 = []
+
+#attr accountIndexField = ''
+#attr accountFields = []
+
+#attr linkPattern = ''
+#attr linkFields = []
+
+#attr searchPage = ''
+
+#attr editLink = ''
+#attr deleteLink = ''
+
+#attr rows = 12
+
+#attr accountStore = ''
+#attr ledgerStore = ''
+#attr ledgerTitle = ''
+#attr bookingStore = 'Prices'
+
+#attr bank = 0
+
+#attr helpText = 'Währung bis 31.12.2001 in DM und ab dem 01.01.2002 in Euro'
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.search.search.focus()"}
+
+##################################################################################
+
+#silent $response.flush()
+#if $ledgerStore != ''
+
+  ##
+  ## get actual index and startSaldo. Further
+  ## calculate the new indexes for paging in the table.
+  ##
+  #if $request.hasField('index')
+    #set $index = int($request.field('index',0))
+    #set $startSaldo = $transaction.session.value('saldo'+str($index),0.0)
+  #else
+    #set $index = 0
+    #set $startSaldo = 0.0
+    #silent $transaction.session.setValue('saldo'+str($index),0.0)
+  #end if
+  #set $nextIndex = $index + $rows
+  #set $prevIndex = max(($index / $rows - 1) * $rows,0)
+
+  ##
+  ## search and clause for database select
+  ##
+  #set $account = str($request.field('account',$transaction.session.value('account',0)))
+  #silent $transaction.session.setValue('account',$account)
+  ##
+  ## read objects from database
+  ##
+  #set $transferObjects = $store.fetchObjectsOfClass($ledgerStore,'WHERE (Konto1="%s" OR Konto2="%s") AND Jahr="%s" ORDER BY Datum LIMIT %i,%i' % ($account,$account,$accountYear,$index,$rows))
+  #set $accountObjects = $store.fetchObjectsOfClass($accountStore,'WHERE %s="%s"' % ($accountIndexField,$account[2:]))
+  #set $bookingObjects = $store.fetchObjectsOfClass($bookingStore)
+  #set $BKZs = []
+  #set $BKZdescription = {}
+  #for $x in $bookingObjects
+    #silent $BKZs.append($x.allAttrs(0)['BKZ'])
+    #silent $BKZdescription[$x.allAttrs(0)['BKZ']] = $x.allAttrs(0)['Beschreibung']
+  #end for
+
+  ##
+  ## Tabellen-Überschrift
+  ##
+  <table width="100%">
+    <tr bgcolor="yellow" valign=top>
+      <th>
+        #if $index != 0
+          <a href="$name?index=0&account=$account"><img src="toStart.png" border=0></a>
+        #end if
+        &nbsp;
+        #if $index != $prevIndex
+          <a href="$name?index=$prevIndex&account=$account"><img src="left.png" border=0></a>
+        #end if
+        &nbsp;
+        $ledgerTitle
+        &nbsp;
+        #if len($transferObjects) == $rows
+          <a href="$name?index=$nextIndex&account=$account"><img src="right.png" border=0></a>
+        #end if
+      </th>
+    </tr>
+  </table>
+
+  ##
+  ## Suchen
+  ##
+  <table width="100%" cellpadding=0>
+    <tr bgcolor="yellow" valign=middle>
+      <td>
+        <form action="SetYear" method=post>
+          <input type="hidden" name="page" value="$name">
+          &nbsp;<b>Jahr</b>&nbsp;<input name="year" value="$accountYear" type="text" size=4 maxlength=40>
+          &nbsp;<input type=image src="search.png">
+        </form>
+      </td>
+      <td>
+        <form name="search" action="$searchPage" method=post>
+          &nbsp;<input name="search" type="text" size=10 maxlength=40>
+          &nbsp;<input type=image src="search.png">
+          &nbsp;&nbsp;&nbsp;
+          #for $letter in "0123456789"
+            <a href="$searchPage?search=$letter*">$letter</a>
+          #end for
+          &nbsp;&nbsp;
+          #for $letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            <a href="$searchPage?search=$letter*">$letter</a>
+          #end for
+        </form>
+      </td>
+    </tr>
+  </table>
+
+  ##
+  ## display Account Infos
+  ##
+  <table width="100%" cellpadding=0>
+    <tr bgcolor="aqua" valign=middle>
+    #set $attrs = $accountObjects[0].allAttrs(0)
+      <td>
+        #for $field in $accountFields
+          #if $field.type == 'date'
+            &nbsp;&nbsp;&nbsp;
+            $field.title:
+            #if $attrs[$field.name]
+              <b>$attrs[$field.name].strftime($dateFormat)</b>
+            #end if
+          #elif $field.type == 'name'
+            <b>$attrs[$field.name]</b>
+          #else
+            &nbsp;&nbsp;&nbsp;
+            $field.title:
+            <b>$attrs[$field.name]</b>
+          #end if
+        #end for
+      </td>
+    </tr>
+  </table>
+
+  <table width="100%">
+    ##
+    ## column titles
+    ##
+    <tr bgcolor="yellow" valign=top>
+      #for $title in $titles
+      <td width="$title.width">
+        $title.title
+      </td>
+      #end for
+    </tr>
+
+    #set $saldo = $startSaldo
+    #for $entries in $transferObjects:
+      #set $attrs = $entries.allAttrs(0)
+
+      ##
+      ## if needed exchange Haben and Soll
+      ##
+      #if $attrs['Konto1'] != $account
+        #set $attrs['Konto'] = $attrs['Konto1']
+        #set $x = $attrs['Haben']
+        #set $attrs['Haben'] = $attrs['Soll']
+        #set $attrs['Soll'] = $x
+      #else
+        #set $attrs['Konto'] = $attrs['Konto2']
+      #end if
+
+      ##
+      ## calculate saldo
+      ##
+      #if $attrs['Haben']
+        #set $saldo = $saldo + float($attrs['Haben'])
+      #elif $attrs['Soll']
+        #set $saldo = $saldo - float($attrs['Soll'])
+      #end if
+      #if $bank
+        #set $attrs['Saldo'] = -1 * $saldo
+      #else
+        #set $attrs['Saldo'] = $saldo
+      #end if
+      ##
+      ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
+      ## Geldbeträge und Datum
+      ##
+      <tr bgcolor="aqua">
+        #for $field in $fields1
+          #if $field.type == ''
+            <td>
+            #set $content = "&nbsp;"
+          #elif $field.type == 'editlink'
+            <td>
+            #if $attrs['BKZ'] in $BKZs
+              <img src="info.gif" border=0 alt="$BKZdescription[$attrs['BKZ']] -> " onMouseOver="zeigetip(this,event,'$BKZdescription[$attrs['BKZ']] -> ')" onMouseOut="verbergetip()">
+              &nbsp;<a href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="edit.png" border=0></a>
+              &nbsp;<a href="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="delete.png" border=0></a>
+            #end if
+            #set $content = ''
+          #elif $attrs[$field.name] == None
+            <td>
+            #set $content = '&nbsp;'
+          #elif $field.type == 'currency'
+            <td align="right"><b>
+            #if $attrs[$field.name] != 0.0 or $field.name == 'Saldo'
+              #set $content = string.replace('%5.2f' % $attrs[$field.name],'.',',')
+            #else
+              #set $content = '&nbsp;'
+            #end if
+          #elif $field.type == 'date'
+            <td><b>
+            #set $content = $attrs[$field.name].strftime($dateFormat)
+          #elif $field.type == 'string'
+            <td><b>
+            #set $content = $attrs[$field.name]
+          #else
+            <td>
+            #set $content = "&nbsp;"
+          #end if
+        #if $field in $linkFields
+          <a href='$linkTemplate?index=$content'>$content</a>
+        #else
+          $content
+        #end if
+        #if (($field.type == 'currency') and ($attrs[$field.name] < 0.0)) or ($field.type in ['date','string'])
+          </b>
+	#end if
+        </td>
+      #end for
+      <tr bgcolor="fuchsia">
+        #for $field in $fields2
+          #if $field.type == ''
+            <td>
+            #set $content = '&nbsp;'
+          #elif $field.type == 'editlink'
+            <td>
+            #if $attrs['BKZ'] in $BKZs
+              <img src="info.gif" border=0 alt="$BKZdescription[$attrs['BKZ']] -> " onMouseOver="zeigetip(this,event,'$BKZdescription[$attrs['BKZ']] -> ')" onMouseOut="verbergetip()">
+              #if $hasRole('auditor')
+                &nbsp;<A href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="edit.png" border=0></A>
+                &nbsp;<A HREF="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="delete.png" border=0></A>
+              #end if
+            #end if
+            #set $content = ''
+          #elif $attrs[$field.name] == None
+            <td>
+            #set $content = '&nbsp;'
+          #elif $field.type == 'currency'
+            #if $attrs[$field.name] < 0.0
+              <td align="right"><b><font color="maroon">
+            #else
+              <td align="right">
+            #end if
+            #if $attrs[$field.name] != 0.0 or $field.name == 'Saldo'
+              #set $content = string.replace('%5.2f' % $attrs[$field.name],'.',',')
+            #else
+              #set $content = '&nbsp;'
+            #end if
+          #elif $field.type == 'date'
+            <td>
+            #set $content = $attrs[$field.name].strftime($dateFormat)
+          #elif $field.type == 'string'
+            <td>
+            #set $content = $attrs[$field.name]
+          #else
+            <td>
+            #set $content = "&nbsp;"
+          #end if
+          #if $field in $linkFields
+            <a href='$linkTemplate?index=$content'>$content</a>
+          #else
+            $content
+          #end if
+          #if ($field.type == 'currency') and ($attrs[$field.name] < 0.0)
+            </font></b>
+	  #end if
+	  </td>
+        #end for
+      </tr>
+    #end for
+    #silent $transaction.session.setValue('saldo'+ str($nextIndex), $saldo)
+  </table>
+#end if

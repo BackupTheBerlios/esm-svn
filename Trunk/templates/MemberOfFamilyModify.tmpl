@@ -1,0 +1,135 @@
+#extends EditTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Member'
+#attr activeSubmenuPoint = 'MemberEdit'
+#attr searchPage = 'MemberSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'MemberView','condition':1,'title':'Daten','link':'MemberView?index=$request.field("index","")'},
+  ]
+
+#attr indexField = 'MitgliedsNr'
+#attr indexPrefix = 'MI'
+
+#attr editStore = 'AccountsMI'
+#attr editTitle1 = 'aktuelle Mitgliedsdaten'
+#attr editTitle2 = 'Mitgliedsdaten ändern'
+#attr editTemplate = 'MemberChange'
+
+#attr inputForm = [
+  {
+    'name':"Vorname",
+    'title':"Vorname",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Nachname",
+    'name':"Nachname",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Titel",
+    'name':"Titel",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Geburtsdatum",
+    'name':"Geburtsdatum",
+    'type':"date",
+  },
+  {
+    'title':"Geschlecht",
+    'name':"Geschlecht",
+    'type':"select",
+    'options':[
+      {"value":"m","title":"männlich"},
+      {"value":"w","title":"weiblich"}
+      ]
+  },
+  {
+    'title':"Adresszusatz",
+    'name':"Adresszusatz",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Strasse",
+    'name':"Strasse",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Ort",
+    'name':"Ort",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Land",
+    'name':"Countrycode",
+    'type':"text",
+    'size':2
+  },
+  {
+    'title':"PLZ",
+    'name':"PLZ",
+    'type':"text",
+    'size':10
+  },
+  {
+    'title':"Telefon (Privat)",
+    'name':"TelefonPrivat",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Telefon (Dienst)",
+    'name':"TelefonDienst",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Telefon (Mobil)",
+    'name':"Mobiltelefon",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"FAX",
+    'name':"FAX",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"E-Mail",
+    'name':"EMail",
+    'type':"text",
+    'size':64,
+    'max':128
+  },
+  {
+    'title':"Kommentare",
+    'name':"Kommentare",
+    'type':"textarea",
+    'size':5
+  }
+  ]
+
+#attr helpText = ""
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.Vorname.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Mitgliedsnr', $attrs['MitgliedsNr'],$attrs['NeueMitgliedsNr']," (Neu: <a href='Member?index=%s'>%s</a>)" % ($attrs['NeueMitgliedsNr'][2:],$attrs['NeueMitgliedsNr'][2:]))
+  #if $attrs['Austrittsdatum']
+    $writeLine('Mitgliedschaft',"vom %s" % $attrs['Eintrittsdatum'].strftime('%d.%m.%Y'),$attrs['Austrittsdatum']," bis %s (%s)" % ($attrs['Austrittsdatum'].strftime('%d.%m.%Y'),$attrs['Austrittsgrund']))
+  #else
+    $writeLine('Mitgliedschaft',"vom %s" % $attrs['Eintrittsdatum'].strftime('%d.%m.%Y'))
+  #end if
+#end def

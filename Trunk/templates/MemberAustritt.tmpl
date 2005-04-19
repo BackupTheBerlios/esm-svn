@@ -1,0 +1,70 @@
+#extends EditTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Member'
+#attr activeSubmenuPoint = 'MemberEdit'
+#attr searchPage = 'MemberSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'MemberView','condition':1,'title':'Daten','link':'MemberView?index=$request.field("index","")'},
+  {'tmpl':'LedgerTemplate','condition':1,'title':'Konto','link':'MemberLedger?account=MI$request.field("index","")'},
+  ]
+
+#attr indexField = 'MitgliedsNr'
+#attr indexPrefix = 'MI'
+
+#attr editStore = 'AccountsMI'
+#attr editTitle1 = 'aktuelle Mitgliedsdaten'
+#attr editTitle2 = 'Austritt'
+#attr editTemplate = 'MemberChange'
+
+#attr inputForm = [
+  {
+    'name':"Austrittsdatum",
+    'title':"Austritt am",
+    'type':"date",
+    'size':10
+  },
+  {
+    'title':"Beitragsfrei ab",
+    'name':"BeitragsartFreiAb",
+    'type':"date",
+    'size':10
+  },
+  {
+    'title':"Grund",
+    'name':"Austrittsgrund",
+    'type':"select",
+    'options':[
+      {"value":"Ordentliche Kündigung","title":"Ordentliche Kündigung"},
+      {"value":"Ausschluß wegen Schulden","title":"Ausschluß wegen Schulden"},
+      {"value":"Vereinswechsel wegen Unzufriedenheit","title":"Vereinswechsel wegen Unzufriedenheit"},
+      {"value":"Austritt wegen Unzufriedenheit","title":"Austritt wegen Unzufriedenheit"},
+      ]
+  }
+  ]
+
+#attr helpText = "Prinzipiell kann immer nur zum Ende des nachfolgenden Quartals" + \
+  "gekündigt werden. Das Austrittsdatum ist immer der letze Tag des Monats. Das" + \
+  "Datum für 'Beitragsfrei Ab' ist in der Regel der 1. Tag des folgenden Monats," + \
+  "kann aber auch vorgezogen werden. Dieses Feld kann auch leer bleiben, dann wird" + \
+  "halt automatisch der 1. Tag des nachfolgenden Monats des Austritt genommen."
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.Austrittsdatum.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Mitgliedsnr', $attrs['MitgliedsNr'],$attrs['NeueMitgliedsNr']," (Neu: <a href='Member?index=%s'>%s</a>)" % ($attrs['NeueMitgliedsNr'][2:],$attrs['NeueMitgliedsNr'][2:]))
+  #if $attrs['Austrittsdatum']
+    $writeLine('Mitgliedschaft',"vom %s" % $attrs['Eintrittsdatum'].strftime('%d.%m.%Y'),$attrs['Austrittsdatum']," bis %s (%s)" % ($attrs['Austrittsdatum'].strftime('%d.%m.%Y'),$attrs['Austrittsgrund']))
+  #else
+    $writeLine('Mitgliedschaft',"vom %s" % $attrs['Eintrittsdatum'].strftime('%d.%m.%Y'))
+  #end if
+  $writeLine('Name',$attrs['Vorname']+", "+$attrs['Titel']+" "+$attrs['Nachname'])
+  $writeLine('Adresse',$attrs['PLZ']+" "+$attrs['Ort']+", "+$attrs['Strasse'])
+  $writeLine('Geburtsdatum & Geschlecht',"%s %s" % ($attrs['Geburtsdatum'].strftime('%d.%m.%Y'),$attrs['Geschlecht']))
+  #if $attrs['Mahnstufe']
+    $writeLine('Mahnung',"<b>%s vom %s</b>" % $attrs['Mahnstufe'],$attrs['LetzteMahnungAm'].strftime('%d.%m.%Y')))
+  #end if
+#end def

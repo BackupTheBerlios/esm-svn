@@ -1,0 +1,40 @@
+#extends AdministrationForm
+##################################################################################
+
+#attr activeSubmenuPoint = 'MemberDTAUS'
+
+#attr editTemplate = 'DTAUS'
+#attr editTitle = 'Datenträger für DTAUS erstellen'
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.form.year.focus()"}
+
+#attr helpText = 'Bitte das Quartal angeben, für das offene Beiträge abgebucht werden sollen.<br>' + \
+  'Bei Zusatzbemerkung können sie zusätzliche Informationen (max. 4 Zeichen) angeben,<br>' + \
+  'die direkt an das Jahr angehängt werden, z.B. "/2".'
+
+##################################################################################
+
+#def getInputForm()
+[
+  {
+    'name':"date",
+    'title':"Datum",
+    'type':"select",
+    'options':[
+      {"value":"Beitrag 1.Q " + str(DateTime.now().year),"title":"1. Quartal " + str(DateTime.now().year)},
+      {"value":"Beitrag 2.Q " + str(DateTime.now().year),"title":"2. Quartal " + str(DateTime.now().year)},
+      {"value":"Beitrag 3.Q " + str(DateTime.now().year),"title":"3. Quartal " + str(DateTime.now().year)},
+      {"value":"Beitrag 4.Q " + str(DateTime.now().year),"title":"4. Quartal " + str(DateTime.now().year)},
+      {"value":"Beitrag 1.Q " + str(DateTime.now().year - 1),"title":"1. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"Beitrag 2.Q " + str(DateTime.now().year - 1),"title":"2. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"Beitrag 3.Q " + str(DateTime.now().year - 1),"title":"3. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"Beitrag 4.Q " + str(DateTime.now().year - 1),"title":"4. Quartal " + str(DateTime.now().year - 1)}
+      ]
+  },
+  {
+    'name':"notice",
+    'title':"Zusatzbemerkung",
+    'type':"TEXT"
+  }
+]
+#end def

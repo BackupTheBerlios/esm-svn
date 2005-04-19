@@ -1,0 +1,35 @@
+#extends SearchTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Personal'
+#attr activeSubmenuPoint = ''
+
+#attr subMenuPoints = [
+  {'tmpl':'PersonalNew','condition':1,'title':'Neu','link':'PersonalNew','role':'editor'},
+  {'tmpl':'PrintTransfers','condition':1,'title':'Ausdruck','link':'PrintPersonalTransfers?accounts=TR*','role':'editor'},
+  {'tmpl':'PrintSaldos','condition':1,'title':'Saldos','link':'PrintPersonalSaldos?accounts=TR*','role':'editor'},
+  {'tmpl':'PrintRevenues','condition':1,'title':'Umsatz','link':'PrintPersonalRevenues?accounts=TR*','role':'editor'},
+  ]
+
+#attr fieldkeys = ['MitgliedsNr','Vorname','Nachname','Geburtsdatum','TelefonPrivat','Seit','Bis']
+#attr fields = {
+  'MitgliedsNr':{'title':'MNr','width':'5%','type':''},
+  'Vorname':{'title':'Vorname','width':'20%','type':''},
+  'Nachname':{'title':'Nachname','width':'20%','type':''},
+  'Geburtsdatum':{'title':'Geburtstag','width':'10%','type':'date'},
+  'TelefonPrivat':{'title':'Telefon','width':'15%','type':''},
+  'Seit':{'title':'seit','width':'5%','type':'date','format':'"%s"'},
+  'Bis':{'title':'bis','width':'5%','type':'date','format':'"%s"'}
+  }
+
+#attr linkFields = ['MitgliedsNr']
+#attr linkPattern = 'PersonalLedger?account=TR'
+
+#attr tableStore = 'AccountsTR'
+#attr tableTitle = 'Personal'
+
+#attr alphaSearchFields = ['Nachname']
+#attr numericSearchFields = ['MitgliedsNr']
+#attr searchPage = 'PersonalLedgerSearch'
+
+##################################################################################

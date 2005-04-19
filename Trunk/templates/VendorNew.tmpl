@@ -1,0 +1,140 @@
+#extends NewTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Vendor'
+#attr activeSubmenuPoint = 'VendorNew'
+#attr searchPage = 'VendorSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'VendorNew','condition':1,'title':'Neu','link':'VendorNew'}
+  ]
+
+#attr indexField = 'VendorNr'
+#attr indexPrefix = 'VE'
+
+#attr editStore = 'AccountsVE'
+#attr editTitle1 = 'neuer Lieferant'
+#attr editTitle2 = 'Lieferantendaten'
+#attr editTemplate = 'VendorCreate'
+
+#attr inputForm = [
+  {
+    'name':"Firma",
+    'title':"Firma",
+    'type':"text",
+    'size':64
+  },
+  {
+    'name':"Vorname",
+    'title':"Vorname",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Nachname",
+    'name':"Nachname",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Titel",
+    'name':"Titel",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Adresszusatz",
+    'name':"Adresszusatz",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Strasse",
+    'name':"Strasse",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Ort",
+    'name':"Ort",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Land",
+    'name':"Countrycode",
+    'type':"text",
+    'size':2
+  },
+  {
+    'title':"PLZ",
+    'name':"PLZ",
+    'type':"text",
+    'size':10
+  },
+  {
+    'title':"Telefon (Privat)",
+    'name':"TelefonPrivat",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Telefon (Dienst)",
+    'name':"TelefonDienst",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Telefon (Mobil)",
+    'name':"Mobiltelefon",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"FAX",
+    'name':"FAX",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"E-Mail",
+    'name':"EMail",
+    'type':"text",
+    'size':64,
+    'max':128
+  },
+  {
+    'title':"Bankverbindungen",
+    'type':"table",
+    'number':2,
+    'fieldlist':['KontoNr','BLZ','Bank','Kontoinhaber'],
+    'fieldType':{
+      'KontoNr':'text',
+      'BLZ':'text',
+      'Bank':'text',
+      'Kontoinhaber':'text'
+    },
+    'fieldTitle':{
+      'KontoNr':'KontoNr',
+      'BLZ':'BLZ',
+      'Bank':'Bank',
+      'Kontoinhaber':'Kontoinhaber'
+    }
+  },
+  {
+    'title':"Kommentare",
+    'name':"Kommentare",
+    'type':"textarea",
+    'size':5
+  }
+  ]
+
+#attr helpText = ""
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.Firma.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Lieferantnr', $attrs['VendorNr'])
+#end def

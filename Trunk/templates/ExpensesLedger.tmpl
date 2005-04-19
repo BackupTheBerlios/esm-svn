@@ -1,0 +1,101 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#extends LedgerTemplate
+#import string
+
+##################################################################################
+
+#attr activeMenuPoint = 'Expenses'
+#attr activeSubmenuPoint = 'ExpensesLedger'
+
+#attr subMenuPoints = [
+  {'tmpl':'ExpensesView',
+    'condition':1,
+    'title':'Info',
+    'link':'ExpensesView?index=#echo $request.field("account",$transaction.session.value("account",""))[2:]#'
+  },
+  {'tmpl':'ExpensesLedger',
+    'condition':1,
+    'title':'Konto',
+    'link':''
+  },
+  {'tmpl':'PrintTransfers',
+    'condition':1,
+    'title':'Ausdruck',
+    'link':'PrintTransfersAK?accounts=#echo $request.field("account",$transaction.session.value("account",""))#'
+  },
+  ]
+
+#attr titles = [
+  {"title":'Datum',"width":'10%'},
+  {"title":'BKZ / Kto',"width":'10%'},
+  {"title":'Empfänger / Bemerkung',"width":'56%'},
+  {"title":'Soll',"width":'8%'},
+  {"title":'Haben',"width":'8%'},
+  {"title":'Saldo',"width":'8%'}
+  ]
+
+#attr fields1 = [
+  {"name":'Datum',"type":'date'},
+  {"name":'BKZ',"type":'string'},
+  {"name":'Who',"type":'string'},
+  {"name":'Soll',"type":'currency'},
+  {"name":'Haben',"type":'currency'},
+  {"name":'NA1',"type":''}
+  ]
+
+#attr fields2 = [
+  {"name":'NA1',"type":'editlink'},
+  {"name":'Konto',"type":'string'},
+  {"name":'Beschreibung',"type":'string'},
+  {"name":'NA3',"type":''},
+  {"name":'NA4',"type":''},
+  {"name":'Saldo',"type":'currency'}
+  ]
+
+#attr accountIndexField = 'Nr'
+
+#attr accountFields = [
+  {'name':'Nr','title':'Nr','width':'5%','type':''},
+  {'name':'Name','title':'Name','width':'20%','type':''},
+  ]
+
+#attr accountStore = 'AccountsAK'
+#attr ledgerStore = 'Transfers'
+#attr ledgerTitle = 'Einnahmen'
+
+#attr linkPattern = 'ExpensesLedger?account=AK'
+#attr linkFields = ['Nr']
+#attr searchPage = 'ExpensesLedgerSearch'
+#attr editLink = 'ExpensesTransferModify'
+#attr deleteLink = 'ExpensesTransferDelete'
+
+##################################################################################

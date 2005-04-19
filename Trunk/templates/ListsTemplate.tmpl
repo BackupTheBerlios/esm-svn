@@ -1,0 +1,49 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#extends SiteTemplate
+
+#implements writeContent
+##################################################################################
+
+#attr activeMenuPoint = 'ListsTemplate'
+
+#attr subMenuPoints = [
+  {'tmpl':'-','title':'Beitragsstatistik','condition':1,'link':''},
+  {'tmpl':'AgesStatistics','title':'Altersstatistik','condition':1,'link':'AgesStatistics'},
+  {'tmpl':'MemberListY','title':'Jugendliche','condition':1,'link':'MemberListY?maxAge=18'},
+  {'tmpl':'MemberListA','title':'Erwachsene','condition':1,'link':'MemberListA?minAge=19'},
+  {'tmpl':'PrintGV','condition':1,'title':'G/V','link':'PrintGVSummary?accounts=EK* AK*','role':'editor'},
+  {'tmpl':'PrintSaldo','condition':1,'title':'Salden','link':'PrintSaldoSummary?accounts=MI* TR* VE* VV* BK*','role':'editor'},
+  {'tmpl':'h1','title':'','condition':1,'link':''},
+  ]
+
+##################################################################################
+

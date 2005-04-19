@@ -1,0 +1,28 @@
+#extends ViewTemplate
+
+##################################################################################
+
+#attr activeMenuPoint = 'Receipts'
+#attr activeSubmenuPoint = 'ReceiptsView'
+#attr searchPage = 'ReceiptsSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'ReceiptsView','condition':1,'title':'Info','link':''},
+  {'tmpl':'ReceiptsLedger','condition':1,'title':'Konto','link':'ReceiptsLedger?account=EK$request.field("index","")'},
+  {'tmpl':'ReceiptsNew','condition':1,'title':'Neu','link':'ReceiptsNew','role':'manager'},
+  {'tmpl':'ReceiptsModify','condition':1,'title':'Ändern','link':'ReceiptsModify?index=$request.field("index","")','role':'manager'}
+  ]
+
+#attr indexField = 'Nr'
+
+#attr viewStore = 'AccountsEK'
+#attr viewTitle = 'Einnahmenkategorie'
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Nr', $attrs['Nr'])
+  $writeLine('Name',$attrs['Name'])
+  $writeLine('Kommentare',$attrs['Kommentare'])
+  $writeLine('Letzte Änderung','%s von %s' % ($attrs['changedAt'].strftime('%d.%m.%Y'),$attrs['changedBy']))
+#end def

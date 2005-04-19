@@ -1,0 +1,76 @@
+#extends ViewTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Personal'
+#attr activeSubmenuPoint = 'PersonalView'
+#attr searchPage = 'PersonalSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'PersonalView','condition':1,'title':'Info','link':''},
+  {'tmpl':'PersonalLedger','condition':1,'title':'Konto','link':'PersonalLedger?account=TR$request.field("index","")'},
+  {'tmpl':'PersonalModify','condition':1,'title':'Ändern','link':'PersonalModify?index=$request.field("index","")','role':'editor'},
+  ]
+
+#attr indexField = 'MitgliedsNr'
+
+#attr viewStore = 'AccountsTR'
+#attr viewTitle = 'Personal'
+
+##################################################################################
+
+#def writeRecord(attrs)
+  #if $attrs['NeueMitgliedsNr']
+    $writeLine('Mitgliedsnr', $attrs['MitgliedsNr'],$attrs['NeueMitgliedsNr'],
+		  "(Neu: <a href='Member?index=%s'>%s</a>)" %
+			($attrs['NeueMitgliedsNr'][2:],$attrs['NeueMitgliedsNr'][2:]))
+  #else
+    $writeLine('Mitgliedsnr', $attrs['MitgliedsNr'])
+  #end if
+  #if $attrs['Bis']
+    $writeLine('Vertrag',"vom %s" %
+			$attrs['Seit'].strftime('%d.%m.%Y'),$attrs['Bis']," bis %s" %
+			$attrs['Bis'].strftime('%d.%m.%Y'))
+  #else
+    $writeLine('Vertrag',"seit dem %s" % $attrs['Seit'].strftime('%d.%m.%Y'))
+  #end if
+  $writeLine('Name',$attrs['Nachname']+", "+$attrs['Titel']+" "+$attrs['Vorname'])
+  $writeLine('Adresse',$attrs['PLZ']+" "+$attrs['Ort']+", "+$attrs['Strasse'])
+  $writeLine('Telefon (privat, dienstlich, mobil)',$attrs['TelefonPrivat']+"<br>"+$attrs['TelefonDienst']+"<br>"+$attrs['Mobiltelefon'])
+  $writeLine('FAX',$attrs['FAX'])
+  $writeLine('E-Mail',$attrs['EMail'])
+  $writeLine('Geburtsdatum & Geschlecht',"%s %s" % ($attrs['Geburtsdatum'].strftime('%d.%m.%Y'),$attrs['Geschlecht']))
+	$writeLine('Bankverbindungen','')
+	$writeTable($attrs,range(1,2+1),
+		['Kontonummer','BLZ','Bank','Kontoinhaber'],
+		[
+		{'name':'KontoNr','type':'string'},
+		{'name':'BLZ','type':'string'},
+		{'name':'Bank','type':'string'},
+		{'name':'Kontoinhaber','type':'string'}
+		])
+	$writeLine('Lizenzen','')
+	$writeTable($attrs,range(1,6+1),
+		['Bezeichnung','Nr.','bis','Zuschuss'],
+		[
+		{'name':'Lizenz','type':'string'},
+		{'name':'LizenzNr','type':'string'},
+		{'name':'LizenzBis','type':'date'},
+		{'name':'LizenzZuschuss','type':'currency'}
+		])
+  $writeLine('Fortbildungen',$attrs['Fortbildungen'])
+	$writeLine('Honorare','')
+	$writeTable($attrs,range(1,6+1),
+		['Kurse','Betrag'],
+		[
+		{'name':'Honorar','type':'string'},
+		{'name':'HonorarBetrag','type':'currency'}
+		])
+	$writeLine('Training','')
+	$writeTable($attrs,range(1,10+1),
+		['Kurs','Ort','Termin'],
+		[{'name':'Training','type':'string'},
+		{'name':'TrainingOrt','type':'string'},
+		{'name':'TrainingTermin','type':'string'}])
+  $writeLine('Kommentare',$attrs['Kommentare'])
+  $writeLine('Letzte Änderung','%s von %s' % ($attrs['changedAt'].strftime('%d.%m.%Y'),$attrs['changedBy']))
+#end def

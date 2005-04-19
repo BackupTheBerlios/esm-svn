@@ -1,0 +1,42 @@
+#from mx import DateTime
+
+#extends AdministrationForm
+##################################################################################
+
+#attr activeSubmenuPoint = 'MemberFeesPreview'
+
+#attr subMenuPoints = [
+  {'tmpl':'NewYear','condition':1,'title':'Jahresabschluß','link':'NewYear'},
+  {'tmpl':'MemberFeesPreview','condition':1,'title':'Beitragsvorschau','link':'MemberFeesPreview'},
+  {'tmpl':'MemberFeesBooking','condition':1,'title':'Beitragsbuchung','link':'MemberFeesBooking'},
+  {'tmpl':'MemberLastschriften','condition':1,'title':'Lastschriften','link':'MemberLastschriften'}
+  ]
+
+#attr editTemplate = 'FeesPreview'
+#attr editTitle = 'Beitragsvorschau'
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.form.year.focus()"}
+
+#attr helpText = 'Bitte das Quartal auswählen, für das die Beiträge berechnet werden sollen.'
+
+##################################################################################
+
+#def getInputForm()
+  [
+  {
+    'title':"Datum",
+    'name':"date",
+    'type':"select",
+    'options':[
+      {"value":"1.4." + str(DateTime.now().year),"title":"1. Quartal " + str(DateTime.now().year)},
+      {"value":"1.7." + str(DateTime.now().year),"title":"2. Quartal " + str(DateTime.now().year)},
+      {"value":"1.10." + str(DateTime.now().year),"title":"3. Quartal " + str(DateTime.now().year)},
+      {"value":"1.1." + str(DateTime.now().year + 1),"title":"4. Quartal " + str(DateTime.now().year)},
+      {"value":"1.4." + str(DateTime.now().year - 1),"title":"1. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"1.7." + str(DateTime.now().year - 1),"title":"2. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"1.10." + str(DateTime.now().year - 1),"title":"3. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"1.1." + str(DateTime.now().year),"title":"4. Quartal " + str(DateTime.now().year - 1)}
+      ]
+  }
+  ]
+#end def

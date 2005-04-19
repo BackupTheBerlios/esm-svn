@@ -1,0 +1,45 @@
+#extends AdministrationForm
+##################################################################################
+
+#attr activeSubmenuPoint = 'MemberFeesBooking'
+
+#attr editTemplate = 'FeesBooking'
+#attr editTitle = 'Beitragsbuchung'
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.form.year.focus()"}
+
+#attr helpText = 'Bitte das Datum angeben, bis zu dem die Beiträge gebucht werden sollen.<br>' + \
+  'Bei Zusatzbemerkung können sie zusätzliche Informationen angeben, z.B. Nacheinzug.<br>' + \
+  'Das Buchungsdatum ist optional, d.h. standardmäßig wird das heutige Datum genommen.'
+
+##################################################################################
+
+#def getInputForm()
+[
+  {
+    'name':"date",
+    'title':"Datum",
+    'type':"select",
+    'options':[
+      {"value":"1.4." + str(DateTime.now().year),"title":"1. Quartal " + str(DateTime.now().year)},
+      {"value":"1.7." + str(DateTime.now().year),"title":"2. Quartal " + str(DateTime.now().year)},
+      {"value":"1.10." + str(DateTime.now().year),"title":"3. Quartal " + str(DateTime.now().year)},
+      {"value":"1.1." + str(DateTime.now().year + 1),"title":"4. Quartal " + str(DateTime.now().year)},
+      {"value":"1.4." + str(DateTime.now().year - 1),"title":"1. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"1.7." + str(DateTime.now().year - 1),"title":"2. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"1.10." + str(DateTime.now().year - 1),"title":"3. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"1.1." + str(DateTime.now().year),"title":"4. Quartal " + str(DateTime.now().year - 1)}
+      ]
+  },
+  {
+    'name':"notice",
+    'title':"Zusatzbemerkung",
+    'type':"TEXT"
+  },
+  {
+    'name':"bookdate",
+    'title':"Buchungsdatum",
+    'type':"TEXT"
+  }
+]
+#end def

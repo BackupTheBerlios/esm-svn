@@ -1,0 +1,49 @@
+#extends TransferTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Vendor'
+
+#attr subMenuPoints = [
+  {'tmpl':'VendorView',
+    'condition':1,
+    'title':'Daten',
+    'link':'VendorView?index=#echo $request.field("account",$transaction.session.value("account",""))[2:]#'
+  },
+  {'tmpl':'VendorLedger',
+    'condition':1,
+    'title':'Konto',
+    'link':'VendorLedger?account=#echo $request.field("account",$transaction.session.value("account",""))#'
+  },
+  {'tmpl':'VendorTransferBill','title':'> Rechnung',
+    'condition':1,
+    'link':'VendorTransferBill?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'VendorTransferBill','title':'> Spende',
+    'condition':1,
+    'link':'VendorTransferSpende?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'VendorTransferEin','title':'> Einzahlung',
+    'condition':1,
+    'link':'VendorTransferEin?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'VendorTransferAus','title':'> Auszahlung',
+    'condition':1,
+    'link':'VendorTransferAus?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'VendorTransferStorno','title':'> Stornierung',
+    'condition':1,
+    'link':'VendorTransferStorno?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+ ]
+
+#attr transferIDDescription = 'VendorNr'
+#attr accountStore = 'AccountsVE'
+#attr bookingStore = 'Prices'
+#attr ledgerTemplate = 'VendorLedger'
+
+##################################################################################

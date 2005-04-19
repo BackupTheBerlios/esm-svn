@@ -1,0 +1,227 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#from GlobalState import Store
+#from mx import DateTime
+#from misc import fee
+#import string
+
+#extends SiteBase
+
+#implements respond
+##################################################################################
+
+#attr role = 'manager'
+
+#attr tableStore = 'AccountsMI'
+#attr priceStore = 'Prices'
+
+#attr fieldkeys = ['MitgliedsNr','Vorname','Nachname','Eintrittsdatum','Austrittsdatum']
+#attr fields = {
+  'MitgliedsNr':{'title':'MNr','width':'5%','type':''},
+  'Vorname':{'title':'Vorname','width':'20%','type':''},
+  'Nachname':{'title':'Nachname','width':'20%','type':''},
+  'Eintrittsdatum':{'title':'Ein','width':'10%','type':'date'},
+  'Austrittsdatum':{'title':'Aus','width':'10%','type':'date'}
+  }
+
+#attr dateFormat = '%d.%m.%Y'
+#attr Anzahl_Beitragsarten = 5
+
+#attr bodyTagAttribs = {'save':'black'}
+
+##################################################################################
+
+#def writeCell(value,type)
+  #if $value == None
+    <td>
+      &nbsp;
+  #elif $type == 'currency'
+    <td align="right">
+    #if $value != 0.0
+      $string.replace('%5.2f' % $value,'.',',')
+    #end if
+  #elif ($type == 'date')
+    <td>
+      $DateTime.DateTimeFrom($value).strftime($dateFormat)
+  #else
+    <td>
+      $value
+  #end if
+  </td>
+#end def
+
+##
+## Looks if a user is authenticated. If this is a login the session info will be
+## updated. Only the Login page is accessable without authentication. Further your
+## it is checked, if you have the required role.
+##
+#if $role
+  #if $request.field('action','') == 'login'
+    #if not $loginUser($request.field('username',''), $request.field('password',''))
+      $transaction.response.sendRedirect('Login')
+    #elif $role not in $transaction.session.value('authenticated_roles',[])
+      $transaction.response.sendRedirect('Main')
+    #end if
+  #elif not $transaction.session.value('authenticated_user',None)
+    $transaction.response.sendRedirect('Login')
+  #elif $role not in $transaction.session.value('authenticated_roles',[])
+    $transaction.response.sendRedirect('Main')
+  #end if
+#end if
+
+##
+## read in database
+##
+#set global $store = Store.store
+#set $priceObjects = $store.fetchObjectsOfClass($priceStore)
+#set $prices = {}
+#for $x in $priceObjects
+  #set $a = $x.allAttrs(0)
+  #set $prices[$a.BKZ] = $a
+#end for
+
+#if $tableStore != ''
+
+  #set $date = DateTime.DateTimeFrom($request.field('date',''))
+  ##
+  ## read all objects from database
+  ##
+  #set $storeObjects = $store.fetchObjectsOfClass($tableStore,'WHERE ID like "%%0"')
+
+  <table width="100%">
+    ##
+    ## Spalten-Überschrift
+    ##
+    <tr bgcolor="yellow">
+      #for $field in $fieldkeys
+      <td width="$fields[$field].width">
+        $fields[$field].title
+      </td>
+      #end for
+      <td width="10%">BFA</td>
+      <td width="10%">Erhebung</td>
+      <td width="10%">BKZ</td>
+      <td width="8%">Haben</td>
+      <td width="8%">Soll</td>
+      <td>&nbsp;</td>
+    </tr>
+
+    #set $saldo = 0.0
+
+    #for $entry in $storeObjects:
+      #set $attrs = $entry.allAttrs(0)
+      #for $y in range($Anzahl_Beitragsarten):
+        ##
+        ## Aufnahmegebühr kalkulieren
+        ##
+        #if $attrs['Beitragsart'+str($y+1)] \
+            and ($attrs['BeitragsartErhebungAb'+str($y+1)] == $attrs['Eintrittsdatum']) \
+            and not ($attrs['BeitragsartFreiAb'+str($y+1)] and ($attrs['BeitragsartFreiAb'+str($y+1)] <= $attrs['Eintrittsdatum'])) \
+            and ($attrs['BeitragsartErhebungAb'+str($y+1)] < $date)
+          <tr>
+            #set $price = prices['11' + $attrs['Beitragsart'+str($y+1)][2:]]
+            #if $attrs['BeitragsartErhebungAb'+str(y+1)] >= $price['Ab']
+              #set $price_haben = $price['AbHaben']
+              #set $price_soll = $price['AbSoll']
+            #else
+              #set $price_haben = $price['Haben']
+              #set $price_soll = $price['Soll']
+            #end if
+            <tr>
+            #for $field in $fieldkeys
+              $writeCell($attrs[$field],$fields[$field].type)
+            #end for
+            $writeCell($attrs['BeitragsartFreiAb'+str($y+1)],'date')
+            $writeCell($attrs['BeitragsartErhebungAb'+str($y+1)],'date')
+            $writeCell('11' + $attrs['Beitragsart'+str($y+1)][2:],'string')
+            $writeCell($price_haben,'currency')
+            $writeCell($price_soll,'currency')
+            <td>&nbsp;</td>
+          </tr>
+          #set $saldo = $saldo + $price_haben + $price_soll
+        #end if
+        ##
+        ## Beitrag kalkulieren
+        ##
+        #if $attrs['Beitragsart'+str($y+1)] \
+            and not (($attrs['BeitragsartFreiAb'+str($y+1)] == $attrs['BeitragsartErhebungAb'+str($y+1)]) \
+              and $attrs['BeitragsartFreiAb'+str($y+1)] \
+              and $attrs['BeitragsartErhebungAb'+str($y+1)]) \
+            and ($attrs['BeitragsartAb'+str(y+1)] < $date) \
+            and ($attrs['BeitragsartErhebungAb'+str($y+1)] \
+              and ($attrs['BeitragsartErhebungAb'+str($y+1)] < $date)) \
+            and (not $attrs['BeitragsartFreiAb'+str($y+1)] \
+              or ($attrs['BeitragsartFreiAb'+str($y+1)] >= $attrs['BeitragsartErhebungAb'+str($y+1)])) \
+            and (not $attrs['Austrittsdatum'] \
+              or ($attrs['Austrittsdatum'] >= $attrs['BeitragsartErhebungAb'+str(y+1)])):
+          <tr>
+            #set $price = prices[$attrs['Beitragsart'+str($y+1)]]
+            #for $field in $fieldkeys
+              $writeCell($attrs[$field],$fields[$field].type)
+            #end for
+            #set $feeResult = $fee($attrs['Beitragsart'+str($y+1)],$attrs['Eintrittsdatum'],$attrs['BeitragsartAb'+str(y+1)],$attrs['BeitragsartFreiAb'+str($y+1)],$attrs['BeitragsartErhebungAb'+str($y+1)],$date,$price,'')
+            $writeCell($attrs['BeitragsartFreiAb'+str($y+1)],'date')
+            $writeCell($attrs['BeitragsartErhebungAb'+str($y+1)],'date')
+            $writeCell($feeResult[2],'string')
+            $writeCell($feeResult[1],'currency')
+            $writeCell($feeResult[0],'currency')
+            <td>&nbsp;</td>
+          </tr>
+          #set $saldo = $saldo + $feeResult[1] + $feeResult[0]
+        #elif $attrs['Beitragsart'+str($y+1)]
+          <tr>
+            #set $price = prices[$attrs['Beitragsart'+str($y+1)]]
+            #for $field in $fieldkeys
+              $writeCell($attrs[$field],$fields[$field].type)
+            #end for
+            $writeCell($attrs['BeitragsartFreiAb'+str($y+1)],'date')
+            $writeCell($attrs['BeitragsartErhebungAb'+str($y+1)],'date')
+            $writeCell($attrs['Beitragsart'+str($y+1)],'string')
+            $writeCell(0.0,'currency')
+            $writeCell(0.0,'currency')
+            <td>&nbsp;</td>
+          </tr>
+        #end if
+      #end for
+    #end for
+    <tr bgcolor="yellow">
+      #for $field in $fieldkeys
+        <td>&nbsp;</td>
+      #end for
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      $writeCell($saldo,'currency')
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+#end if

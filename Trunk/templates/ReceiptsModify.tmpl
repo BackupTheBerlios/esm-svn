@@ -1,0 +1,47 @@
+#extends EditTemplate
+
+##################################################################################
+
+#attr role = 'manager'#settings python
+
+#attr activeMenuPoint = 'Receipts'
+#attr activeSubmenuPoint = 'ReceiptsEdit'
+#attr searchPage = 'ReceiptsSearch'
+
+#attr indexField = 'Nr'
+#attr indexPrefix = 'EK'
+
+#attr subMenuPoints = [
+  {'tmpl':'ReceiptsView','condition':1,'title':'Daten','link':'ReceiptsView?index=$request.field("index","")'},
+  {'tmpl':'LedgerTemplate','condition':1,'title':'Konto','link':'ReceiptsLedger?account=EK$request.field("index","")'},
+  ]
+
+#attr editStore = 'AccountsEK'
+#attr editTitle1 = 'Einnahmenkategorie'
+#attr editTitle2 = 'Daten ändern'
+#attr editTemplate = 'ReceiptsChange'
+
+#attr inputForm = [
+  {
+    'name':"Name",
+    'title':"Name",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Kommentare",
+    'name':"Kommentare",
+    'type':"textarea",
+    'size':5
+  }
+  ]
+
+#attr helpText = ""
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.Name.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Nr', $attrs['Nr'])
+#end def

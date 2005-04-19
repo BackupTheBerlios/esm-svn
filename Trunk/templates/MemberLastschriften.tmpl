@@ -1,0 +1,39 @@
+#extends AdministrationForm
+##################################################################################
+
+#attr activeSubmenuPoint = 'MemberLastschriften'
+
+#attr editTemplate = 'Lastschriften'
+#attr editTitle = 'Lastschriften buchen'
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.form.year.focus()"}
+
+#attr helpText = 'Bitte das Quartal angeben, für das offene Beiträge eingezogen werden sollen.<br>' + \
+  'Bei Zusatzbemerkung können sie zusätzliche Informationen angeben, z.B. Nacheinzug.'
+
+##################################################################################
+
+#def getInputForm()
+[
+  {
+    'name':"date",
+    'title':"Datum",
+    'type':"select",
+    'options':[
+      {"value":"1. Quartal " + str(DateTime.now().year),"title":"1. Quartal " + str(DateTime.now().year)},
+      {"value":"2. Quartal " + str(DateTime.now().year),"title":"2. Quartal " + str(DateTime.now().year)},
+      {"value":"3. Quartal " + str(DateTime.now().year),"title":"3. Quartal " + str(DateTime.now().year)},
+      {"value":"4. Quartal " + str(DateTime.now().year),"title":"4. Quartal " + str(DateTime.now().year)},
+      {"value":"1. Quartal " + str(DateTime.now().year - 1),"title":"1. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"2. Quartal " + str(DateTime.now().year - 1),"title":"2. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"3. Quartal " + str(DateTime.now().year - 1),"title":"3. Quartal " + str(DateTime.now().year - 1)},
+      {"value":"4. Quartal " + str(DateTime.now().year - 1),"title":"4. Quartal " + str(DateTime.now().year - 1)}
+      ]
+  },
+  {
+    'name':"notice",
+    'title':"Zusatzbemerkung",
+    'type':"TEXT"
+  }
+]
+#end def

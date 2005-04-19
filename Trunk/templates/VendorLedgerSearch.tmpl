@@ -1,0 +1,34 @@
+#extends SearchTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Vendor'
+#attr activeSubmenuPoint = ''
+
+#attr subMenuPoints = [
+  {'tmpl':'VendorNew','condition':1,'title':'Neu','link':'VendorNew','role':'editor'},
+  {'tmpl':'PrintTransfers','condition':1,'title':'Ausdruck','link':'PrintVendorTransfers?accounts=VE*','role':'editor'},
+  {'tmpl':'PrintSaldos','condition':1,'title':'Saldos','link':'PrintVendorSaldos?accounts=VE*','role':'editor'},
+  ]
+
+#attr fieldkeys = ['VendorNr','Firma','Nachname','Vorname','TelefonPrivat','TelefonDienst','Mobiltelefon']
+#attr fields = {
+  'VendorNr':{'title':'LNr','width':'5%','type':''},
+  'Firma':{'title':'Firma','width':'25%','type':''},
+  'Nachname':{'title':'Nachname','width':'20%','type':''},
+  'Vorname':{'title':'Vorname','width':'10%','type':''},
+  'TelefonPrivat':{'title':'Telefon','width':'15%','type':''},
+  'TelefonDienst':{'title':'Telefon','width':'15%','type':''},
+  'Mobiltelefon':{'title':'Telefon','width':'15%','type':''},
+  }
+
+#attr linkFields = ['VendorNr']
+#attr linkPattern = 'VendorLedger?account=VE'
+
+#attr tableStore = 'AccountsVE'
+#attr tableTitle = 'Lieferanten'
+
+#attr alphaSearchFields = ['Firma','Nachname']
+#attr numericSearchFields = ['VendorNr']
+#attr searchPage = 'VendorLedgerSearch'
+
+##################################################################################

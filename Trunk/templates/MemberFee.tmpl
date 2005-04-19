@@ -1,0 +1,90 @@
+#extends EditTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Member'
+#attr activeSubMenuPoint = 'MemberEdit'
+#attr searchPage = 'MemberSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'MemberView','condition':1,'title':'Daten','link':'MemberView?index=$request.field("index","")'},
+  {'tmpl':'LedgerTemplate','condition':1,'title':'Konto','link':'MemberLedger?account=MI$request.field("index","")'},
+  ]
+
+#attr indexField = 'MitgliedsNr'
+#attr indexPrefix = 'MI'
+
+#attr editStore = 'AccountsMI'
+#attr editTitle1 = 'aktuelle Mitgliedsdaten'
+#attr editTitle2 = 'Neuer Beitrag'
+#attr editTemplate = 'MemberChange'
+
+#attr inputForm = [
+  {
+    'title':"Beitragsfrei ab",
+    'name':"BeitragsartFreiAb",
+    'type':"text",
+    'size':10
+  },
+  {
+    'title':"Beitragsart",
+    'name':"Beitragsart",
+    'type':"select",
+    'options':[
+      {"value":"10Ju","title":"Jugendliche"},
+      {"value":"10Er","title":"Erwachsene"},
+      {"value":"10Fa","title":"Familie mit 1 Erwachsenen"},
+      {"value":"10Fi","title":"Familie mit 2 Erwachsenen"},
+      {"value":"10pa","title":"Passives Mitglied"},
+      {"value":"10F","title":"Fördermitglied"},
+      {"value":"10Em","title":"Ehrenmitglied"},
+      {"value":"10Jg","title":"Jugendliche (Trainer)"},
+      {"value":"10Ew","title":"Erwachsene (Trainer)"},
+      {"value":"10Fm","title":"Familie mit 1 Erwachsenen (Trainer)"},
+      {"value":"10Fl","title":"Familie mit 2 Erwachsenen (Trainer)"},
+      {"value":"10ps","title":"Passives Mitglied (Trainer)"},
+      {"value":"10AT","title":"Aushilfstrainer"},
+      ]
+  },
+  {
+    'title':"neuer Beitrag ab",
+    'name':"BeitragsartAb",
+    'type':"text",
+    'size':10
+  }
+  ]
+
+#attr helpText = "Mit 'Beitragsfrei ab' ist der 1. des Monats anzugeben, ab dem der" + \
+  "bisherige Beitrag nicht mehr erhoben werden soll. Mit 'Beitragsart' und 'neuer" + \
+  "Beitrag ab' wird angegeben, welcher Beitrag ab diesem Datum erhoben werden" + \
+  "soll. Wenn sich das Datum für 'Beitragsfrei ab' im aktuellen Quartal oder" + \
+  "früher befindet, muß geprüft werden, ob bereits Beitrag über dieses Datum" + \
+  "hinaus erhoben wurde, d.h. ob das angegebene Datum bei 'Beitragsfrei ab' vor" + \
+  "dem Datum 'nächste Erhebung' des alten Beitrages liegt. In diesem Fall ist der" + \
+  "entsprechend zuviel eingezogene Betrag zurück zu erstatten." + \
+  "<br><br>" + \
+  "Um ein Mitglied für einen Beitragszeitraum" + \
+  "auf beitragsfrei zu setzen, muß dieser Zeitraum in 'Beitragsfrei ab' (von) und" + \
+  "'neuer Beitrag ab' (bis) angegeben werden. In 'Beitragsart' kann die bisherige" + \
+  "Beitragsart aber auch eine neue Beitragsart angegeben werden, die nach diesem" + \
+  "Zeitraum gelten soll."
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.BeitragsartFreiAb.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Mitgliedsnr', $attrs['MitgliedsNr'],$attrs['NeueMitgliedsNr']," (Neu: <a href='Member?index=%s'>%s</a>)" % ($attrs['NeueMitgliedsNr'][2:],$attrs['NeueMitgliedsNr'][2:]))
+  #if $attrs['Austrittsdatum']
+    $writeLine('Mitgliedschaft',"vom %s" % $attrs['Eintrittsdatum'].strftime('%d.%m.%Y'),$attrs['Austrittsdatum']," bis %s (%s)" % ($attrs['Austrittsdatum'].strftime('%d.%m.%Y'),$attrs['Austrittsgrund']))
+  #else
+    $writeLine('Mitgliedschaft',"vom %s" % $attrs['Eintrittsdatum'].strftime('%d.%m.%Y'))
+  #end if
+  $writeLine('Name',$attrs['Vorname']+", "+$attrs['Titel']+" "+$attrs['Nachname'])
+  $writeLine('Geburtsdatum & Geschlecht',"%s %s" % ($attrs['Geburtsdatum'].strftime('%d.%m.%Y'),$attrs['Geschlecht']))
+  $writeTable($attrs,range(1,6),
+    ['Art','ab','BFA','nächste Erhebung'],
+    [{'name':'Beitragsart','type':'string'},
+     {'name':'BeitragsartAb','type':'date'},
+     {'name':'BeitragsartFreiAb','type':'date'},
+     {'name':'BeitragsartErhebungAb','type':'date'}])
+#end def

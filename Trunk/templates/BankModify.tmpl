@@ -1,0 +1,168 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#extends EditTemplate
+
+#attr role = 'manager'
+
+##################################################################################
+
+#attr activeMenuPoint = 'Bank'
+#attr activeSubmenuPoint = 'BankEdit'
+#attr searchPage = 'BankSearch'
+
+#attr indexField = 'BankNr'
+#attr indexPrefix = 'BK'
+
+#attr subMenuPoints = [
+  {'tmpl':'BankView','condition':1,'title':'Info','link':'BankView?index=$request.field("index","")'},
+  {'tmpl':'LedgerTemplate','condition':1,'title':'Konto','link':'BankLedger?account=BK$request.field("index","")'},
+  ]
+
+#attr editStore = 'AccountsBK'
+#attr editTitle1 = 'Bankkonten'
+#attr editTitle2 = 'Bankdaten ändern'
+#attr editTemplate = 'BankChange'
+
+#attr inputForm = [
+  {
+    'name':"Bank",
+    'title':"Bank",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"KontoNr",
+    'name':"KontoNr",
+    'type':"text",
+    'size':20
+  },
+  {
+    'title':"BLZ",
+    'name':"BLZ",
+    'type':"text",
+    'size':20
+  },
+  {
+    'title':"Adresszusatz",
+    'name':"Adresszusatz",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Strasse",
+    'name':"Strasse",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Ort",
+    'name':"Ort",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Land",
+    'name':"Countrycode",
+    'type':"text",
+    'size':2
+  },
+  {
+    'title':"PLZ",
+    'name':"PLZ",
+    'type':"text",
+    'size':10
+  },
+  {
+    'title':"Telefon (Service)",
+    'name':"TelefonService",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Ansprechpartner",
+    'name':"Ansprechpartner",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Telefon",
+    'name':"TelefonAnsprechpartner",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"FAX",
+    'name':"FAXAnsprechpartner",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"E-Mail",
+    'name':"EMailAnsprechpartner",
+    'type':"text",
+    'size':64,
+    'max':128
+  },
+  {
+  'title':"PIN für Internet",
+    'name':"PINInternet",
+    'type':"text",
+    'size':10
+  },
+  {
+  'title':"PIN für Telefon",
+    'name':"PINTelefon",
+    'type':"text",
+    'size':10
+  },
+  {
+    'title':"Berechtigte",
+    'name':"Berechtigte",
+    'type':"textarea",
+    'size':5
+  },
+  {
+    'title':"Kommentare",
+    'name':"Kommentare",
+    'type':"textarea",
+    'size':5
+  }
+  ]
+
+#attr helpText = ""
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.Bank.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Nr', $attrs['BankNr'])
+#end def

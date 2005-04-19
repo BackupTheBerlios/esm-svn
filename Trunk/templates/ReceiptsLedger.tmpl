@@ -1,0 +1,71 @@
+#extends LedgerTemplate
+#import string
+
+##################################################################################
+
+#attr activeMenuPoint = 'Receipts'
+#attr activeSubmenuPoint = 'ReceiptsLedger'
+
+#attr subMenuPoints = [
+  {'tmpl':'ReceiptsView',
+    'condition':1,
+    'title':'Info',
+    'link':'ReceiptsView?index=#echo $request.field("account",$transaction.session.value("account",""))[2:]#'
+  },
+  {'tmpl':'ReceiptsLedger',
+    'condition':1,
+    'title':'Konto',
+    'link':''
+  },
+  {'tmpl':'PrintTransfers',
+    'condition':1,
+    'title':'Ausdruck',
+    'link':'PrintTransfersEK?accounts=#echo $request.field("account",$transaction.session.value("account",""))#'
+  },
+  ]
+
+#attr titles = [
+  {"title":'Datum',"width":'10%'},
+  {"title":'BKZ / Kto',"width":'10%'},
+  {"title":'Empfänger / Bemerkung',"width":'56%'},
+  {"title":'Soll',"width":'8%'},
+  {"title":'Haben',"width":'8%'},
+  {"title":'Saldo',"width":'8%'}
+  ]
+
+#attr fields1 = [
+  {"name":'Datum',"type":'date'},
+  {"name":'BKZ',"type":'string'},
+  {"name":'Who',"type":'string'},
+  {"name":'Soll',"type":'currency'},
+  {"name":'Haben',"type":'currency'},
+  {"name":'NA1',"type":''}
+  ]
+
+#attr fields2 = [
+  {"name":'NA1',"type":'editlink'},
+  {"name":'Konto',"type":'string'},
+  {"name":'Beschreibung',"type":'string'},
+  {"name":'NA3',"type":''},
+  {"name":'NA4',"type":''},
+  {"name":'Saldo',"type":'currency'}
+  ]
+
+#attr accountIndexField = 'Nr'
+
+#attr accountFields = [
+  {'name':'Nr','title':'Nr','width':'5%','type':''},
+  {'name':'Name','title':'Name','width':'20%','type':''},
+  ]
+
+#attr accountStore = 'AccountsEK'
+#attr ledgerStore = 'Transfers'
+#attr ledgerTitle = 'Einnahmen'
+
+#attr linkPattern = 'ReceiptsLedger?account=EK'
+#attr linkFields = ['Nr']
+#attr searchPage = 'ReceiptsLedgerSearch'
+#attr editLink = 'ReceiptsTransferModify'
+#attr deleteLink = 'ReceiptsTransferDelete'
+
+##################################################################################

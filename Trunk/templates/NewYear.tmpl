@@ -1,0 +1,32 @@
+#extends AdministrationForm
+##################################################################################
+
+#attr role = 'auditor'
+
+#attr activeSubmenuPoint = 'NewYear'
+
+#attr subMenuPoints = [
+  {'tmpl':'NewYear','condition':1,'title':'Jahresabschluß','link':'NewYear'},
+  {'tmpl':'MemberFeesPreview','condition':1,'title':'Beitragsvorschau','link':'MemberFeesPreview'},
+  {'tmpl':'MemberFeesBooking','condition':1,'title':'Beitragsbuchung','link':'MemberFeesBooking'},
+  {'tmpl':'MemberLastschriften','condition':1,'title':'Lastschriften','link':'MemberLastschriften'},
+  {'tmpl':'MemberDTAUS','condition':1,'title':'Einzug','link':'MemberDTAUS'}
+  ]
+
+#attr inputForm = [
+  {
+    'name':"year",
+    'title':"Jahr",
+    'type':"TEXT"
+  }
+  ]
+
+#attr editTemplate = 'SaldoBooking'
+#attr editTitle = 'Jahresabschluß'
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.form.year.focus()"}
+
+#attr helpText = 'Bitte das Jahr angeben, für welches die neuen Salden für das nachfolgende Jahr <br>' + \
+  'berechnet werden soll.'
+
+##################################################################################

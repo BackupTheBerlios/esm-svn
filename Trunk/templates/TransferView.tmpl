@@ -1,0 +1,104 @@
+#from mx import DateTime
+#import string
+
+#extends SiteCenteredTemplate
+
+#implements writeContent
+##################################################################################
+
+#attr role = 'editor'
+
+#attr transferIDDescription = ''
+#attr accountStore = ''
+#attr bookingStore = ''
+#attr transferStore = 'Transfers'
+#attr ledgerTemplate = ''
+
+#attr transferBKZ = ''
+#attr transferNotice = ''
+#attr transferTitle = ''
+#attr transferAction = ''
+
+#attr helpText = ''
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.description.focus()"}
+
+##################################################################################
+
+#set $transferTAID = $request.field('taid','')
+#set $transferID = $request.field('id','')
+#set $transferIndex = $request.field('index',0)
+#set $transferObjects = $store.fetchObjectsOfClass($transferStore,'WHERE TAID="%s"' % $transferTAID)
+
+#if len($transferObjects) == 1
+  #set $attrs = $transferObjects[0].allAttrs(0)
+  #set $transferBKZ = $attrs['BKZ']
+  #set $transferName = $attrs['Who']
+  #set $transferHaben = string.replace('%5.2f' % $attrs['Haben'],'.',',')
+  #set $transferSoll = string.replace('%5.2f' % $attrs['Soll'],'.',',')
+  #set $transferKonto = $attrs['Konto2']
+  #set $transferNotice = 'Bemerkung'
+  #set $transferNoticeDefault = $attrs['Beschreibung']
+  #set $transferDate = DateTime.DateTimeFrom($attrs['Datum']).strftime($dateFormat)
+
+  <table border="0" width="600" cellpadding="0" cellspacing="0">
+    <tr><td>
+      <form name ="data" method="post" action="$transferAction">
+        <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
+          <tr><td width="100%" bgcolor="yellow">
+            $transferTitle der Buchung
+          </td></tr>
+        </table>
+        <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
+          <tr><td width="200">&nbsp;</td><td width="400">&nbsp;</td></tr>
+          #if $transferIDDescription
+            <tr>
+              <td align="right"><b>$transferIDDescription:</b></td>
+              <td>#echo $transferID[2:]#</td>
+            </tr>
+          #end if
+          <tr>
+            <td align="right"><b>Empfänger:</b></td>
+            <td>
+              $transferName
+            </td>
+          </tr>
+          <tr>
+          <tr>
+            <td align="right"><b>BKZ:</b></td>
+            <td>$transferBKZ</td>
+          </tr>
+          <tr>
+            <td align="right"><b>Buchungsdatum:</b></td>
+            <td>$transferDate</td>
+          </tr>
+          <tr>
+            <td align="right"><b>Haben:</b></td>
+            <td>$transferHaben</td>
+          </tr>
+          <tr>
+            <td align="right"><b>Soll:</b></td>
+            <td>$transferSoll</td>
+          </tr>
+          <tr>
+            <td align="right"><b>$transferNotice:</b></td>
+            <td>$transferNoticeDefault</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" value="LÖSCHEN"></td>
+          </tr>
+          <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </table>
+        <input type="hidden" name="taid" value="$transferTAID">
+        <input type="hidden" name="account" value="$transferID">
+        <input type="hidden" name="index" value="$transferIndex">
+        <input type="hidden" name="page" value="$ledgerTemplate">
+      </form>
+    </td></tr>
+    <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+    <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+    <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+    <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+  </table>
+#end if

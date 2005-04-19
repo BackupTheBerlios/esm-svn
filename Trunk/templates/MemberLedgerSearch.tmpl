@@ -1,0 +1,35 @@
+#extends SearchTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Member'
+#attr activeSubmenuPoint = ''
+
+#attr subMenuPoints = [
+  {'tmpl':'MemberNew','condition':1,'title':'Neues Mitglied','link':'MemberNew','role':'editor'},
+  {'tmpl':'PrintTransfers','condition':1,'title':'Ausdruck','link':'PrintMemberTransfers?accounts=MI*','role':'editor'},
+  {'tmpl':'PrintSaldos','condition':1,'title':'Saldos','link':'PrintMemberSaldos?accounts=MI*','role':'editor'},
+  ]
+
+#attr fieldkeys = ['MitgliedsNr','NeueMitgliedsNr','Vorname','Nachname','Geburtsdatum','TelefonPrivat','Eintrittsdatum','Austrittsdatum']
+#attr fields = {
+  'MitgliedsNr':{'title':'MNr','width':'5%','type':''},
+  'NeueMitgliedsNr':{'title':'Neu','width':'5%','type':''},
+  'Vorname':{'title':'Vorname','width':'20%','type':''},
+  'Nachname':{'title':'Nachname','width':'20%','type':''},
+  'Geburtsdatum':{'title':'Geburtstag','width':'10%','type':'date'},
+  'TelefonPrivat':{'title':'Telefon','width':'15%','type':''},
+  'Eintrittsdatum':{'title':'Ein','width':'10%','type':'date'},
+  'Austrittsdatum':{'title':'Aus','width':'10%','type':'date'}
+  }
+
+#attr linkFields = ['MitgliedsNr']
+#attr linkPattern = 'MemberLedger?account=MI'
+
+#attr tableStore = 'AccountsMI'
+#attr tableTitle = 'Mitglieder'
+
+#attr alphaSearchFields = ['Nachname']
+#attr numericSearchFields = ['MitgliedsNr']
+#attr searchPage = 'MemberLedgerSearch'
+
+##################################################################################

@@ -1,0 +1,247 @@
+#extends SiteTemplate
+
+#implements writeContent
+##################################################################################
+
+#attr role = 'editor'
+
+#attr indexField = ''
+#attr indexPrefix = ''
+
+#attr editStore = ''
+#attr editTitle = ''
+#attr editTemplate = ''
+
+#attr inputForm = ''
+#attr inheritAttributes = []
+
+#attr helpText = ''
+
+#attr bodyTagAttribs = {'text':'black'}
+
+##################################################################################
+
+#attr newIndex = 1
+
+#def writeInputForm(attrs,fields)
+  #for $field in $fields
+    #if ($field.type == 'fixed') and $attrs.has_key($field.name)
+      <input type="HIDDEN" name="$field.name" value="$attrs[$field.name]">
+    #elif ($field.type == 'fixed') and $field.has_key('value')
+      <input type="HIDDEN" name="$field.name" value="$field.value">
+    #else
+      <tr>
+        <td align="right"><b>$field.title:</b></td>
+        <td>
+        #if $field.type == 'text'
+          #if $attrs.has_key($field.name)
+            <input type="TEXT" name="$field.name" size="$field.size" value="$attrs[$field.name]">
+          #else
+            <input type="TEXT" name="$field.name" size="$field.size">
+          #end if
+        #elif $field.type == 'date'
+          #if $attrs.has_key($field.name) and $attrs[$field.name]
+            <input type="TEXT" name="$field.name" size="10" value="$attrs[$field.name].strftime('%d.%m.%Y')">
+          #else
+            <input type="TEXT" name="$field.name" size="10">
+          #end if
+        #elif $field.type == 'select'
+          <select name="$field.name" size="1">
+          #for $option in $field.options
+            #if $attrs.has_key($field.name) and ($option.value == $attrs[$field.name])
+              <option value="$option.value" selected>$option.title</option>
+            #else
+              <option value="$option.value">$option.title</option>
+            #end if
+          #end for
+          </select>
+        #elif $field.type == 'textarea'
+          #if $attrs.has_key($field.name)
+            <textarea name="$field.name" rows=$field.size cols=60>$attrs[$field.name]</textarea>
+          #else
+            <textarea name="$field.name" rows=$field.size cols=60></textarea>
+          #end if
+        #elif $field.type == 'table'
+          <table>
+            <tr>
+            #for $f in $field.fieldlist
+              <th>
+                $field.fieldTitle[$f]
+              </th>
+            #end for
+            </tr>
+            #for x in range(1,$field.number + 1)
+              <tr>
+              #for $f in $field.fieldlist
+                <td>
+                #if $field.fieldType[$f] == 'text'
+                  #set $fx = '%s%s' % ($f,$x)
+                  #if $attrs.has_key($fx)
+                    <input type="TEXT" name="$fx" value="$attrs[$fx]">
+                  #else
+                    <input type="TEXT" name="$fx">
+                  #end if
+                #elif $field.fieldType[$f] == 'date'
+                  #set $fx = '%s%s' % ($f,$x)
+                  #if $attrs.has_key($fx) and $attrs[$fx]
+                    #set $v = $DateTime.DateTimeFrom($attrs[$fx]).strftime($dateFormat)
+                    <input type="TEXT" name="$fx" value="$v">
+                  #else
+                    <input type="TEXT" name="$fx">
+                  #end if
+                #elif $field.fieldType[$f] == 'currency'
+                  #set $fx = '%s%s' % ($f,$x)
+                  #if $attrs.has_key($fx) and $attrs[$fx]
+                    <input type="TEXT" name="$fx" value="#echo string.replace('%.2f' % float($attrs[$fx]),'.',',')#">
+                  #else
+                    <input type="TEXT" name="$fx">
+                  #end if
+                #end if
+                </td>
+              #end for
+              </tr>
+            #end for
+          </table>
+        #end if
+        </td>
+      </tr>
+    #end if
+  #end for
+#end def
+
+#def writeRecord(attrs)
+
+#end def
+
+#silent $response.flush()
+#if $editStore != ''
+
+  #set $attrs = {}
+
+  #set $index = $request.field($indexField,'')
+  #if $index
+    ##
+    ## init attributes
+    ##
+    #set $storeObjects = $store.fetchObjectsOfClass($editStore,'WHERE %s = "%s"' % ($indexField,$index))
+    #set $iAttrs = $storeObjects[0].allAttrs(0)
+    #for $x in $inheritAttributes
+      #set $attrs[$x] = $iAttrs[$x]
+    #end for
+    #if $newIndex
+      ##
+      # calculate new index for converted family member so single member
+      ##
+      #if $index[-1:] != "0"
+        #set $storeObjects = $store.fetchObjectsOfClass('IDs','WHERE %s = "%s"' % ('Tablename',$editStore))
+        #set $IDattrs = $storeObjects[0].allAttrs(0)
+        #set $attrs['ID'] = $indexPrefix + str($IDattrs.LastID + 10)
+        #set $attrs[$indexField] = str($IDattrs.LastID + 10)
+      #else
+        #set $storeObjects = $store.fetchObjectsOfClass($editStore,'WHERE %s LIKE "%s"' % ($indexField,$index[:-1] + '_'))
+        #set $familyIndex = len($storeObjects)
+        #set $attrs['ID'] = $indexPrefix + $index[:-1] + str($familyIndex)
+        #set $attrs[$indexField] = $index[:-1] + str($familyIndex)
+      #end if
+    #else
+      #set $attrs['ID'] = $indexPrefix + $index
+      #set $attrs[$indexField] = $index
+    #end if
+  #else
+    ##
+    ## init attributes
+    ##
+    #set $attrs['Countrycode'] = 'de'
+    #if $indexField
+      ##
+      ## calculate new index
+      ##
+      #set $storeObjects = $store.fetchObjectsOfClass('IDs','WHERE %s = "%s"' % ('Tablename',$editStore))
+      #set $IDattrs = $storeObjects[0].allAttrs(0)
+      #set $attrs['ID'] = $indexPrefix + str($IDattrs.LastID + 10)
+      #set $attrs[$indexField] = str($IDattrs.LastID + 10)
+    #end if
+  #end if
+
+  ##
+  ## clear
+  ##
+  ## Überschrift
+  ##
+    <table width="100%">
+      <tr bgcolor="yellow" valign=top>
+        <th>
+          $editTitle1
+        </th>
+      </tr>
+    </table>
+
+  ##
+  ## Suchen
+  ##
+  </TD></TR>
+  <TR><TD>
+    <table width="100%" cellpadding=0>
+      <tr bgcolor="yellow" valign=top>
+        <td>
+          <form name="search" action="$searchPage" method=post>
+            &nbsp;<input name="search" type="text" size=10 maxlength=40>
+            &nbsp;<input type=image src="search.png">
+            &nbsp;&nbsp;&nbsp;
+            #for $letter in "0123456789"
+              <a href="$searchPage?search=$letter*">$letter</a>
+            #end for
+            &nbsp;&nbsp;
+            #for $letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+              <a href="$searchPage?search=$letter*">$letter</a>
+            #end for
+          </form>
+        </td>
+      </tr>
+    </table>
+
+  </TD></TR>
+  <TR><TD>
+    <table width="100%">
+      ##
+      ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
+      ## Geldbeträge und Datum
+      ##
+      $writeRecord($attrs)
+    </table>
+
+  </TD></TR>
+  <TR><TD align="$contentBox.align">
+    <table border="0" width="600" cellpadding="0" cellspacing="0">
+      <tr><td>
+        <form name ="data" method="post" action="$editTemplate">
+          #if $indexField
+            <input type="hidden" name="old$indexField" value="$index">
+            <input type="hidden" name="$indexField" value="$attrs[$indexField]">
+            <input type="hidden" name="account" value="$attrs.ID">
+            <input type="hidden" name="ID" value="$attrs.ID">
+          #end if
+          <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
+            <tr>
+              <td width="200" bgcolor="yellow">$editTitle2</td>
+              <td width="400" bgcolor="yellow">&nbsp;</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td><td>&nbsp;</td>
+            </tr>
+            $writeInputForm($attrs,$inputForm)
+            <tr>
+              <td>&nbsp;</td>
+              <td><input type="submit" value="OK"></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td><td>&nbsp;</td>
+            </tr>
+          </table>
+        </form>
+      </td></tr>
+      <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+      <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+    </table>
+
+#end if

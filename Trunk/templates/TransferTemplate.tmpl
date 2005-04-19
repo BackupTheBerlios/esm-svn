@@ -1,0 +1,238 @@
+#from SiteCenteredTemplate import SiteCenteredTemplate
+#from mx import DateTime
+#import string
+
+#extends SiteCenteredTemplate
+
+#implements writeContent
+##################################################################################
+
+#attr role = 'editor'
+
+#attr transferIDDescription = ''
+#attr accountStore = ''
+#attr bookingStore = ''
+#attr transferStore = 'Transfers'
+#attr ledgerTemplate = ''
+
+#attr transferBKZ = ''
+#attr transferType = ''
+#attr transferOptions = []
+#attr transferOptionsDescription = ''
+#attr transferNotice = ''
+#attr transferNoticeDefault = ''
+#attr transferNameRequired = 0
+#attr transferAction = 'TransferCreate'
+
+#attr helpText = ''
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.notice.focus()"}
+
+##################################################################################
+
+#set $today = DateTime.now().strftime($dateFormat)
+
+#set $transferTAID = $request.field('taid','')
+#set $transferID = $request.field('id','')
+#set $transferIndex = $request.field('index',0)
+
+#set $transferBkzs = []
+
+#if $transferTAID
+  #set $transferObjects = $store.fetchObjectsOfClass($transferStore,'WHERE TAID="%s"' % $transferTAID)
+  #if len($transferObjects) == 1
+    #set $attrs = $transferObjects[0].allAttrs(0)
+    #set $transferBkz = $attrs['BKZ']
+    #set $transferName = $attrs['Who']
+    #set $transferHaben = string.replace('%5.2f' % $attrs['Haben'],'.',',')
+    #set $transferSoll = string.replace('%5.2f' % $attrs['Soll'],'.',',')
+    #set $transferKonto = $attrs['Konto2']
+    #set $transferNoticeValue = $attrs['Beschreibung']
+    #set $transferDate = DateTime.DateTimeFrom($attrs['Datum']).strftime($dateFormat)
+    #set $bookingObjects = $store.fetchObjectsOfClass($bookingStore,'WHERE BKZ="%s"' % $transferBkz)
+    #set $attrs = $bookingObjects[0].allAttrs(0)
+    #set $transferOptionsDescription = $attrs['Beschreibung']
+  #end if
+#else
+  #set $transferNoticeValue = $transferNoticeDefault
+  #set $accountObjects = $store.fetchObjectsOfClass($accountStore,'WHERE ID="%s"' % $transferID)
+  #if len($accountObjects) == 1
+    #set $attrs = $accountObjects[0].allAttrs(0)
+    #if $attrs.has_key('Firma') and $attrs['Firma']
+      #set $transferName = $attrs['Firma']
+    #elif $attrs.has_key('Bank')
+      #set $transferName = $attrs['Bank']
+    #elif $attrs.has_key('Vorname') and $attrs.has_key('Nachname')
+      #set $transferName = $attrs['Nachname'] + ', ' + $attrs['Vorname']
+    #else
+      #set $transferName = ''
+    #end if
+  #end if
+
+  #set $transferBkz = $transferBKZ
+  #if (len(string.split($transferBkz)) > 1) or ('*' in $transferBkz)
+    #set $BKZpattern = string.split($transferBkz)
+    #for $x in $BKZpattern
+      #set $bookingObjects = $store.fetchObjectsOfClass($bookingStore,'WHERE BKZ LIKE "%s"' % string.replace($x,'*','%'))
+      #for $y in $bookingObjects
+        #set $attrs = $y.allAttrs(0)
+        #silent $transferBkzs.append({'description':$attrs['Beschreibung'],'value':$attrs['BKZ']})
+      #end for
+    #end for
+  #end if
+
+  #if not $transferBkzs
+    #set $bookingObjects = $store.fetchObjectsOfClass($bookingStore,'WHERE BKZ="%s"' % $transferBkz)
+    #set $attrs = $bookingObjects[0].allAttrs(0)
+    #if DateTime.now() < $attrs['Ab']
+      #set $transferHaben = string.replace('%5.2f' % $attrs['Haben'],'.',',')
+      #set $transferSoll = string.replace('%5.2f' % $attrs['Soll'],'.',',')
+    #else
+      #set $transferHaben = string.replace('%5.2f' % $attrs['AbHaben'],'.',',')
+      #set $transferSoll = string.replace('%5.2f' % $attrs['AbSoll'],'.',',')
+    #end if
+    #set $transferOptionsDescription = $attrs['Beschreibung']
+    #set $transferKonto = $attrs['Konto']
+  #else
+    #set $transferHaben = '0,0'
+    #set $transferSoll = '0,0'
+  #end if
+  #set $transferDate = $today
+#end if
+
+#if $transferTAID or len($accountObjects) == 1
+
+  <table border="0" width="600" cellpadding="0" cellspacing="0">
+    <tr><td>
+      <form name ="data" method="post" action="$transferAction">
+        <input type="hidden" name="index" value="$transferIndex">
+        <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
+          <tr><td width="100%" bgcolor="yellow">
+            #if $transferBkzs or not $transferOptionsDescription
+              Buchung
+            #else
+              Buchung der $transferOptionsDescription
+            #end if
+          </td></tr>
+          #set $errorText = $request.field('error','')
+          #if $errorText
+            <tr><td width="100%" bgcolor="$errorBox.bgColor"><table>
+              <tr>
+                <td BGCOLOR="$errorBox.bgColor" BACKGROUND="$errorBox.background" align="$errorBox.align" valign="$errorBox.valign" width="5%">
+                  <IMG SRC="$errorSymbol" BORDER="0" ALIGN="middle">
+                </td>
+                <td BGCOLOR="$errorBox.bgColor" BACKGROUND="$errorBox.background" align="$errorBox.align" valign="$errorBox.valign">
+                  $errorText
+                </td>
+              </tr>
+            </table></td></tr>
+          #end if
+        </table>
+        <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
+          <tr><td width="200">&nbsp;</td><td width="400">&nbsp;</td></tr>
+          #if $transferIDDescription
+            <tr>
+              <td align="right"><b>$transferIDDescription:</b></td>
+              <td>#echo $transferID[2:]#</td>
+            </tr>
+          #end if
+          <tr>
+            <td align="right"><b>Empfänger:</b></td>
+            <td>
+              #if $transferNameRequired
+                <input type="TEXT" name="name" size="32" value="$transferName">
+              #else
+                $transferName
+                <input type="hidden" name="name" value="$transferName">
+              #end if
+            </td>
+          </tr>
+          <tr>
+          #if $transferBkzs
+            <tr>
+              <td align="right"><b>Zweck:</b></td>
+              <td>
+                <select name="bkz">
+                  #for $bkz in $transferBkzs
+                    <option value="#include source=$bkz.value#">#include source=$bkz.description#</option>
+                  #end for
+                </select>
+                <input type="hidden" name="konto" value="">
+              </td>
+            </tr>
+          #else
+            <tr>
+              <td align="right"><b>BKZ:</b></td>
+              <td>$transferBkz</td>
+              <input type="hidden" name="bkz" value="$transferBkz">
+              <input type="hidden" name="konto" value="$transferKonto">
+            </tr>
+          #end if
+          <tr>
+            <td align="right"><b>Buchungsdatum:</b></td>
+            <td><input type="TEXT" name="date" value="$transferDate" size="10"></td>
+          </tr>
+          #if $transferOptions
+            <tr>
+              <td align="right"><b>$transferOptionsDescription:</b></td>
+              <td>
+                <select name="description">
+                  #for $option in $transferOptions
+                    <option value="#include source=$option.value#">#include source=$option.description#</option>
+                  #end for
+                </select>
+              </td>
+            </tr>
+          #end if
+          #if $transferType == 'haben'
+            <tr>
+              <td align="right"><b>Haben:</b></td>
+              <td><input type="TEXT" name="Haben" value="$transferHaben" size="10"></td>
+              <input type="HIDDEN" name="Soll" value="$transferSoll">
+            </tr>
+          #elif $transferType == 'soll'
+            <tr>
+              <td align="right"><b>Soll:</b></td>
+              <td><input type="TEXT" name="Soll" value="$transferSoll" size="10"></td>
+              <input type="HIDDEN" name="Haben" value="$transferHaben">
+            </tr>
+          #elif $transferType == 'edit'
+            #if ($string.strip($transferSoll) == "0,00") or ($string.strip($transferHaben) != "0,00")
+              <tr>
+                <td align="right"><b>Haben:</b></td>
+                <td><input type="TEXT" name="Haben" value="$transferHaben" size="10"></td>
+              </tr>
+            #end if
+            #if ($string.strip($transferHaben) == "0,00") or ($string.strip($transferSoll) != "0,00")
+              <tr>
+                <td align="right"><b>Soll:</b></td>
+                <td><input type="TEXT" name="Soll" value="$transferSoll" size="10"></td>
+              </tr>
+            #end if
+          #else
+            <input type="HIDDEN" name="Haben" value="$transferHaben">
+            <input type="HIDDEN" name="Soll" value="$transferSoll">
+          #end if
+          #if $transferNotice
+            <tr>
+              <td align="right"><b>$transferNotice:</b></td>
+              <td><input type="TEXT" name="notice" size="32" value="$transferNoticeValue"></td>
+            </tr>
+          #end if
+          <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" value="OK"></td>
+          </tr>
+          <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </table>
+        <input type="hidden" name="taid" value="$transferTAID">
+        <input type="hidden" name="account" value="$transferID">
+        <input type="hidden" name="page" value="$ledgerTemplate">
+      </form>
+    </td></tr>
+    <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+    <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+    <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+    <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+  </table>
+#end if

@@ -1,0 +1,44 @@
+#extends TransferView
+##################################################################################
+
+#attr activeMenuPoint = 'Personal'
+
+#attr subMenuPoints = [
+  {'tmpl':'PersonalView',
+    'condition':1,
+    'title':'Daten',
+    'link':'PersonalView?index=#echo $request.field("account",$transaction.session.value("account",""))[2:]#'
+  },
+  {'tmpl':'PersonalLedger',
+    'condition':1,
+    'title':'Konto',
+    'link':'PersonalLedger?account=#echo $request.field("account",$transaction.session.value("account",""))#'
+  },
+  {'tmpl':'PersonalTransferAb','title':'> Abrechnung Tr',
+    'condition':1,
+    'link':'PersonalTransferAb?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+   {'tmpl':'PersonalTransferAbVerw','title':'> Abrechnung Vw',
+    'condition':1,
+    'link':'PersonalTransferAbVerw?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'PersonalTransferAus','title':'> Auszahlung',
+    'condition':1,
+    'link':'PersonalTransferAus?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'PersonalTransferStorno','title':'> Stornierung',
+    'condition':1,
+    'link':'PersonalTransferStorno?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+ ]
+
+#attr transferIDDescription = 'MitgliedsNr'
+#attr accountStore = 'AccountsTR'
+#attr bookingStore = 'Prices'
+#attr ledgerTemplate = 'PersonalLedger'
+
+##################################################################################

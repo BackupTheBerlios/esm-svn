@@ -1,0 +1,31 @@
+#extends SearchTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Receipts'
+#attr activeSubmenuPoint = ''
+
+#attr subMenuPoints = [
+  {'tmpl':'ReceiptsNew','condition':1,'title':'Neu','link':'ReceiptsNew','role':'manager'},
+  {'tmpl':'PrintTransfers','condition':1,'title':'Ausdruck','link':'PrintTransfersEK?accounts=EK*','role':'editor'},
+  {'tmpl':'PrintSummary','condition':1,'title':'Saldos','link':'PrintReceiptsSummary?accounts=EK*','role':'editor'},
+]
+
+#attr fieldkeys = ['Nr','Name','Kommentare']
+#attr fields = {
+  'Nr':{'title':'Nr','width':'10%','type':''},
+  'Name':{'title':'Name','width':'45%','type':''},
+  'Kommentare':{'title':'Kommentare','width':'55%','type':''},
+  }
+
+#attr linkFields = ['Nr']
+#attr linkPattern = 'ReceiptsLedger?account=EK'
+
+#attr tableStore = 'AccountsEK'
+#attr tableTitle = 'Einnahmen'
+
+#attr alphaSearchFields = ['Name']
+#attr numericSearchFields = ['Nr']
+
+#attr searchPage = 'ReceiptsLedgerSearch'
+
+##################################################################################

@@ -1,0 +1,97 @@
+#import string
+
+#extends LedgerTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Personal'
+#attr activeSubmenuPoint = 'PersonalLedger'
+
+#attr subMenuPoints = [
+  {'tmpl':'PersonalView',
+    'condition':1,
+    'title':'Info',
+    'link':'PersonalView?index=#echo $request.field("account",$transaction.session.value("account",""))[2:]#'
+  },
+  {'tmpl':'PersonalLedger',
+    'condition':1,
+    'title':'Konto',
+    'link':''
+  },
+  {'tmpl':'PersonalTransferAb','title':'> Abrechnung Tr',
+    'condition':1,
+    'link':'PersonalTransferAb?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'PersonalTransferAbVerw','title':'> Abrechnung Vw',
+    'condition':1,
+    'link':'PersonalTransferAbVerw?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'PersonalTransferAus','title':'> Auszahlung',
+    'condition':1,
+    'link':'PersonalTransferAus?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'PersonalTransferStorno','title':'> Stornierung',
+    'condition':1,
+    'link':'PersonalTransferStorno?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'PrintTransfers',
+    'title':'> Ausdruck',
+    'condition':1,
+    'link':'PrintPersonalTransfers?accounts=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  ]
+
+#attr titles = [
+  {"title":'Datum',"width":'10%'},
+  {"title":'BKZ',"width":'10%'},
+  {"title":'Empfänger / Bemerkung',"width":'56%'},
+  {"title":'Soll',"width":'8%'},
+  {"title":'Haben',"width":'8%'},
+  {"title":'Saldo',"width":'8%'}
+  ]
+
+#attr fields1 = [
+  {"name":'Datum',"type":'date'},
+  {"name":'BKZ',"type":'string'},
+  {"name":'Who',"type":'string'},
+  {"name":'Soll',"type":'currency'},
+  {"name":'Haben',"type":'currency'},
+  {"name":'NA1',"type":''}
+  ]
+
+#attr fields2 = [
+  {"name":'NA1',"type":'editlink'},
+  {"name":'NA2',"type":''},
+  {"name":'Beschreibung',"type":'string'},
+  {"name":'NA3',"type":''},
+  {"name":'NA4',"type":''},
+  {"name":'Saldo',"type":'currency'}
+  ]
+
+#attr accountIndexField = 'MitgliedsNr'
+
+#attr accountFields = [
+  {'name':'MitgliedsNr','title':'MNr','width':'5%','type':''},
+  {'name':'Vorname','title':'Name','width':'20%','type':''},
+  {'name':'Nachname','title':'','width':'20%','type':'name'},
+  {'name':'Geburtsdatum','title':'Geb','width':'10%','type':'date'},
+  {'name':'TelefonPrivat','title':'Tel','width':'15%','type':''},
+  {'name':'Seit','title':'von','width':'10%','type':'date'},
+  {'name':'Bis','title':'bis','width':'10%','type':'date'}
+  ]
+
+#attr accountStore = 'AccountsTR'
+#attr ledgerStore = 'Transfers'
+#attr ledgerTitle = 'Kontoauszug'
+
+#attr linkPattern = 'PersonalLedger?account=TR'
+#attr linkFields = ['MitgliedsNr']
+#attr searchPage = 'PersonalLedgerSearch'
+#attr editLink = 'PersonalTransferModify'
+#attr deleteLink = 'PersonalTransferDelete'
+
+##################################################################################

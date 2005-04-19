@@ -1,0 +1,204 @@
+#extends NewTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Member'
+#attr activeSubmenuPoint = 'MemberToPersonal'
+#attr searchPage = 'MemberSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'MemberView','condition':1,'title':'Daten','link':'MemberView?index=$request.field("MitgliedsNr","")'},
+  {'tmpl':'MemberToPersonal','condition':1,'title':'Neuer Personal','link':''}
+  ]
+
+#attr indexField = 'MitgliedsNr'
+#attr indexPrefix = 'TR'
+
+#attr editStore = 'AccountsMI'
+#attr editTitle1 = 'Neuer Personal'
+#attr editTitle2 = 'Mitgliedsdaten'
+#attr editTemplate = 'MemberNewPersonal'
+
+#attr inputForm = [
+  {
+    'name':"Vorname",
+    'title':"Vorname",
+    'type':"fixed"
+  },
+  {
+    'title':"Nachname",
+    'name':"Nachname",
+    'type':"fixed"
+  },
+  {
+    'title':"Titel",
+    'name':"Titel",
+    'type':"fixed"
+  },
+  {
+    'title':"Geburtsdatum",
+    'name':"Geburtsdatum",
+    'type':"fixed"
+  },
+  {
+    'title':"Geschlecht",
+    'name':"Geschlecht",
+    'type':"fixed"
+  },
+  {
+    'title':"Adresszusatz",
+    'name':"Adresszusatz",
+    'type':"fixed"
+  },
+  {
+    'title':"Strasse",
+    'name':"Strasse",
+    'type':"fixed"
+  },
+  {
+    'title':"Ort",
+    'name':"Ort",
+    'type':"fixed"
+  },
+  {
+    'title':"Land",
+    'name':"Countrycode",
+    'type':"fixed"
+  },
+  {
+    'title':"PLZ",
+    'name':"PLZ",
+    'type':"fixed"
+  },
+  {
+    'title':"Telefon (Privat)",
+    'name':"TelefonPrivat",
+    'type':"fixed"
+  },
+  {
+    'title':"Telefon (Dienst)",
+    'name':"TelefonDienst",
+    'type':"fixed"
+  },
+  {
+    'title':"Telefon (Mobil)",
+    'name':"Mobiltelefon",
+    'type':"fixed"
+  },
+  {
+    'title':"FAX",
+    'name':"FAX",
+    'type':"fixed"
+  },
+  {
+    'title':"E-Mail",
+    'name':"EMail",
+    'type':"fixed"
+  },
+  {
+    'title':"ab",
+    'name':"Seit",
+    'type':"date"
+  },
+  {
+    'title':"Bankverbindungen",
+    'type':"table",
+    'number':2,
+    'fieldlist':['KontoNr','BLZ','Bank','Kontoinhaber'],
+    'fieldType':{
+      'KontoNr':'text',
+      'BLZ':'text',
+      'Bank':'text',
+      'Kontoinhaber':'text'
+    },
+    'fieldTitle':{
+      'KontoNr':'KontoNr',
+      'BLZ':'BLZ',
+      'Bank':'Bank',
+      'Kontoinhaber':'Kontoinhaber'
+    }
+  },
+  {
+    'title':"Lizenzen",
+    'type':"table",
+    'number':6,
+    'fieldlist':['Lizenz','LizenzNr','LizenzBis','LizenzZuschuss'],
+    'fieldType':{
+      'Lizenz':'text',
+      'LizenzNr':'text',
+      'LizenzBis':'date',
+      'LizenzZuschuss':'currency'
+    },
+    'fieldTitle':{
+      'Lizenz':'Bezeichnung',
+      'LizenzNr':'Nr.',
+      'LizenzBis':'bis',
+      'LizenzZuschuss':'Zuschuss'
+    }
+  },
+  {
+    'title':"Fortbildungen",
+    'name':"Fortbildungen",
+    'type':"textarea",
+    'size':5
+  },
+  {
+    'title':"Honorare",
+    'type':"table",
+    'number':6,
+    'fieldlist':['Honorar','HonorarBetrag'],
+    'fieldType':{
+      'Honorar':'text',
+      'HonorarBetrag':'currency'
+    },
+    'fieldTitle':{
+      'Honorar':'Kurse',
+      'HonorarBetrag':'Betrag'
+    }
+  },
+  {
+    'title':"Traing",
+    'type':"table",
+    'number':10,
+    'fieldlist':['Training','TrainingOrt','TrainingTermin'],
+    'fieldType':{
+      'Training':'text',
+      'TrainingOrt':'text',
+      'TrainingTermin':'text'
+    },
+    'fieldTitle':{
+      'Training':'Kurs',
+      'TrainingOrt':'Ort',
+      'TrainingTermin':'Termin'
+    }
+  },
+  {
+    'title':"Kommentare",
+    'name':"Kommentare",
+    'type':"textarea",
+    'size':5
+  }
+  ]
+#attr inheritAttributes = ["Vorname","Nachname","Titel","Geburtsdatum","Geschlecht",
+  "Adresszusatz","Strasse","Ort","Countrycode","PLZ",
+  "TelefonPrivat","TelefonDienst","Mobiltelefon","FAX","EMail",
+  "KontoNr1","BLZ1","Bank1","Kontoinhaber1",
+  "KontoNr2","BLZ2","Bank2","Kontoinhaber2",
+  ]
+
+#attr helpText = ""
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.Vorname.focus()"}
+
+##################################################################################
+
+#attr newIndex = 0
+
+#def writeRecord(attrs)
+  $writeLine('Mitgliedsnr', $attrs['MitgliedsNr'])
+  $writeLine('Name',$attrs['Nachname']+", "+$attrs['Titel']+" "+$attrs['Vorname'])
+  $writeLine('Adresse',$attrs['PLZ']+" "+$attrs['Ort']+", "+$attrs['Strasse'])
+  $writeLine('Telefon (privat, dienstlich, mobil)',$attrs['TelefonPrivat']+"<br>"+$attrs['TelefonDienst']+"<br>"+$attrs['Mobiltelefon'])
+  $writeLine('FAX',$attrs['FAX'])
+  $writeLine('E-Mail',$attrs['EMail'])
+  $writeLine('Geburtsdatum & Geschlecht',"%s %s" % ($attrs['Geburtsdatum'].strftime('%d.%m.%Y'),$attrs['Geschlecht']))
+#end def

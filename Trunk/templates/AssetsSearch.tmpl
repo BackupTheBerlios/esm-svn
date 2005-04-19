@@ -1,0 +1,67 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+##
+## AssetsSearch.tmpl
+##
+
+#extends SearchTemplate
+
+##################################################################################
+
+#attr activeMenuPoint = 'Assets'
+
+#attr subMenuPoints = [
+  {'tmpl':'AssetsNew','condition':1,'title':'Neu','link':'AssetsNew','role':'manager'},
+  {'tmpl':'PrintTransfers','condition':1,'title':'Ausdruck','link':'PrintAssetsTransfers?accounts=VV*','role':'editor'},
+  {'tmpl':'PrintSaldos','condition':1,'title':'Saldos','link':'PrintAssetsSaldos?accounts=VV*','role':'editor'},
+  ]
+
+#attr linkFields = ['Nr']
+#attr linkPattern = 'AssetsView?index='
+
+#attr activeSubmenuPoint = 'AssetsSearch'
+#attr searchPage = 'AssetsSearch'
+
+#attr fieldkeys = ['Nr','Name','Kommentare']
+#attr fields = {
+  'Nr':{'title':'Nr','width':'5%','type':''},
+  'Name':{'title':'Name','width':'25%','type':''},
+  'Kommentare':{'title':'Kommentare','width':'70%','type':''},
+  }
+
+#attr tableStore = 'AccountsVV'
+#attr tableTitle = 'Bestandskonten'
+
+#attr alphaSearchFields = ['Name']
+#attr numericSearchFields = ['Nr']
+#attr sortField = 'Nr'
+
+##################################################################################

@@ -1,0 +1,89 @@
+#extends TransferView
+##################################################################################
+
+#attr activeMenuPoint = 'Member'
+
+#attr subMenuPoints = [
+  {'tmpl':'MemberView',
+    'condition':1,
+    'title':'Daten',
+    'link':'MemberView?index=#echo $request.field("account",$transaction.session.value("account",""))[2:]#'
+  },
+  {'tmpl':'MemberLedger',
+    'condition':1,
+    'title':'Konto',
+    'link':'MemberLedger?account=#echo $request.field("account",$transaction.session.value("account",""))#'
+  },
+  {'tmpl':'MemberTransferEin','title':'> Einzahlung',
+    'condition':1,
+    'link':'MemberTransferEin?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferAus','title':'> Auszahlung',
+    'condition':1,
+    'link':'MemberTransferAus?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferStorno','title':'> Stornierung',
+    'condition':1,
+    'link':'MemberTransferStorno?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransfer11Sc','title':'> Schwimmkurs',
+    'condition':1,
+    'link':'MemberTransfer11Sc?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferMahn','title':'> Mahngebühr',
+    'condition':1,
+    'link':'MemberTransferMahn?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferVerw','title':'> Verw. Gebühr',
+    'condition':1,
+    'link':'MemberTransferVerw?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferGutAuf','title':'> Gut. Aufnahme',
+    'condition':1,
+    'link':'MemberTransferGutAuf?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferGutBei','title':'> Gut. Beitrag',
+    'condition':1,
+    'link':'MemberTransferGutBei?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferGutKu','title':'> Gut. Kursgebühr',
+    'condition':1,
+    'link':'MemberTransferGutKu?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferGutSto','title':'> Gut. Stornierung',
+    'condition':1,
+    'link':'MemberTransferGutSto?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferGutMahn','title':'> Gut. Mahnung',
+    'condition':1,
+    'link':'MemberTransferGutMahn?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferRaten','title':'> Ratenzahlung',
+    'condition':1,
+    'link':'MemberTransferRaten?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'MemberTransferSpende','title':'> Spende',
+    'condition':1,
+    'link':'MemberTransferSpende?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  ]
+
+#attr transferIDDescription = 'MitgliedsNr'
+#attr accountStore = 'AccountsMI'
+#attr bookingStore = 'Prices'
+#attr ledgerTemplate = 'MemberLedger'
+
+##################################################################################

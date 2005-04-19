@@ -1,0 +1,142 @@
+#import string
+
+#extends LedgerTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Member'
+#attr activeSubmenuPoint = 'MemberLedger'
+
+#attr subMenuPoints = [
+  {'tmpl':'MemberView',
+    'condition':1,
+    'title':'Info',
+    'link':'MemberView?index=#echo $request.field("account",$transaction.session.value("account",""))[2:]#'
+  },
+  {'tmpl':'MemberLedger',
+    'condition':1,
+    'title':'Konto',
+    'link':''
+  },
+  {'tmpl':'Member','title':'> Einzahlung',
+    'condition':1,
+    'link':'MemberTransferEin?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Auszahlung',
+    'condition':1,
+    'link':'MemberTransferAus?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Stornierung',
+    'condition':1,
+    'link':'MemberTransferStorno?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Schwimmkurs',
+    'condition':1,
+    'link':'MemberTransfer11Sc?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Mahngebühr',
+    'condition':1,
+    'link':'MemberTransferMahn?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Verw. Gebühr',
+    'condition':1,
+    'link':'MemberTransferVerw?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Gut. Aufnahme',
+    'condition':1,
+    'link':'MemberTransferGutAuf?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Gut. Beitrag',
+    'condition':1,
+    'link':'MemberTransferGutBei?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Gut. Kursgebühr',
+    'condition':1,
+    'link':'MemberTransferGutKu?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Gut. Stornierung',
+    'condition':1,
+    'link':'MemberTransferGutSto?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Gut. Mahnung',
+    'condition':1,
+    'link':'MemberTransferGutMahn?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Ratenzahlung',
+    'condition':1,
+    'link':'MemberTransferRaten?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'Member','title':'> Spende',
+    'condition':1,
+    'link':'MemberTransferSpende?id=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  {'tmpl':'PrintTransfers',
+    'title':'> Ausdruck',
+    'condition':1,
+    'link':'PrintMemberTransfers?accounts=#echo $request.field("account",$transaction.session.value("account",""))#&index=#echo $request.field("index",$transaction.session.value("index",0))#',
+    'role':'editor'
+  },
+  ]
+
+#attr titles = [
+  {"title":'Datum',"width":'10%'},
+  {"title":'BKZ / Kto',"width":'10%'},
+  {"title":'Empfänger / Bemerkung',"width":'56%'},
+  {"title":'Soll',"width":'8%'},
+  {"title":'Haben',"width":'8%'},
+  {"title":'Saldo',"width":'8%'}
+  ]
+
+#attr fields1 = [
+  {"name":'Datum',"type":'date'},
+  {"name":'BKZ',"type":'string'},
+  {"name":'Who',"type":'string'},
+  {"name":'Soll',"type":'currency'},
+  {"name":'Haben',"type":'currency'},
+  {"name":'NA1',"type":''}
+  ]
+
+#attr fields2 = [
+  {"name":'NA1',"type":'editlink'},
+  {"name":'Konto',"type":'string'},
+  {"name":'Beschreibung',"type":'string'},
+  {"name":'NA3',"type":''},
+  {"name":'NA4',"type":''},
+  {"name":'Saldo',"type":'currency'}
+  ]
+
+#attr accountIndexField = 'MitgliedsNr'
+
+#attr accountFields = [
+  {'name':'MitgliedsNr','title':'MNr','width':'5%','type':''},
+  {'name':'Vorname','title':'Name','width':'20%','type':''},
+  {'name':'Nachname','title':'','width':'20%','type':'name'},
+  {'name':'Geburtsdatum','title':'Geb','width':'10%','type':'date'},
+  {'name':'TelefonPrivat','title':'Tel','width':'15%','type':''},
+  {'name':'Eintrittsdatum','title':'Ein','width':'10%','type':'date'},
+  {'name':'Austrittsdatum','title':'Aus','width':'10%','type':'date'}
+  ]
+
+#attr accountStore = 'AccountsMI'
+#attr ledgerStore = 'Transfers'
+#attr ledgerTitle = 'Kontoauszug'
+
+#attr linkPattern = 'MemberLedger?account=MI'
+#attr linkFields = ['MitgliedsNr']
+#attr searchPage = 'MemberLedgerSearch'
+#attr editLink = 'MemberTransferModify'
+#attr deleteLink = 'MemberTransferDelete'
+
+##################################################################################

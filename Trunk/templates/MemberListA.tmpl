@@ -1,0 +1,49 @@
+#extends FormTemplate
+
+##################################################################################
+
+#attr subMenuPoints = [
+  {'tmpl':'-','title':'Beitragsstatistik','condition':1,'link':''},
+  {'tmpl':'AgesStatistics','title':'Altersstatistik','condition':1,'link':'AgesStatistics'},
+  {'tmpl':'MemberListY','title':'Jugendliche','condition':1,'link':'MemberListY?maxAge=18'},
+  {'tmpl':'MemberListA','title':'Erwachsene','condition':1,'link':'MemberListA?minAge=19'},
+  {'tmpl':'-','title':'Saldos','condition':1,'link':''},
+  {'tmpl':'h1','title':'','condition':1,'link':''},
+  ]
+
+#attr activeMenuPoint = 'ListsTemplate'
+#attr activeSubmenuPoint = 'MemberListA'
+
+#attr inputForm = [
+  {
+    'name':"reportingdate",
+    'title':"Stichtag",
+    'type':"TEXT"
+  },
+  {
+    'name':"minAge",
+    'title':"",
+    'type':"hidden",
+    'value':'19',
+  },
+  {
+    'name':"maxAge",
+    'title':"",
+    'type':"hidden",
+    'value':'200',
+  },
+  ]
+
+#attr editTemplate = 'PrintMemberList'
+#attr editTitle = 'Mitgliederliste Erwachsene'
+#attr helpText = '''Es werden die Mitglieder ausgegeben, die zum Stichtag Mitglied waren.
+Das Alter wird ebenfalls zum Stichtag berechnet. Wenn kein Stichtag angegeben wird,
+werden alle, auch die ehemaligen Mitglieder ausgegeben. Auﬂerdem werden Mitglieder
+auch mehrfach ausgegeben, wenn eine Umwandlung der Familie vorlag. Das Alter bezieht
+sich auf das aktuelle Datum.'''
+
+#attr bodyTagAttributes = {'text':'black',"onload":"document.form.reportingdate.focus()"}
+
+##################################################################################
+
+#attr role = 'viewer'

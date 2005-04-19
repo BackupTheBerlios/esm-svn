@@ -1,0 +1,39 @@
+#extends ViewTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Vendor'
+#attr activeSubmenuPoint = 'VendorView'
+#attr searchPage = 'VendorSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'VendorView','condition':1,'title':'Info','link':''},
+  {'tmpl':'VendorLedger','condition':1,'title':'Konto','link':'VendorLedger?account=VE$request.field("index","")'},
+  {'tmpl':'VendorNew','condition':1,'title':'Neu','link':'VendorNew','role':'editor'},
+  {'tmpl':'VendorModify','condition':1,'title':'Ändern','link':'VendorModify?index=$request.field("index","")','role':'editor'}
+  ]
+
+#attr indexField = 'VendorNr'
+
+#attr viewStore = 'AccountsVE'
+#attr viewTitle = 'Lieferant'
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Lieferantnr', $attrs['VendorNr'])
+  $writeLine('Firma',$attrs['Firma'])
+  $writeLine('Name',$attrs['Nachname']+", "+$attrs['Titel']+" "+$attrs['Vorname'])
+  $writeLine('Adresse',$attrs['PLZ']+" "+$attrs['Ort']+", "+$attrs['Strasse'])
+  $writeLine('Telefon (privat, dienstlich, mobil)',$attrs['TelefonPrivat']+"<br>"+$attrs['TelefonDienst']+"<br>"+$attrs['Mobiltelefon'])
+  $writeLine('FAX',$attrs['FAX'])
+  $writeLine('E-Mail',$attrs['EMail'])
+  $writeLine('Bankverbindungen','')
+  $writeTable($attrs,range(1,3),
+    ['Kontonummer','BLZ','Bank','Kontoinhaber'],
+    [{'name':'KontoNr','type':'string'},
+    {'name':'BLZ','type':'string'},
+    {'name':'Bank','type':'string'},
+    {'name':'Kontoinhaber','type':'string'}])
+  $writeLine('Kommentare',$attrs['Kommentare'])
+  $writeLine('Letzte Änderung','%s von %s' % ($attrs['changedAt'].strftime('%d.%m.%Y'),$attrs['changedBy']))
+#end def

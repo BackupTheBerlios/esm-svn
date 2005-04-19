@@ -1,0 +1,230 @@
+#from mx import DateTime
+#import string
+
+#extends SiteSkeleton
+##################################################################################
+
+##
+## In menuPoints are all main point of the menu listed. The title will be shown
+## to the user where the link makes this point selectable if present. The
+## subMenuPoints are shown below the selected menu point in activeMenuPoint.
+## subMenuPoints has the same structure and meaning as menuPoints. These menu
+## points are related to the genus.
+##
+
+#attr logo = "sfw.gif"
+#attr clubName = "SFW e.V."
+
+#attr menuPoints = [
+  {'tmpl':'Member','title':'Mitglieder','link':'MemberLedgerSearch'},
+  {'tmpl':'Personal','title':'Mitarbeiter','link':'PersonalLedgerSearch'},
+  {'tmpl':'Vendor','title':'Lieferanten','link':'VendorLedgerSearch'},
+  {'tmpl':'Bank','title':'Bank','link':'BankLedgerSearch'},
+  {'tmpl':'Assets','title':'Bestand','link':'AssetsLedgerSearch'},
+  {'tmpl':'h0','title':'','link':''},
+  {'tmpl':'Receipts','title':'Einnahmen','link':'ReceiptsLedgerSearch'},
+  {'tmpl':'Expenses','title':'Ausgaben','link':'ExpensesLedgerSearch'},
+  {'tmpl':'h1','title':'','link':''},
+  {'tmpl':'ListsTemplate','title':'Listen','link':'ListsTemplate'},
+  {'tmpl':'Export','title':'Export','link':'ExportsTemplate'},
+  {'tmpl':'Tables','title':'Tabellen','link':'Tables'},
+  {'tmpl':'h2','title':'','link':''},
+  {'tmpl':'Administration','title':'Administration','link':'Administration','role':'auditor'},
+  {'tmpl':'h3','title':'','link':''},
+  {'tmpl':'Support','title':'Support','link':''},
+  {'tmpl':'About','title':'Über','link':'About'},
+  {'tmpl':'Logout','title':'Ausloggen','link':'Logout'}
+  ]
+
+#attr activeMenuPoint = ''
+#attr activeSubmenuPoint = ''
+#attr activeTemplate = ''
+
+#attr searchPage = ''
+
+#attr subMenuPoints = []
+
+##################################################################################
+
+#def writeLine2(title,line,condition='',optional='')
+  <tr>
+    <td bgcolor="yellow">
+      $title
+    </td>
+    <td bgcolor="lightblue">
+      $line
+        #if $condition
+          $optional
+        #end if
+    </td>
+  </tr>
+#end def
+
+#def writeLine(title,line,condition='',optional='')
+  <tr bgcolor="yellow">
+    <td>
+      $title
+    </td>
+  </tr>
+  #if $line
+    <tr bgcolor="aqua">
+      <td>
+        <b>
+        $line
+        #if $condition
+          $optional
+        #end if
+        </b>
+      </td>
+    </tr>
+  #end if
+#end def
+
+#def writeTable(attrs,indexs,headers,fields)
+  <tr><td> ## </td><td>
+    <table width="100%">
+      <tr bgcolor="yellow">
+        #for header in headers
+          <td>
+            $header
+          </td>
+        #end for
+      </tr>
+      #for index in indexs
+        #if $attrs[$fields[0]['name']+str($index)]
+          <tr bgcolor="lightblue">
+            #for field in fields
+              <td><b>
+                #if $field['type'] == 'date' and $attrs[$field['name']+str($index)]
+                  #set $content = DateTime.DateTimeFrom($attrs[$field['name']+str($index)])
+                  $content.strftime($dateFormat)
+                #elif $field['type'] == 'string'
+                  $attrs[$field['name']+str($index)]
+                #elif $field['type'] == 'currency' and $attrs[$field['name']+str($index)]
+                  #echo string.replace('%.2f' % float($attrs[$field['name']+str($index)]),'.',',')
+                #end if
+              </b></td>
+            #end for
+          </tr>
+        #end if
+      #end for
+    </table>
+  </td></tr>
+#end def
+
+
+#####################
+#def subMenu
+
+#end def
+#####################
+
+#####################
+#def writeMenu
+
+##
+## The menu is build up in rows of a table. Each menu point is represented in a
+## colored cell as simple text and a link. If the link informaation of a menu point
+## is empty, no link is availabe anhd the text is shown in italic font. So this
+## menu point is not available, e.g. not implemented, now. The menu
+## points in a submenu are indented and have a different color. The text of the
+## active menu point and its submenu are bold.
+##
+
+<table cellspacing="2" cellpadding="2" width="90%">
+##  <tr>
+##    <td>
+##      &nbsp;
+##    </td>
+##  </tr>
+  #for x in $menuPoints
+    #if $x.tmpl == $activeMenuPoint
+      ##
+      ## if a link has a role info, the link is only shown is the user has the role
+      ##
+      #if not ($x.has_key('role') and $x.role not in $transaction.session.value('authenticated_roles',[]))
+        ##
+        ## show active menu point
+        ##
+        <tr>
+          <td bgcolor="lightgreen">
+          #if $x.link
+            <a href="$x.link"><b>$x.title</b></a>
+          #else
+            <i><b>$x.title</b></i>
+          #end if
+          </td>
+        </tr>
+        ##
+        ## submenus are shown below the active menu point
+        ##
+        #for y in $subMenuPoints
+          ##
+          ## show submenu only if an optional condition is true
+          ##
+          #if self.lazyCondition($y.condition)
+            ##
+            ## if a link has a role info, the link is only shown is the user has the role
+            ##
+            #if not ($y.has_key('role') and (not $transaction.session.value('authenticated_user','') or $y.role not in $transaction.session.value('authenticated_roles',[])))
+              <tr>
+                <td bgcolor="yellow">
+                  #if $y.tmpl == $activeSubmenuPoint
+                    &nbsp;<img src="selected.png" border=0>
+                    <i><b>$y.title</b></i>
+                  #elif $y.title
+                    &nbsp;<img src="notSelected.png" border=0>
+                    #if $y.link
+                      <a href="#include source=$y.link #"><b>$y.title</b></a>
+                    #else
+                      <i><b>$y.title</b></i>
+                    #end if
+                  #else
+                    <i></i>
+                  #end if
+                </td>
+              </tr>
+            #end if
+          #end if
+        #end for
+      #end if
+    #else
+      ##
+      ## if a link has a role info, the link is only shown is the user has the role
+      ##
+      #if not ($x.has_key('role') and (not $transaction.session.value('authenticated_user','') or $x.role not in $transaction.session.value('authenticated_roles',[])))
+        ##
+        ## show not active menu point
+        ##
+        <tr>
+          <td bgcolor="lightgreen">
+          #if $x.link
+            <a href="$x.link">$x.title</a>
+          #else
+            <i>$x.title</i>
+          #end for
+          </td>
+        </tr>
+      #end if
+    #end if
+  #end for
+  ##
+  ## Copyright infos
+  ##
+  <tr>
+    <td align="center">
+       <a href="/forum/forum.php" target="_blank">Forum</a>
+       <a href="mailto:support@e-sportmanager.de"><img src="letter.gif" border=0></a>
+      <font color="white">
+        <br>
+        &copy; 2000 - $currentYr
+        <br>
+        <a href="http://www.e-sportmanager.de">red2pro</a>
+        <br>
+        das Redaktionsteam
+      </font>
+    </td>
+  </tr>
+</table>
+#end def
+#####################

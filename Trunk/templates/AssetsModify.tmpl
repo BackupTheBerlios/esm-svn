@@ -1,0 +1,77 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#extends EditTemplate
+
+##################################################################################
+
+#attr role = 'manager'#settings python
+
+#attr activeMenuPoint = 'Assets'
+#attr activeSubmenuPoint = 'AssetsEdit'
+#attr searchPage = 'AssetsSearch'
+
+#attr indexField = 'Nr'
+#attr indexPrefix = 'VV'
+
+#attr subMenuPoints = [
+  {'tmpl':'AssetsView','condition':1,'title':'Info','link':'AssetsView?index=$request.field("index","")'},
+  {'tmpl':'LedgerTemplate','condition':1,'title':'Konto','link':'AssetsLedger?account=VV$request.field("index","")'},
+  ]
+
+#attr editStore = 'AccountsVV'
+#attr editTitle1 = 'Bestandskonten'
+#attr editTitle2 = 'Daten ändern'
+#attr editTemplate = 'AssetsChange'
+
+#attr inputForm = [
+  {
+    'name':"Name",
+    'title':"Name",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Kommentare",
+    'name':"Kommentare",
+    'type':"textarea",
+    'size':5
+  }
+  ]
+
+#attr helpText = ""
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.Name.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Nr', $attrs['Nr'])
+#end def

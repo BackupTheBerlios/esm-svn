@@ -1,0 +1,58 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#extends ViewTemplate
+
+##################################################################################
+
+#attr activeMenuPoint = 'Assets'
+#attr activeSubmenuPoint = 'AssetsView'
+#attr searchPage = 'AssetsSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'AssetsView','condition':1,'title':'Info','link':''},
+  {'tmpl':'AssetsLedger','condition':1,'title':'Konto','link':'AssetsLedger?account=VV$request.field("index","")'},
+  {'tmpl':'AssetsNew','condition':1,'title':'Neu','link':'AssetsNew','role':'manager'},
+  {'tmpl':'AssetsModify','condition':1,'title':'Ändern','link':'AssetsModify?index=$request.field("index","")','role':'manager'}
+  ]
+
+#attr indexField = 'Nr'
+
+#attr viewStore = 'AccountsVV'
+#attr viewTitle = 'Bestandskonto'
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Nr', $attrs['Nr'])
+  $writeLine('Name',$attrs['Name'])
+  $writeLine('Kommentare',$attrs['Kommentare'])
+  $writeLine('Letzte Änderung','%s von %s' % ($attrs['changedAt'].strftime('%d.%m.%Y'),$attrs['changedBy']))
+#end def

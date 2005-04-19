@@ -1,0 +1,104 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#extends SiteCenteredTemplate
+#implements writeContent
+
+#from mx import DateTime
+
+##################################################################################
+
+#attr role = 'manager'
+
+#attr activeMenuPoint = 'Administration'
+
+#attr subMenuPoints = [
+  {'tmpl':'NewYear','condition':1,'title':'Jahresabschluﬂ','link':'NewYear'},
+  {'tmpl':'MemberFeesPreview','condition':1,'title':'Beitragsvorschau','link':'MemberFeesPreview'},
+  {'tmpl':'MemberFeesBooking','condition':1,'title':'Beitragsbuchung','link':'MemberFeesBooking'},
+  {'tmpl':'MemberLastschriften','condition':1,'title':'Lastschriften','link':'MemberLastschriften'},
+  {'tmpl':'MemberDTAUS','condition':1,'title':'Einzug','link':'MemberDTAUS'}
+  ]
+
+#attr inputForm = []
+
+#attr editTemplate = ''
+#attr editTitle = ''
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.form.username.focus()"}
+
+##################################################################################
+
+#def getInputForm()
+  $inputForm
+#end def
+
+<table border="0" width="300" cellpadding="0" cellspacing="0"><tr><td>
+  <form name ="form" method="post" action="$editTemplate">
+    <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="yellow">
+      <tr valign=top>
+        <th>
+          $editTitle
+        </th>
+      </tr>
+    </table>
+    <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
+      <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+      #for $field in eval($getInputForm())
+        #if $field.type == "hidden"
+          <input type="hidden" name="$field.name" value="$field.value">
+        #elif $field.type == 'select'
+          <tr>
+            <td align="right">$field.title</td>
+            <td>
+              <select name="$field.name" size="1">
+              #for $option in $field.options
+                <option value="$option.value">$option.title</option>
+              #end for
+            </select>
+            </td>
+          </tr>
+        #else
+          <tr>
+            <td align="right">$field.title</td>
+            <td><input type="$field.type" name="$field.name"></td>
+          </tr>
+        #end if
+      #end for
+      <tr>
+        <td>&nbsp;</td>
+        <td><input type="submit" value="OK"></td>
+      </tr>
+      <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+    </table>
+  </form>
+</td></tr></table>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>

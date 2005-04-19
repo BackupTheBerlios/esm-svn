@@ -1,0 +1,103 @@
+#import string
+
+#extends LedgerTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Vendor'
+#attr activeSubmenuPoint = 'VendorLedger'
+
+#attr subMenuPoints = [
+  {'tmpl':'VendorView',
+    'condition':1,
+    'title':'Info',
+    'link':'VendorView?index=#echo $request.field("account",$transaction.session.value("account",""))[2:]#'
+  },
+  {'tmpl':'VendorLedger',
+    'condition':1,
+    'title':'Konto',
+    'link':''
+  },
+  {'tmpl':'VendorTransferBill','title':'> Rechnung',
+    'condition':1,
+    'link':'VendorTransferBill?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'VendorTransferEin','title':'> Einzahlung',
+    'condition':1,
+    'link':'VendorTransferEin?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'VendorTransferBill','title':'> Spende',
+    'condition':1,
+    'link':'VendorTransferSpende?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'VendorTransferAus',
+    'title':'> Auszahlung',
+    'condition':1,
+    'link':'VendorTransferAus?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'VendorTransferStorno',
+    'title':'> Stornierung',
+    'condition':1,
+    'link':'VendorTransferStorno?id=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  {'tmpl':'PrintTransfers',
+    'title':'> Ausdruck',
+    'condition':1,
+    'link':'PrintVendorTransfers?accounts=#echo $request.field("account",$transaction.session.value("account",""))#',
+    'role':'editor'
+  },
+  ]
+
+#attr titles = [
+  {"title":'Datum',"width":'10%'},
+  {"title":'BKZ / Kto',"width":'10%'},
+  {"title":'Empfänger / Bemerkung',"width":'56%'},
+  {"title":'Soll',"width":'8%'},
+  {"title":'Haben',"width":'8%'},
+  {"title":'Saldo',"width":'8%'}
+  ]
+
+#attr fields1 = [
+  {"name":'Datum',"type":'date'},
+  {"name":'BKZ',"type":'string'},
+  {"name":'Who',"type":'string'},
+  {"name":'Soll',"type":'currency'},
+  {"name":'Haben',"type":'currency'},
+  {"name":'NA1',"type":''}
+  ]
+
+#attr fields2 = [
+  {"name":'NA1',"type":'editlink'},
+  {"name":'Konto',"type":'string'},
+  {"name":'Beschreibung',"type":'string'},
+  {"name":'NA3',"type":''},
+  {"name":'NA4',"type":''},
+  {"name":'Saldo',"type":'currency'}
+  ]
+
+#attr accountIndexField = 'VendorNr'
+
+#attr accountFields = [
+  {'name':'VendorNr','title':'MNr','width':'5%','type':''},
+  {'name':'Firma','title':'Firma/Name','width':'20%','type':''},
+  {'name':'Vorname','title':'Name','width':'10%','type':'name'},
+  {'name':'Nachname','title':'','width':'20%','type':'name'},
+  {'name':'TelefonPrivat','title':'Tel(p)','width':'15%','type':''},
+  {'name':'TelefonDienst','title':'(d)','width':'15%','type':''},
+  ]
+
+#attr accountStore = 'AccountsVE'
+#attr ledgerStore = 'Transfers'
+#attr ledgerTitle = 'Kontoauszug'
+
+#attr linkPattern = 'VendorLedger?account=VE'
+#attr linkFields = ['VendorNr']
+#attr searchPage = 'VendorLedgerSearch'
+#attr editLink = 'VendorTransferModify'
+#attr deleteLink = 'VendorTransferDelete'
+
+##################################################################################

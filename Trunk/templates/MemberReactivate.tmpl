@@ -1,0 +1,83 @@
+#extends EditTemplate
+##################################################################################
+
+#attr activeMenuPoint = 'Member'
+#attr activeSubmenuPoint = 'MemberReactivate'
+#attr searchPage = 'MemberSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'MemberView','condition':1,'title':'Daten','link':'MemberView?index=$request.field("index","")'},
+  {'tmpl':'LedgerTemplate','condition':1,'title':'Konto','link':'MemberLedger?account=MI$request.field("index","")'},
+  ]
+
+#attr indexField = 'MitgliedsNr'
+#attr indexPrefix = 'MI'
+
+#attr editStore = 'AccountsMI'
+#attr editTitle1 = 'aktuelle Mitgliedsdaten'
+#attr editTitle2 = 'Mitglied reaktivieren'
+#attr editTemplate = 'MemberChange'
+
+#attr inputForm = [
+  {
+    'name':"Austrittsdatum",
+    'type':"fixed",
+    'value':None
+  },
+  {
+    'name':"Austrittsgrund",
+    'type':"fixed",
+    'value':""
+  },
+  {
+    'title':"Beitragsart",
+    'name':"Beitragsart",
+    'type':"select",
+    'options':[
+      {"value":"10Ju","title":"Jugendliche"},
+      {"value":"10Er","title":"Erwachsene"},
+      {"value":"10Fa","title":"Familie mit 1 Erwachsenen"},
+      {"value":"10Fi","title":"Familie mit 2 Erwachsenen"},
+      {"value":"10pa","title":"Passives Mitglied"},
+      {"value":"10F","title":"Fördermitglied"},
+      {"value":"10Em","title":"Ehrenmitglied"},
+      {"value":"10Jg","title":"Jugendliche (Trainer)"},
+      {"value":"10Ew","title":"Erwachsene (Trainer)"},
+      {"value":"10Fm","title":"Familie mit 1 Erwachsenen (Trainer)"},
+      {"value":"10Fl","title":"Familie mit 2 Erwachsenen (Trainer)"},
+      {"value":"10ps","title":"Passives Mitglied (Trainer)"},
+      {"value":"10AT","title":"Aushilfstrainer"},
+      ]
+  },
+  {
+    'title':"neuer Beitrag ab",
+    'name':"BeitragsartAb",
+    'type':"text",
+    'size':10
+  }
+  ]
+
+#attr helpText = "Bei 'neuer Beitrag ab' ist der 1. des Monats anzugeben, ab dem der" + \
+  "neue Beitrag erhoben werden soll. Mit 'Beitragsart' wird angegeben, welcher" + \
+  "Beitrag ab diesem Datum erhoben werden soll."
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.BeitragsartFreiAb.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+  $writeLine('Mitgliedsnr', $attrs['MitgliedsNr'],$attrs['NeueMitgliedsNr']," (Neu: <a href='Member?index=%s'>%s</a>)" % ($attrs['NeueMitgliedsNr'][2:],$attrs['NeueMitgliedsNr'][2:]))
+  #if $attrs['Austrittsdatum']
+    $writeLine('Mitgliedschaft',"vom %s" % $attrs['Eintrittsdatum'].strftime('%d.%m.%Y'),$attrs['Austrittsdatum']," bis %s (%s)" % ($attrs['Austrittsdatum'].strftime('%d.%m.%Y'),$attrs['Austrittsgrund']))
+  #else
+    $writeLine('Mitgliedschaft',"vom %s" % $attrs['Eintrittsdatum'].strftime('%d.%m.%Y'))
+  #end if
+  $writeLine('Name',$attrs['Vorname']+", "+$attrs['Titel']+" "+$attrs['Nachname'])
+  $writeLine('Geburtsdatum & Geschlecht',"%s %s" % ($attrs['Geburtsdatum'].strftime('%d.%m.%Y'),$attrs['Geschlecht']))
+  $writeTable($attrs,range(1,6),
+    ['Art','ab','BFA','nächste Erhebung'],
+    [{'name':'Beitragsart','type':'string'},
+     {'name':'BeitragsartAb','type':'date'},
+     {'name':'BeitragsartFreiAb','type':'date'},
+     {'name':'BeitragsartErhebungAb','type':'date'}])
+#end def

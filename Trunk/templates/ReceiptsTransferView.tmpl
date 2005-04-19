@@ -1,0 +1,24 @@
+#extends TransferView
+##################################################################################
+
+#attr activeMenuPoint = 'Receipts'
+
+#attr subMenuPoints = [
+  {'tmpl':'ReceiptsView',
+    'condition':1,
+    'title':'Daten',
+    'link':'ReceiptsView?index=#echo $request.field("account",$transaction.session.value("account",""))[2:]#'
+  },
+  {'tmpl':'ReceiptsLedger',
+    'condition':1,
+    'title':'Konto',
+    'link':'ReceiptsLedger?account=#echo $request.field("account",$transaction.session.value("account",""))#'
+  },
+ ]
+
+#attr transferIDDescription = 'Nr'
+#attr accountStore = 'AccountsEK'
+#attr bookingStore = 'Prices'
+#attr ledgerTemplate = 'ReceiptsLedger'
+
+##################################################################################

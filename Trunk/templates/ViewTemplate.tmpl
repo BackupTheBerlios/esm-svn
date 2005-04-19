@@ -1,0 +1,114 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#import string
+#from esm import misc
+#from mx import DateTime
+
+#extends SiteTemplate
+
+#implements writeContent
+##################################################################################
+
+#attr activeMenuPoint = ''
+#attr activeSubmenuPoint = ''
+
+#attr indexField = ''
+
+#attr viewStore = ''
+#attr viewTitle = ''
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.search.search.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+
+#end def
+
+#silent $response.flush()
+#if $viewStore != ''
+
+  ##
+  ## read index and object
+  ##
+  #set $index = $request.field('index','')
+  #set $storeObjects = $store.fetchObjectsOfClass($viewStore,'WHERE %s = "%s"' % ($indexField,$index))
+  #set $neighbourObjects = $store.fetchObjectsOfClass($viewStore,'WHERE %s like "%s"' % ($indexField,$index[:-1]+'_'))
+  #set neighbours=[]
+  #for $entry in $neighbourObjects:
+    #silent $neighbours.append($entry.allAttrs(0)[$indexField])
+  #end for
+  ##
+  ## Überschrift
+  ##
+  <table width="100%">
+    <tr bgcolor="yellow" valign=top>
+      <th>
+        $viewTitle
+      </th>
+    </tr>
+  </table>
+
+  ##
+  ## Suchen
+  ##
+  <table width="100%" cellpadding=0>
+    <tr bgcolor="yellow" valign=top>
+      <td>
+        <form name="search" action="$searchPage" method=post>
+          &nbsp;<input name="search" type="text" size=10 maxlength=40>
+          &nbsp;<input type=image src="search.png">
+          &nbsp;&nbsp;&nbsp;
+          #for $letter in "0123456789"
+            <a href="$searchPage?search=$letter*">$letter</a>
+          #end for
+          &nbsp;&nbsp;
+          #for $letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            <a href="$searchPage?search=$letter*">$letter</a>
+          #end for
+        </form>
+      </td>
+    </tr>
+  </table>
+
+  <table width="100%">
+    #for $entries in $storeObjects:
+    ##
+    ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
+    ## Geldbeträge und Datum
+    ##
+      #set $attrs = $entries.allAttrs(0)
+      #set $attrs['_neighbours'] = $neighbours
+      $writeRecord($attrs)
+    #end for
+  </table>
+
+#end if

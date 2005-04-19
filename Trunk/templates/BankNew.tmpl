@@ -1,0 +1,169 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#extends NewTemplate
+
+##################################################################################
+
+#attr role = 'manager'
+
+#attr activeMenuPoint = 'Bank'
+#attr activeSubmenuPoint = 'BankNew'
+#attr searchPage = 'BankSearch'
+
+#attr subMenuPoints = [
+  {'tmpl':'BankNew','condition':1,'title':'Neu','link':'BankNew','role':'manager'}
+  ]
+
+#attr editStore = 'AccountsBK'
+#attr editTitle1 = 'neue Bank'
+#attr editTitle2 = 'Bankdaten'
+#attr editTemplate = 'BankCreate'
+
+#attr inputForm = [
+  {
+    'name':"BankNr",
+    'title':"Nr",
+    'type':"text",
+    'size':8
+  },
+  {
+    'name':"Bank",
+    'title':"Bank",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"KontoNr",
+    'name':"KontoNr",
+    'type':"text",
+    'size':20
+  },
+  {
+    'title':"BLZ",
+    'name':"BLZ",
+    'type':"text",
+    'size':20
+  },
+  {
+    'title':"Adresszusatz",
+    'name':"Adresszusatz",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Strasse",
+    'name':"Strasse",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Ort",
+    'name':"Ort",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Land",
+    'name':"Countrycode",
+    'type':"text",
+    'size':2
+  },
+  {
+    'title':"PLZ",
+    'name':"PLZ",
+    'type':"text",
+    'size':10
+  },
+  {
+    'title':"Telefon (Service)",
+    'name':"TelefonService",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"Ansprechpartner",
+    'name':"Ansprechpartner",
+    'type':"text",
+    'size':64
+  },
+  {
+    'title':"Telefon",
+    'name':"TelefonAnsprechpartner",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"FAX",
+    'name':"FAXAnsprechpartner",
+    'type':"text",
+    'size':32
+  },
+  {
+    'title':"E-Mail",
+    'name':"EMailAnsprechpartner",
+    'type':"text",
+    'size':64,
+    'max':128
+  },
+  {
+  'title':"PIN für Internet",
+    'name':"PINInternet",
+    'type':"text",
+    'size':10
+  },
+  {
+  'title':"PIN für Telefon",
+    'name':"PINTelefon",
+    'type':"text",
+    'size':10
+  },
+  {
+    'title':"Berechtigte",
+    'name':"Berechtigte",
+    'type':"textarea",
+    'size':5
+  },
+  {
+    'title':"Kommentare",
+    'name':"Kommentare",
+    'type':"textarea",
+    'size':5
+  }
+  ]
+
+#attr helpText = ""
+
+#attr bodyTagAttribs = {'text':'black',"onload":"document.data.BKZ.focus()"}
+
+##################################################################################
+
+#def writeRecord(attrs)
+#end def
