@@ -1,7 +1,7 @@
 @REM
 @REM File:      $URL$
-@REM Version:   $rev$
-@REM Changed:   $date$
+@REM Version:   $Rev$
+@REM Changed:   $Date$
 @REM
 @REM Homepage:  http://esm.berlios.de
 @REM Copyright: GNU Public License Version 2 (see license.txt)
