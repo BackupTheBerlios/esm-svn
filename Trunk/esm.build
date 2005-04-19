@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+
+<!--
+
+File:      $URL$
+Version:   $rev$
+Changed:   $date$
+
+Homepage:  http://esm.berlios.de
+Copyright: GNU Public License Version 2 (see license.txt)
+
+E-Sportmanager (esm)
+
+Copyright (C) 2005 Jan Gottschick
+
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+  or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+  for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the
+
+  Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+-->
+
+<!--
+  TODO
+  
+  - automatic installation of the required software/libraries
+-->
+
+<project name="esm" default="install" basedir=".">
+    <description>
+        Build and install the E-Sportmanager software
+        
+        Expects the following targets on the command line:
+        
+        'install' installs the latest code
+        'install.sql' initialize the empty database
+        'clean' removes all code files not required for the source code distribution
+        'distribute' pack the source code in a zip file
+        'release' check in the source to a version management system
+        
+        Expects the following environment variables:
+        
+        'PYTHON_HOME' path to the python software (required)
+        'WEBWARE_HOME' path to the webware software (required)
+        '_CONTEXT' name of the context used in webware (default = esm)
+        '_HOME' path, where to install the webware working directory (optional)
+        '_DBNAME' name of the database to use (default = _CONTEXT)
+        '_DBUSER' name of the database user (default = _CONTEXT)
+        '_DBPASSWORD' password of the database user (default = _CONTEXT)
+    </description>
+    
+    <property name="product" value="esm" />
+    
+    <sysinfo />
+    <ifnot test="${property::exists('sys.env.PYTHON_HOME')}">
+        <fail message="ERROR: Environment variable PYTHON_HOME not set." />
+    </ifnot>
+    <ifnot test="${property::exists('sys.env.WEBWARE_HOME')}">
+        <fail message="ERROR: Environment variable WEBWARE_HOME not set." />
+    </ifnot>
+    
+    <property name="cheetah" value="${sys.env.PYTHON_HOME}/Scripts/cheetah-compile" />
+    <property name="python" value="${sys.env.PYTHON_HOME}" />
+    <property name="webware" value="${sys.env.WEBWARE_HOME}" />
+    
+    <property name="install.context" value="${product}" />
+    <if test="${property::exists('sys.env._CONTEXT')}">
+        <property name="install.context" value="${sys.env._CONTEXT}" />
+    </if>
+    <if test="${property::exists('sys.env._HOME')}">
+        <property name="install.home" value="${sys.env._HOME}" />
+    </if>
+    <property name="install.dir" value="${install.context}-bin"/>
+    <if test="${property::exists('sys.env._HOME')}">
+        <property name="install.dir" value="${sys.env._HOME}/${install.context}" />
+    </if>
+    <property name="install.password" value="${install.context}"/>
+    <if test="${property::exists('sys.env._PASSWORD')}">
+        <property name="install.password" value="${sys.env._PASSWORD}" />
+    </if>
+    <property name="install.title" value="${install.context}"/>
+    <if test="${property::exists('sys.env._TITLE')}">
+        <property name="install.title" value="${sys.env._TITLE}" />
+    </if>
+    <property name="install.organisation" value="${install.context}"/>
+    <if test="${property::exists('sys.env._ORGANISATION')}">
+        <property name="install.organisation" value="${sys.env._ORGANISATION}" />
+    </if>
+    <property name="db.user" value="${install.context}"/>
+    <if test="${property::exists('sys.env._DBUSER')}">
+        <property name="db.user" value="${sys.env._DBUSER}" />
+    </if>
+    <property name="db.password" value="${install.context}"/>
+    <if test="${property::exists('sys.env._DBPASSWD')}">
+        <property name="db.password" value="${sys.env._DBPASSWD}" />
+    </if>
+    <property name="db.name" value="${install.context}"/>
+    <if test="${property::exists('sys.env._DBNAME')}">
+        <property name="db.password" value="${sys.env._DBNAME}" />
+    </if>
+    
+    <echo message="Install to '${install.dir}'." />
+    
+    <target name="install.workdir" description="create webware context"
+        if="${property::exists('install.home')}"
+        unless="${directory::exists(install.dir)}">
+         <exec program="${python}/python.exe" commandline="${webware}/bin/MakeAppWorkDir.py -c ${install.context} ${install.home}"/>
+         <echo message="Created working directory." level="Error" />
+         <mkdir dir="${install.dir}" />
+   </target>
+    
+    <target name="install.configure" description="configure environment settings">
+        <!-- encode password -->
+        <exec program="${python}/python.exe"
+          commandline='generate_password.py "${install.password}" password'/>
+        <foreach item="Line" in="password" property="password">
+            <property name="encoded.password" value="${password}" />
+        </foreach>
+        <delete file="password" />
+        
+        <copy todir="classes">
+            <fileset basedir="classes/skel">
+                <include name="*.py" />
+            </fileset>
+            <filterchain>
+                <replacetokens>
+                    <token key="CONTEXT" value="${install.context}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+        <copy todir=".">
+            <fileset basedir="skel">
+                <include name="*.*" />
+            </fileset>
+            <filterchain>
+                <replacetokens>
+                    <token key="CONTEXT" value="${install.context}" />
+                    <token key="TITLE" value="${install.title}" />
+                    <token key="ORGANISATION" value="${install.organisation}" />
+                    <token key="HOME" value="${install.home}" />
+                    <token key="PASSWORD" value="${encoded.password}" />
+                    <token key="DBNAME" value="${db.name}" />
+                    <token key="DBUSER" value="${db.user}" />
+                    <token key="DBPASSWORD" value="${db.password}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+    </target>
+    
+    <target name="install" description="install all files in webware directory"
+        depends="required.software,install.workdir,install.configure,install.images,install.middle,install.templates">
+        
+        <copy todir="${install.dir}">
+            <fileset>
+                <include name="*.py" />
+            </fileset>
+        </copy>
+        <copy todir="${install.dir}">
+            <fileset basedir="classes">
+                <include name="*.py" />
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="install.images" description="install images">
+        <mkdir dir="${install.dir}/images" />
+        <copy todir="${install.dir}/images">
+            <fileset basedir="images">
+                <include name="*.png" />
+                <include name="*.gif" />
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="install.middle" description="install Middlekit files">
+        <mkdir dir="${install.dir}/Middle" />
+        <copy todir="${install.dir}/Middle">
+            <fileset basedir="Middle">
+                <include name="*.py" />
+            </fileset>
+        </copy>
+        <mkdir dir="${install.dir}/Middle/GeneratedPy" />
+        <copy todir="${install.dir}/Middle/GeneratedPy">
+            <fileset basedir="Middle/GeneratedPy">
+                <include name="*.py" />
+            </fileset>
+        </copy>
+        <mkdir dir="${install.dir}/Middle/${product}.mkmodel" />
+        <copy file="Middle/${product}.mkmodel/Classes.csv" todir="${install.dir}/Middle/${product}.mkmodel" />
+    </target>
+
+    <target name="install.templates">
+        <foreach item="File" property="filename">
+            <in>
+                <items basedir="templates">
+                    <include name="*.tmpl" />
+                </items>
+            </in>
+            <do>
+                <regex pattern="^(?'basename'.*)\.(?'extension'\w+)$" input="${filename}" />
+                <exec program="python" if="${file::up-to-date(basename+'.py',basename+'.tmpl') or (file::exists(basename+'.py') == false)}">
+                    <arg value="${cheetah}" />
+                    <arg value="${filename}" />
+                </exec>
+            </do>
+        </foreach>
+        <copy todir="${install.dir}">
+            <fileset basedir="templates">
+                <include name="*.py" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="install.sql"
+        description="should be called to initialize the database">
+            <copy todir="sql">
+            <fileset basedir="sql/skel">
+                <include name="*.sql" />
+            </fileset>
+            <filterchain>
+                <replacetokens>
+                    <token key="CONTEXT" value="${install.context}" />
+                    <token key="DBPASSWD" value="${db.password}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+        <exec program="${db.importprogram}" commandline="-p ${db.password} -u root ${db.name} classes/init.sql" />
+    </target>
+    
+    <target name="required.software" description="test if required software is present">
+        <fail unless="${file::exists(python + '/python.exe')}"
+            message="ERROR: The software package 'Python' has to be installed." />
+        <fail unless="${directory::exists(python + '/Lib/site-packages/Cheetah')}"
+            message="ERROR: The software package 'Doc Utils' has to be installed." />
+        <fail unless="${directory::exists(python + '/Lib/site-packages/docutils')}"
+            message="ERROR: The software package 'CheetahTemplates' has to be installed." />
+        <fail unless="${directory::exists(python + '/Lib/site-packages/mx/Datetime')}"
+            message="ERROR: The software package 'egenix mx tools' has to be installed." />
+        <fail unless="${directory::exists(python + '/Lib/site-packages/reportlab/platypus')}"
+            message="ERROR: The software package 'reportlab pdf tools' has to be installed." />
+        <fail unless="${directory::exists(python + '/Lib/site-packages/mysqldb')}"
+            message="ERROR: The software package 'MySQL database adapters' has to be installed." />
+        <fail unless="${directory::exists(webware + '/WebKit')}"
+            message="ERROR: The software package 'Webware' has to be installed." />
+    </target>
+        
+    <target name="clean" description="clean up and remove all generated files in source directory">
+        <delete>
+            <fileset>
+                <include name="init-mysql.sql" />
+                <include name="product*.*" />
+                <include name="*.pyc" />
+                <include name="*.py_bak" />
+            </fileset>
+        </delete>
+        <delete>
+            <fileset basedir="classes">
+                <include name="*.pyc" />
+                <include name="*.py_bak" />
+                <include name="GlobalState.py" />
+                <include name="SiteBase.py" />
+            </fileset>
+        </delete>
+        <delete>
+            <fileset basedir="templates">
+                <include name="*.py" />
+                <include name="*.pyc" />
+                <include name="*.py_bak" />
+            </fileset>
+        </delete>
+    </target>
+    
+    <target name="distribute" description="pack the source file in a zip file"
+      depends="clean">
+        <delete>
+            <fileset>
+                <include name="setenv.bat" />
+            </fileset>
+        </delete>
+        <zip zipfile="../${product}-src.zip" comment="E-Sportmanager (c) 2000-2005" verbose="true">
+            <fileset basedir=".">
+            </fileset>
+        </zip>
+        <echo message="distribution file created." level="Error" />
+    </target>
+
+    <target name="release" description="check in the source to a version management system">
+        <fail message="!!! To Be Done !!!" />
+        <echo message="software released." level="Error" />
+    </target>
+    
+</project>
