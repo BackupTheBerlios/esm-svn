@@ -14,6 +14,7 @@
 
 #attr inputForm = ''
 #attr inheritAttributes = []
+#attr inheritAttributesFrom0 = []
 
 #attr helpText = ''
 
@@ -33,6 +34,9 @@
       <tr>
         <td align="right"><b>$field.title:</b></td>
         <td>
+        #if $field.has_key('default')
+          #set $attrs[$field.name] = $field.default
+        #end if
         #if $field.type == 'text'
           #if $attrs.has_key($field.name)
             <input type="TEXT" name="$field.name" size="$field.size" value="$attrs[$field.name]">
@@ -128,6 +132,11 @@
     #for $x in $inheritAttributes
       #set $attrs[$x] = $iAttrs[$x]
     #end for
+    #set $storeObjects = $store.fetchObjectsOfClass($editStore,'WHERE %s = "%s0"' % ($indexField,$index[:-1]))
+    #set $iAttrs = $storeObjects[0].allAttrs(0)
+    #for $x in $inheritAttributesFrom0
+      #set $attrs[$x] = $iAttrs[$x]
+    #end for
     #if $newIndex
       ##
       # calculate new index for converted family member so single member
@@ -166,42 +175,6 @@
   ##
   ## clear
   ##
-  ## Überschrift
-  ##
-    <table width="100%">
-      <tr bgcolor="yellow" valign=top>
-        <th>
-          $editTitle1
-        </th>
-      </tr>
-    </table>
-
-  ##
-  ## Suchen
-  ##
-  </TD></TR>
-  <TR><TD>
-    <table width="100%" cellpadding=0>
-      <tr bgcolor="yellow" valign=top>
-        <td>
-          <form name="search" action="$searchPage" method=post>
-            &nbsp;<input name="search" type="text" size=10 maxlength=40>
-            &nbsp;<input type=image src="search.png">
-            &nbsp;&nbsp;&nbsp;
-            #for $letter in "0123456789"
-              <a href="$searchPage?search=$letter*">$letter</a>
-            #end for
-            &nbsp;&nbsp;
-            #for $letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-              <a href="$searchPage?search=$letter*">$letter</a>
-            #end for
-          </form>
-        </td>
-      </tr>
-    </table>
-
-  </TD></TR>
-  <TR><TD>
     <table width="100%">
       ##
       ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:

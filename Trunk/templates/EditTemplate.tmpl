@@ -145,46 +145,8 @@
   ##
   #set $index = $request.field('index','')
   #set $storeObjects = $store.fetchObjectsOfClass($editStore,'WHERE %s = "%s"' % ($indexField,$index))
-
-  ##
-  ## Überschrift
-  ##
-    <table width="100%">
-      <tr bgcolor="yellow" valign=top>
-        <th>
-          $editTitle1
-        </th>
-      </tr>
-    </table>
-
-  ##
-  ## Suchen
-  ##
-  </TD></TR>
-  <TR><TD>
-    <table width="100%" cellpadding=0>
-      <tr bgcolor="yellow" valign=top>
-        <td>
-          <form name="search" action="$searchPage" method=post>
-            &nbsp;<input name="search" type="text" size=10 maxlength=40>
-            &nbsp;<input type=image src="search.png">
-            &nbsp;&nbsp;&nbsp;
-            #for $letter in "0123456789"
-              <a href="$searchPage?search=$letter*">$letter</a>
-            #end for
-            &nbsp;&nbsp;
-            #for $letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-              <a href="$searchPage?search=$letter*">$letter</a>
-            #end for
-          </form>
-        </td>
-      </tr>
-    </table>
-  </TD></TR>
-
   #set $attrs = $storeObjects[0].allAttrs(0)
 
-  <TR><TD>
     <table width="600" cellpadding="0" cellspacing="0">
       <tr><td>
         <form name ="data" method="post" action="$editTemplate">

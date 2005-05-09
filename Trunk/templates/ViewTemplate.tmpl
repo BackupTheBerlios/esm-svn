@@ -29,7 +29,7 @@
 #attr __revision__ = "$Rev$"[6:-2]
 
 #import string
-#from esm import misc
+#import misc
 #from mx import DateTime
 
 #extends SiteTemplate
@@ -64,40 +64,8 @@
   #set $neighbourObjects = $store.fetchObjectsOfClass($viewStore,'WHERE %s like "%s"' % ($indexField,$index[:-1]+'_'))
   #set neighbours=[]
   #for $entry in $neighbourObjects:
-    #silent $neighbours.append($entry.allAttrs(0)[$indexField])
+    #silent $neighbours.append(($entry.allAttrs(0)[$indexField],$entry.allAttrs(0)['Nachname']+", "+$entry.allAttrs(0)['Vorname']))
   #end for
-  ##
-  ## Überschrift
-  ##
-  <table width="100%">
-    <tr bgcolor="yellow" valign=top>
-      <th>
-        $viewTitle
-      </th>
-    </tr>
-  </table>
-
-  ##
-  ## Suchen
-  ##
-  <table width="100%" cellpadding=0>
-    <tr bgcolor="yellow" valign=top>
-      <td>
-        <form name="search" action="$searchPage" method=post>
-          &nbsp;<input name="search" type="text" size=10 maxlength=40>
-          &nbsp;<input type=image src="search.png">
-          &nbsp;&nbsp;&nbsp;
-          #for $letter in "0123456789"
-            <a href="$searchPage?search=$letter*">$letter</a>
-          #end for
-          &nbsp;&nbsp;
-          #for $letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            <a href="$searchPage?search=$letter*">$letter</a>
-          #end for
-        </form>
-      </td>
-    </tr>
-  </table>
 
   <table width="100%">
     #for $entries in $storeObjects:

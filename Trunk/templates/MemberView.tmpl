@@ -7,9 +7,9 @@
 
 #attr subMenuPoints = [
   {'tmpl':'MemberView','condition':1,'title':'Info','link':''},
-  {'tmpl':'MemberLedger','condition':'self.request().field("index","")[-1:] == "0"','title':'Konto','link':'MemberLedger?account=MI$request.field("index","")'},
+  {'tmpl':'MemberLedger','condition':1,'title':'Konto','link':'MemberLedger?account=MI#echo $request.field("index","")[:-1] #0'},
   {'tmpl':'MemberNew','condition':1,'title':'Neues Mitglied','link':'MemberNew','role':'editor'},
-  {'tmpl':'MemberNewFamily','condition':'self.request().field("index","")[-1:] == "0"','title':'Neues Fam.mitgl.','link':'MemberNewFamily?MitgliedsNr=$request.field("index","")','role':'editor'},
+  {'tmpl':'MemberNewFamily','condition':1,'title':'Neues Fam.mitgl.','link':'MemberNewFamily?MitgliedsNr=#echo $request.field("index","")[:-1] #0','role':'editor'},
   {'tmpl':'MemberModify','condition':'self.request().field("index","")[-1:] == "0"','title':'Ändern','link':'MemberModify?index=$request.field("index","")','role':'editor'},
   {'tmpl':'MemberOfFamilyModify','condition':'self.request().field("index","")[-1:] != "0"','title':'Ändern','link':'MemberOfFamilyModify?index=$request.field("index","")','role':'editor'},
   {'tmpl':'MemberAustritt','condition':1,'title':'Austritt','link':'MemberAustritt?index=$request.field("index","")','role':'editor'},
@@ -32,8 +32,8 @@
 #def writeRecord(attrs)
   #set $neighbours = ''
   #for $n in $attrs['_neighbours']:
-    #if $n != attrs[$indexField]
-      #set $neighbours = $neighbours + " <a href='MemberView?index=%s'>%s</a>" % ($n,$n)
+    #if $n[0] != attrs[$indexField]
+      #set $neighbours = $neighbours + " <a href='MemberView?index=%s'>%s</a>" % ($n[0],$n[1])
     #end if
   #end for
   #if $neighbours

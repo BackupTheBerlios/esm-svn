@@ -1,8 +1,8 @@
-@REM Install esm software 
+@REM start esm software 
 @REM 
-@REM File:      $URL$ 
-@REM Version:   $Rev$ 
-@REM Changed:   $Date$ 
+@REM File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/install.bat $ 
+@REM Version:   $Rev: 6 $ 
+@REM Changed:   $Date: 2005-04-19 10:13:40 +0200 (Tue, 19 Apr 2005) $ 
 @REM 
 @REM Homepage:  http://esm.berlios.de 
 @REM Copyright: GNU Public License Version 2 (see license.txt) 
@@ -32,17 +32,11 @@ PUSHD %~dp0%
 
 SETLOCAL 
 
-IF EXIST setenv.bat (
-  @CALL setenv.bat
-  nant -nologo -e -buildfile:esm.build install
-  ECHO :
-  ECHO : Start ESM-Server by running "%_HOME%\esm.bat"
-  ECHO :
-  ECHO : Login at http://localhost:8080
-  ECHO :
+IF EXIST appserver.bat (
+  @CALL appserver.bat http
 ) ELSE (
   ECHO :
-  ECHO : !!!! Please run "setup.bat" first !!!!
+  ECHO : !!!! ERROR: Didn't found appserver.bat !!!!
   ECHO :
 )
 

@@ -29,7 +29,7 @@
 #attr __revision__ = "$Rev$"[6:-2]
 
 #import string
-#from esm import misc
+#import misc
 
 #extends SiteTemplate
 
@@ -124,35 +124,6 @@
           <a href="$name?index=$nextIndex&account=$account"><img src="right.png" border=0></a>
         #end if
       </th>
-    </tr>
-  </table>
-
-  ##
-  ## Suchen
-  ##
-  <table width="100%" cellpadding=0>
-    <tr bgcolor="yellow" valign=middle>
-      <td>
-        <form action="SetYear" method=post>
-          <input type="hidden" name="page" value="$name">
-          &nbsp;<b>Jahr</b>&nbsp;<input name="year" value="$accountYear" type="text" size=4 maxlength=40>
-          &nbsp;<input type=image src="search.png">
-        </form>
-      </td>
-      <td>
-        <form name="search" action="$searchPage" method=post>
-          &nbsp;<input name="search" type="text" size=10 maxlength=40>
-          &nbsp;<input type=image src="search.png">
-          &nbsp;&nbsp;&nbsp;
-          #for $letter in "0123456789"
-            <a href="$searchPage?search=$letter*">$letter</a>
-          #end for
-          &nbsp;&nbsp;
-          #for $letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            <a href="$searchPage?search=$letter*">$letter</a>
-          #end for
-        </form>
-      </td>
     </tr>
   </table>
 

@@ -1,5 +1,35 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
 #import string
-#from esm import misc
+#import misc
 
 #extends SiteTemplate
 
@@ -59,37 +89,15 @@
     <tr bgcolor="yellow" valign=top>
       <th>
         #if $index != $prevIndex
-          <a href="$name?index=$prevIndex&search=$search"><img src="left.png" border=0></a>
+          <a href="$name?index=$prevIndex&search=$search"><img src="images/left.png" border=0></a>
         #end if
         &nbsp;
         $tableTitle
         &nbsp;
         #if len($storeObjects) == $rows
-          <a href="$name?index=$nextIndex&search=$search"><img src="right.png" border=0></a>
+          <a href="$name?index=$nextIndex&search=$search"><img src="images/right.png" border=0></a>
         #end if
       </th>
-    </tr>
-  </table>
-
-  ##
-  ## Suchen
-  ##
-  <table width="100%" cellpadding=0>
-    <tr bgcolor="yellow" valign=top>
-      <td>
-        <form name="search" action="$searchPage" method=post>
-          &nbsp;<input name="search" type="text" size=10 maxlength=40>
-          &nbsp;<input type=image src="search.png">
-          &nbsp;&nbsp;&nbsp;
-          #for $letter in "0123456789"
-            <a href="$searchPage?search=$letter*">$letter</a>
-          #end for
-          &nbsp;&nbsp;
-          #for $letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            <a href="$searchPage?search=$letter*">$letter</a>
-          #end for
-        </form>
-      </td>
     </tr>
   </table>
 

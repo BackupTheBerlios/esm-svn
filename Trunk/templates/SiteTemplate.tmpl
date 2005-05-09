@@ -1,3 +1,33 @@
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
 #from mx import DateTime
 #import string
 
@@ -132,11 +162,18 @@
 ##
 
 <table cellspacing="2" cellpadding="2" width="90%">
-##  <tr>
-##    <td>
-##      &nbsp;
-##    </td>
-##  </tr>
+  ##
+  ## Suchen
+  ##
+  <tr>
+    <td>
+        <form name="search" action="$searchPage" method=post>
+            <input name="search" type="text" size=10 maxlength=40>
+            &nbsp;
+            <input type=image src="images/search.png" vcenter=middle>
+        </form>
+    </td>
+  </tr>
   #for x in $menuPoints
     #if $x.tmpl == $activeMenuPoint
       ##
@@ -170,10 +207,10 @@
               <tr>
                 <td bgcolor="yellow">
                   #if $y.tmpl == $activeSubmenuPoint
-                    &nbsp;<img src="selected.png" border=0>
+                    &nbsp;<img src="images/selected.png" border=0>
                     <i><b>$y.title</b></i>
                   #elif $y.title
-                    &nbsp;<img src="notSelected.png" border=0>
+                    &nbsp;<img src="images/notSelected.png" border=0>
                     #if $y.link
                       <a href="#include source=$y.link #"><b>$y.title</b></a>
                     #else
@@ -214,14 +251,14 @@
   <tr>
     <td align="center">
        <a href="/forum/forum.php" target="_blank">Forum</a>
-       <a href="mailto:support@e-sportmanager.de"><img src="letter.gif" border=0></a>
+       <a href="mailto:support@e-sportmanager.de"><img src="images/letter.gif" border=0></a>
       <font color="white">
         <br>
         &copy; 2000 - $currentYr
         <br>
-        <a href="http://www.e-sportmanager.de">red2pro</a>
+        <a href="http://esm.berlios.de">E-Sportmanager</a>
         <br>
-        das Redaktionsteam
+        Version $getVersion()
       </font>
     </td>
   </tr>

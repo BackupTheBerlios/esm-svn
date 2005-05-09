@@ -70,6 +70,7 @@ Copyright (C) 2005 Jan Gottschick
     </ifnot>
     
     <property name="cheetah" value="${sys.env.PYTHON_HOME}/Scripts/cheetah-compile" />
+    <property name="cheetah.lib" value="${sys.env.PYTHON_HOME}/Lib/site-packages/Cheetah" />
     <property name="python" value="${sys.env.PYTHON_HOME}" />
     <property name="webware" value="${sys.env.WEBWARE_HOME}" />
     
@@ -101,12 +102,12 @@ Copyright (C) 2005 Jan Gottschick
         <property name="db.user" value="${sys.env._DBUSER}" />
     </if>
     <property name="db.password" value="${install.context}"/>
-    <if test="${property::exists('sys.env._DBPASSWD')}">
-        <property name="db.password" value="${sys.env._DBPASSWD}" />
+    <if test="${property::exists('sys.env._DBPASSWORD')}">
+        <property name="db.password" value="${sys.env._DBPASSWORD}" />
     </if>
     <property name="db.name" value="${install.context}"/>
     <if test="${property::exists('sys.env._DBNAME')}">
-        <property name="db.password" value="${sys.env._DBNAME}" />
+        <property name="db.name" value="${sys.env._DBNAME}" />
     </if>
     
     <echo message="Install to '${install.dir}'." />
@@ -135,6 +136,7 @@ Copyright (C) 2005 Jan Gottschick
             <filterchain>
                 <replacetokens>
                     <token key="CONTEXT" value="${install.context}" />
+                    <token key="PRODUCT" value="${product}" />
                 </replacetokens>
             </filterchain>
         </copy>
@@ -162,12 +164,30 @@ Copyright (C) 2005 Jan Gottschick
         
         <copy todir="${install.dir}">
             <fileset>
-                <include name="*.py" />
+                <include name="generate_password.py" />
+                <include name="product.config" />
+                <include name="version.txt" />
             </fileset>
         </copy>
         <copy todir="${install.dir}">
             <fileset basedir="classes">
                 <include name="*.py" />
+            </fileset>
+        </copy>
+        <copy todir="${install.home}">
+            <fileset basedir=".">
+                <include name="AppServer.bat" />
+                <include name="esm.bat" />
+            </fileset>
+        </copy>
+        <copy todir="${install.home}/Configs">
+            <fileset basedir=".">
+                <include name="Application.config" />
+            </fileset>
+        </copy>
+        <copy todir="${cheetah.lib}">
+            <fileset basedir=".">
+                <include name="Template.py" />
             </fileset>
         </copy>
     </target>
@@ -230,7 +250,7 @@ Copyright (C) 2005 Jan Gottschick
             <filterchain>
                 <replacetokens>
                     <token key="CONTEXT" value="${install.context}" />
-                    <token key="DBPASSWD" value="${db.password}" />
+                    <token key="DBPASSWORD" value="${db.password}" />
                 </replacetokens>
             </filterchain>
         </copy>

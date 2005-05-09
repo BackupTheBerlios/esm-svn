@@ -47,7 +47,7 @@ class Store:
   def __init__(self):
     # Do something
     self.store = MySQLObjectStore(user=dbUser, passwd=dbPassword)
-    self.store.readModelFileNamed('@CONTEXT@/Middle/@CONTEXT@')
+    self.store.readModelFileNamed('@CONTEXT@/Middle/@PRODUCT@')
 
   def __call__(self):
     return self

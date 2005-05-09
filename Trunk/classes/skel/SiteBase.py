@@ -47,6 +47,13 @@ users = config['users']
 site = config['site']
 organisation = config['organisation']
 
+#
+# read version file
+#
+f = open('@CONTEXT@/version.txt','r')
+version = f.readline()
+f.close()
+
 class SiteBase(_SkeletonPage):
 
   role = 'viewer'
@@ -92,6 +99,9 @@ class SiteBase(_SkeletonPage):
 
   def getSite(self):
     return site
+
+  def getVersion(self):
+    return version
 
   def checkRole(self,requiredRole):
     #
