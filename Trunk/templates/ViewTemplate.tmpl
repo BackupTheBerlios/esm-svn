@@ -64,7 +64,11 @@
   #set $neighbourObjects = $store.fetchObjectsOfClass($viewStore,'WHERE %s like "%s"' % ($indexField,$index[:-1]+'_'))
   #set neighbours=[]
   #for $entry in $neighbourObjects:
-    #silent $neighbours.append(($entry.allAttrs(0)[$indexField],$entry.allAttrs(0)['Nachname']+", "+$entry.allAttrs(0)['Vorname']))
+    #if $entry.allAttrs(0).has_key("Nachname") and $entry.allAttrs(0).has_key("Vorname")
+      #silent $neighbours.append(($entry.allAttrs(0)[$indexField],$entry.allAttrs(0)['Nachname'] + ", " + $entry.allAttrs(0)['Vorname']))
+    #else
+      #silent $neighbours.append(($entry.allAttrs(0)[$indexField],$entry.allAttrs(0)[$indexField]))
+    #end if
   #end for
 
   <table width="100%">

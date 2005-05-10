@@ -145,10 +145,10 @@ class MemberChange(SiteTemplate):
       #
       # calculating and setting the dates for "BeitragsartFreiAb"
       #
-      beitragsart = self.transaction.request().field('Beitragsart','')
-      beitragsartAb = self.transaction.request().field('BeitragsartAb','')
-      beitragsartFreiAb = self.transaction.request().field('BeitragsartFreiAb','')
-      austrittsdatum = self.transaction.request().field('Austrittsdatum','')
+      beitragsart = string.strip(self.transaction.request().field('Beitragsart',''))
+      beitragsartAb = string.strip(self.transaction.request().field('BeitragsartAb',''))
+      beitragsartFreiAb = string.strip(self.transaction.request().field('BeitragsartFreiAb',''))
+      austrittsdatum = string.strip(self.transaction.request().field('Austrittsdatum',''))
       #
       # if beitragsartFreiAb or beitragsartAb are not set, they are equal
       #
