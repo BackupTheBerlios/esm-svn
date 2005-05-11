@@ -160,18 +160,13 @@ Copyright (C) 2005 Jan Gottschick
     </target>
     
     <target name="install" description="install all files in webware directory"
-        depends="required.software,install.workdir,install.configure,install.images,install.middle,install.templates">
+        depends="required.software,install.workdir,install.configure,install.images,install.middle,install.templates,install.classes">
         
         <copy todir="${install.dir}">
             <fileset>
                 <include name="generate_password.py" />
                 <include name="product.config" />
                 <include name="version.txt" />
-            </fileset>
-        </copy>
-        <copy todir="${install.dir}">
-            <fileset basedir="classes">
-                <include name="*.py" />
             </fileset>
         </copy>
         <copy todir="${install.home}">
@@ -217,6 +212,14 @@ Copyright (C) 2005 Jan Gottschick
         </copy>
         <mkdir dir="${install.dir}/Middle/${product}.mkmodel" />
         <copy file="Middle/${product}.mkmodel/Classes.csv" todir="${install.dir}/Middle/${product}.mkmodel" />
+    </target>
+
+    <target name="install.classes">
+        <copy todir="${install.dir}">
+            <fileset basedir="classes">
+                <include name="*.py" />
+            </fileset>
+        </copy>
     </target>
 
     <target name="install.templates">

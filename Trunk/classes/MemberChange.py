@@ -113,99 +113,112 @@ class MemberChange(SiteTemplate):
     # this servlet changes Member data
     #
 
+    #
+    # retrieving the parameters
+    #
     account = self.transaction.request().field('account','')
     page = self.transaction.request().field('page','Main')
+    beitragsart = string.strip(self.transaction.request().field('Beitragsart',''))
+    beitragsartAb = string.strip(self.transaction.request().field('BeitragsartAb',''))
+    beitragsartFreiAb = string.strip(self.transaction.request().field('BeitragsartFreiAb',''))
+    austrittsdatum = string.strip(self.transaction.request().field('Austrittsdatum',''))
+    
+    #
+    # calculating and setting the dates for "BeitragsartFreiAb"
+    #
+    #
+    # if beitragsartFreiAb or beitragsartAb are not set, they are equal
+    #
+    if (beitragsartFreiAb == '') and (beitragsartAb != ''):
+        beitragsFreiAb = beitragsartAb
+    if (beitragsartFreiAb != '') and (beitragsartAb == ''):
+        beitragsartAb = beitragsartFreiAb
+    if (austrittsdatum != '') and (beitragsartFreiAb == ''):
+        y =  DateTime.DateTimeFrom(austrittsdatum)+DateTime.DateTimeDelta(1)
+        beitragsartFreiAb = y.date
+        
     #
     # retrieve member object
     #
     globalSetVars = self._globalSetVars
     store = globalSetVars['store']
-    storeObjects = store.fetchObjectsOfClass(self.storeName,'WHERE %s = "%s"' % (self.indexField,account))
-    if len(storeObjects) == 1:
-      member = storeObjects[0]
-      #
-      # change member object
-      #
-      for attr in memberAttrs:
-        if (attr not in standardAttrs) and self.transaction.request().field(attr,None) != None:
-          if memberFields[attr][memberType] == 'string':
-            member.setValueForKey(attr, self.transaction.request().field(attr,''))
-          elif memberFields[attr][memberType] == 'float':
-            member.setValueForKey(attr, float(string.replace(self.transaction.request().field(attr,''),',','.')))
-          elif memberFields[attr][memberType] == 'datetime':
-            if self.transaction.request().field(attr,''):
-              member.setValueForKey(attr, DateTime.DateTimeFrom(self.transaction.request().field(attr,'')))
-            else:
-              member.setValueForKey(attr, None)
-          elif memberFields[attr][memberType] == 'date':
-            if self.transaction.request().field(attr,''):
-              member.setValueForKey(attr, DateTime.DateTimeFrom(self.transaction.request().field(attr,'')))
-            else:
-              member.setValueForKey(attr, None)
-      #
-      # calculating and setting the dates for "BeitragsartFreiAb"
-      #
-      beitragsart = string.strip(self.transaction.request().field('Beitragsart',''))
-      beitragsartAb = string.strip(self.transaction.request().field('BeitragsartAb',''))
-      beitragsartFreiAb = string.strip(self.transaction.request().field('BeitragsartFreiAb',''))
-      austrittsdatum = string.strip(self.transaction.request().field('Austrittsdatum',''))
-      #
-      # if beitragsartFreiAb or beitragsartAb are not set, they are equal
-      #
-      if (beitragsartFreiAb == '') and (beitragsartAb != ''):
-        beitragsFreiAb = beitragsartAb
-      if (beitragsartFreiAb != '') and (beitragsartAb == ''):
-        beitragsartAb = beitragsartFreiAb
-      if (austrittsdatum != '') and (beitragsartFreiAb == ''):
-        y =  DateTime.DateTimeFrom(austrittsdatum)+DateTime.DateTimeDelta(1)
-        beitragsartFreiAb = y.date
-      beitragsartNb = 0
-      if beitragsartFreiAb != '':
-        for x in range(1,Anzahl_Beitragsarten+1):
-          if (member.valueForKey('Beitragsart'+str(x)) != '') and (member.valueForKey('BeitragsartFreiAb'+str(x)) == None):
-            member.setValueForKey('BeitragsartFreiAb'+str(x), DateTime.DateTimeFrom(beitragsartFreiAb))
+    storeObjects = store.fetchObjectsOfClass(self.storeName,'WHERE %s LIKE "%s_"' % (self.indexField,account[:-1]))
+    print storeObjects
+    for member in storeObjects:
+        print "Change %s" % member.ID()
+        print member
+        if austrittsdatum and not member.Austrittsdatum():
+            member.setAustrittsdatum(DateTime.DateTimeFrom(austrittsdatum))
+            member.setAustrittsgrund(string.strip(self.transaction.request().field('Austrittsgrund','')))
+        if member.valueForKey(self.indexField) == account:
+          print "do it %s" % member.ID()
+          #
+          # change member object
+          #
+          for attr in memberAttrs:
+            if (attr not in standardAttrs) and self.transaction.request().field(attr,None) != None:
+              if memberFields[attr][memberType] == 'string':
+                member.setValueForKey(attr, self.transaction.request().field(attr,''))
+              elif memberFields[attr][memberType] == 'float':
+                member.setValueForKey(attr, float(string.replace(self.transaction.request().field(attr,''),',','.')))
+              elif memberFields[attr][memberType] == 'datetime':
+                if self.transaction.request().field(attr,''):
+                  member.setValueForKey(attr, DateTime.DateTimeFrom(self.transaction.request().field(attr,'')))
+                else:
+                  member.setValueForKey(attr, None)
+              elif memberFields[attr][memberType] == 'date':
+                if self.transaction.request().field(attr,''):
+                  member.setValueForKey(attr, DateTime.DateTimeFrom(self.transaction.request().field(attr,'')))
+                else:
+                  member.setValueForKey(attr, None)
+        if account[-1:] == "0":
+            beitragsartNb = 0
+            if beitragsartFreiAb != '':
+                for x in range(1,Anzahl_Beitragsarten+1):
+                  if (member.valueForKey('Beitragsart'+str(x)) != '') and (member.valueForKey('BeitragsartFreiAb'+str(x)) == None):
+                    member.setValueForKey('BeitragsartFreiAb'+str(x), DateTime.DateTimeFrom(beitragsartFreiAb))
+                    #
+                    # fees with equal beitragsartAb and beitragsartFreiAb could be overwritten
+                    #
+                    if member.valueForKey('BeitragsartAb'+str(x)) == DateTime.DateTimeFrom(beitragsartFreiAb):
+                      beitragsartNb = x - 1
+                    else:
+                      beitragsartNb = x
+            elif beitragsartAb != '':
+                for x in range(1,Anzahl_Beitragsarten+1):
+                  if (member.valueForKey('Beitragsart'+str(x)) == '') and (beitragsartNb == 0):
+                    beitragsartNb = x - 1
             #
-            # fees with equal beitragsartAb and beitragsartFreiAb could be overwritten
+            # set new fee in the next slot (2-5 and 1) respective slot 1, if no fee already exists
             #
-            if member.valueForKey('BeitragsartAb'+str(x)) == DateTime.DateTimeFrom(beitragsartFreiAb):
-              beitragsartNb = x - 1
-            else:
-              beitragsartNb = x
-      elif beitragsartAb != '':
-        for x in range(1,Anzahl_Beitragsarten+1):
-          if (member.valueForKey('Beitragsart'+str(x)) == '') and (beitragsartNb == 0):
-            beitragsartNb = x - 1
-      #
-      # set new fee in the next slot (2-5 and 1) respective slot 1, if no fee already exists
-      #
-      if beitragsart != '':
-        member.setValueForKey('Beitragsart'+str(beitragsartNb % 5 + 1), beitragsart)
-        member.setValueForKey('BeitragsartAb'+str(beitragsartNb % 5 + 1), DateTime.DateTimeFrom(beitragsartAb))
-        member.setValueForKey('BeitragsartFreiAb'+str(beitragsartNb % 5 + 1), None)
-        member.setValueForKey('BeitragsartErhebungAb'+str(beitragsartNb % 5 + 1), DateTime.DateTimeFrom(beitragsartAb))
-        member.setValueForKey('Beitragsart'+str((beitragsartNb + 1) % 5 + 1), "")
-        member.setValueForKey('BeitragsartAb'+str((beitragsartNb + 1) % 5 + 1), None)
-        member.setValueForKey('BeitragsartFreiAb'+str((beitragsartNb + 1) % 5 + 1), None)
-        member.setValueForKey('BeitragsartErhebungAb'+str((beitragsartNb + 1) % 5 + 1), None)
-      #
-      # set standard attributes
-      #
-      member.setChangedBy(self.transaction.session().value('authenticated_user',''))
-      member.setChangedAt(DateTime.now())
-      member.setChangedOn(self.getSite())
-      #
-      # store member in database
-      #
-      try:
+            if beitragsart != '':
+                member.setValueForKey('Beitragsart'+str(beitragsartNb % 5 + 1), beitragsart)
+                member.setValueForKey('BeitragsartAb'+str(beitragsartNb % 5 + 1), DateTime.DateTimeFrom(beitragsartAb))
+                member.setValueForKey('BeitragsartFreiAb'+str(beitragsartNb % 5 + 1), None)
+                member.setValueForKey('BeitragsartErhebungAb'+str(beitragsartNb % 5 + 1), DateTime.DateTimeFrom(beitragsartAb))
+                member.setValueForKey('Beitragsart'+str((beitragsartNb + 1) % 5 + 1), "")
+                member.setValueForKey('BeitragsartAb'+str((beitragsartNb + 1) % 5 + 1), None)
+                member.setValueForKey('BeitragsartFreiAb'+str((beitragsartNb + 1) % 5 + 1), None)
+                member.setValueForKey('BeitragsartErhebungAb'+str((beitragsartNb + 1) % 5 + 1), None)
+        #
+        # set standard attributes
+        #
+        member.setChangedBy(self.transaction.session().value('authenticated_user',''))
+        member.setChangedAt(DateTime.now())
+        member.setChangedOn(self.getSite())
+        #
+        # store member in database
+        #
+    try:
         store.saveChanges()
-      except OperationalError,x:
+    except OperationalError,x:
         store.discardEverything()
         errorCode,errorText = x
         #
         # back to error page
         #
         self.transaction.response().sendRedirect('Error?problem=Daten+konnten+nicht+gespeichert+werden!&reason=' + urlEncode(str(errorText)))
-      except Warning,x:
+    except Warning,x:
         pass
     #
     # back to member page
