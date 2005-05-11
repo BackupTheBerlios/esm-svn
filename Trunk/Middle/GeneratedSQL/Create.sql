@@ -1,12 +1,11 @@
 /*
 Start of generated SQL.
 
-# Date         = Sat Nov 30 12:00:17 2002
-# Python ver   = 2.1.3 (#1, Sep  7 2002, 15:29:56) 
-[GCC 2.95.4 20011002 (Debian prerelease)]
-# Op Sys       = posix
-# Platform     = linux2
-# Cur dir      = /home/esm/esm-src/Middle
+# Date         = Wed May 11 17:17:20 2005
+# Python ver   = 2.3.3 (#51, Dec 18 2003, 20:22:39) [MSC v.1200 32 bit (Intel)]
+# Op Sys       = nt
+# Platform     = win32
+# Cur dir      = C:\jgott\Privat\SFW\esm-src\Middle
 # Num classes  = 11
 
 Classes:
@@ -56,8 +55,8 @@ create table Prices (
 create table AccountsMI (
     accountsMIId                   int not null primary key auto_increment,
 	ID                             varchar(10) not null,
-	MitgliedsNr                    varchar(10) not null,
-	NeueMitgliedsNr                varchar(10),
+	MitgliedsNr                    varchar(8) not null,
+	NeueMitgliedsNr                varchar(8),
 	Vorname                        varchar(64) not null,
 	Nachname                       varchar(64) not null,
 	Titel                          varchar(32),
@@ -291,7 +290,7 @@ create table AccountsBK (
 create table AccountsVV (
     accountsVVId                   int not null primary key auto_increment,
 	ID                             varchar(10) not null,
-	Nr                             varchar(10) not null,
+	Nr                             varchar(8) not null,
 	Name                           varchar(64) not null,
 	Kommentare                     text,
 	ErsteingabeAm                  date not null,
@@ -305,7 +304,7 @@ create table AccountsVV (
 create table AccountsAK (
     accountsAKId                   int not null primary key auto_increment,
 	ID                             varchar(10) not null,
-	Nr                             varchar(10) not null,
+	Nr                             varchar(8) not null,
 	Name                           varchar(64) not null,
 	Kommentare                     text,
 	ErsteingabeAm                  date not null,
@@ -319,7 +318,7 @@ create table AccountsAK (
 create table AccountsEK (
     accountsEKId                   int not null primary key auto_increment,
 	ID                             varchar(10) not null,
-	Nr                             varchar(10) not null,
+	Nr                             varchar(8) not null,
 	Name                           varchar(64) not null,
 	Kommentare                     text,
 	ErsteingabeAm                  date not null,

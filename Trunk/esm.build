@@ -115,9 +115,11 @@ Copyright (C) 2005 Jan Gottschick
     <target name="install.workdir" description="create webware context"
         if="${property::exists('install.home')}"
         unless="${directory::exists(install.dir)}">
-         <exec program="${python}/python.exe" commandline="${webware}/bin/MakeAppWorkDir.py -c ${install.context} ${install.home}"/>
+         <!-- exec program="${python}/python.exe" commandline="${webware}/bin/MakeAppWorkDir.py -c ${install.context} ${install.home}"/ -->
+         <exec program="${python}/python.exe" commandline="${webware}/bin/MakeAppWorkDir.py ${install.home}"/>
          <echo message="Created working directory." level="Error" />
          <mkdir dir="${install.dir}" />
+         <exec program="Middle/Generate.bat"/>
    </target>
     
     <target name="install.configure" description="configure environment settings">

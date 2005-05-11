@@ -72,7 +72,7 @@ class FeesBooking(SiteTemplate):
         attrs = entry.allAttrs(0)
         for y in range(Anzahl_Beitragsarten):
           #
-          # Aufnahmegebühr kalkulieren
+          # Aufnahmegebuehr kalkulieren
           #
           if (attrs['Beitragsart'+str(y+1)] != '') \
               and (attrs['BeitragsartErhebungAb'+str(y+1)] == attrs['Eintrittsdatum']) \
