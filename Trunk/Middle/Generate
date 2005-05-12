@@ -1,1 +1,0 @@
-python Generate.py --db MySQL --model esm
