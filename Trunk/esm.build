@@ -115,10 +115,12 @@ Copyright (C) 2005 Jan Gottschick
     <target name="install.workdir" description="create webware context"
         if="${property::exists('install.home')}"
         unless="${directory::exists(install.dir)}">
+         <!-- exec program="${python}/python.exe" commandline="${webware}/bin/MakeAppWorkDir.py ${install.home}"/ -->
          <exec program="${python}/python.exe" commandline="${webware}/bin/MakeAppWorkDir.py -c ${install.context} ${install.home}"/>
          <echo message="Created working directory." level="Error" />
          <mkdir dir="${install.dir}" />
          <exec program="${python}/python.exe" commandline="${webware}/MiddleKit/Design/Generate.py --db MySQL --model ${product}" workingdir="Middle"/>
+         <delete file="${install.dir}/Main.py" />
    </target>
     
     <target name="install.configure" description="configure environment settings">

@@ -28,12 +28,19 @@
 __author__ = "Jan Gottschick"
 __revision__ = "$Rev$"[6:-2]
 
-from MiddleKit.Run.MySQLObjectStore import MySQLObjectStore
+from sqlobject.main import *
+from sqlobject.col import *
+from sqlobject.mysql.mysqlconnection import *
+
+import os
 
 #
 # read configuration file
 #
-f = open('@CONTEXT@/product.config','r')
+if os.path.exists('@CONTEXT@/product.config'):
+    f = open('@CONTEXT@/product.config','r')
+else:
+    f = open('../product.config','r')
 config = eval(f.read())
 f.close()
 #
@@ -42,18 +49,23 @@ f.close()
 dbUser = config['dbUser']
 dbPassword = config['dbPassword']
 
+from MiddleKit.Run.MySQLObjectStore import MySQLObjectStore
+    
 class Store:
 
   def __init__(self):
     # Do something
-    self.store = MySQLObjectStore(user=dbUser, passwd=dbPassword)
-    self.store.readModelFileNamed('@CONTEXT@/Middle/@PRODUCT@')
+    self.store = None
+    # self.store = MySQLObjectStore(user=dbUser, passwd=dbPassword)
+    # self.store.readModelFileNamed('@CONTEXT@/Middle/@PRODUCT@')
 
   def __call__(self):
     return self
 
   def store(self):
     return self.store
+
+Store = Store()
 
 class ID:
 
@@ -70,5 +82,25 @@ class ID:
     self.id = (self.id + 1) % 1000
     return self.id
 
-Store = Store()
 ID = ID()
+
+dbConnection = MySQLConnection(user=dbUser,passwd=dbPassword,db='@PRODUCT@')
+
+class Version(SQLObject):
+    
+    _connection = dbConnection
+    
+    context = StringCol()
+    versionNb = IntCol()
+
+Version.createTable(ifNotExists=True)
+v = Version.selectBy(context='version')
+if v.count() == 1:
+    versionNb = v[0].versionNb
+else:
+    versionNb = 0
+    Version(context='version',versionNb=0)
+
+versionNb = 1
+v = Version.selectBy(context='version')
+v[0].versionNb = versionNb
