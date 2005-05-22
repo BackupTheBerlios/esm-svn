@@ -38,15 +38,21 @@ from GlobalState import dbConnection,Version
 from mx import DateTime
 from sqlobject.mysql.mysqlconnection import *
 
-class BankCode(SQLObject):
+class Price(SQLObject):
     '''
         SQLObject for the bank codes database
     '''
     
     _connection = dbConnection
     
-    bankName = StringCol(length=26)
-    bankCode = StringCol(length=64)
+    transferCode = StringCol(length=10)
+    soll = CurrencyCol(default=0.0)
+    haben = CurrencyCol(default=0.0)
+    description = StringCol(length=64, default='')
+    newFrom = DateTimeCol()
+    newHaben = CurrencyCol(default=0.0)
+    newSoll = CurrencyCol(default=0.0)
+    account = StringCol(length=10)
     
     changedAt = DateTimeCol(default= DateTime.now())
     changedAtSite = StringCol(length=2, varchar=False, default = '  ')
@@ -57,9 +63,9 @@ class BankCode(SQLObject):
         pattern = string.replace(string.lower(pattern),'?','_')
         if pattern:
             if pattern[0] in '0123456789':
-                return self.select("bank_code LIKE '%s'" % pattern)
+                return self.select("transfer_code LIKE '%s'" % pattern)
             else:
-                return self.select("bank_name LIKE '%s'" % pattern)
+                return self.select("description LIKE '%s'" % pattern)
         else:
             return self.select()
             
@@ -67,21 +73,27 @@ class BankCode(SQLObject):
         
     def allAttrs(self):
         attrs = {}
-        attrs['bankName'] = self.bankName
-        attrs['bankCode'] = self.bankCode
+        attrs['transferCode'] = self.transferCode
+        attrs['soll'] = self.soll
+        attrs['haben'] = self.haben
+        attrs['description'] = self.description
+        attrs['newFrom'] = self.newFrom
+        attrs['newHaben'] = self.newHaben
+        attrs['newSoll'] = self.newSoll
+        attrs['account'] = self.account
         attrs['changedAt'] = self.changedAt
         attrs['changedAtSite'] = self.changedAtSite
         attrs['changedBy'] = self.changedBy
         return attrs    
 
-class blz(SQLObject):
+class prices(SQLObject):
     '''
         SQLObject for the MiddleKit database format
     '''
 
     _connection = dbConnection
     _fromDatabase = True
-    _idName = 'bLZId'
+    _idName = 'pricesId'
     _style = MixedCaseStyle(longID=True)
 
 #
@@ -89,27 +101,34 @@ class blz(SQLObject):
 #
 
 # which is the actual version
-v = Version.selectBy(context='bankcode')
+v = Version.selectBy(context='price')
 if v.count() == 1:
     versionNb = v[0].versionNb
 else:
     versionNb = 0
-    Version(context='bankcode',versionNb=0)
+    Version(context='price',versionNb=0)
 
 # transform database to SQLObject format
 if versionNb <= 0:
-    BankCode.createTable(ifNotExists=True)
+    Price.createTable(ifNotExists=True)
     if isinstance(dbConnection,MySQLConnection):
-        dbConnection.query('ALTER TABLE %s.`bank_code` TYPE = MYISAM;' % dbConnection.db)
-    for x in blz.select():
-        BankCode(
-            bankName=x.bank,
-            bankCode=x.bLZ,
+        dbConnection.query('ALTER TABLE %s.`price` TYPE = MYISAM;' % dbConnection.db)
+    for x in prices.select():
+        Price(
+            transferCode=x.bKZ,
+            soll=x.soll,
+            haben=x.haben,
+            description=x.beschreibung,
+            newFrom=x.ab,
+            newHaben=x.abHaben,
+            newSoll=x.abSoll,
+            account=x.konto,
+
             changedAt=x.changedAt,
             changedAtSite=x.changedOn,
             changedBy=x.changedBy)
 
 # store actual version number
 versionNb = 1
-v = Version.selectBy(context='bankcode')
+v = Version.selectBy(context='price')
 v[0].versionNb = versionNb

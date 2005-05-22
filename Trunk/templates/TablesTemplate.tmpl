@@ -48,7 +48,7 @@
 #attr numericSearchFields = []
 #attr searchPage = ''
 
-#attr tableStore = ''
+#attr tableStore = None
 #attr tableTitel = ''
 
 ##################################################################################
@@ -66,12 +66,11 @@
   ##
   ## search and clause for database select
   ##
-  #set $search = str($request.field('search',''))
-  #set $clause = misc.buildAccountClause($search,$alphaSearchFields,$numericSearchFields)
   ##
   ## read objects from database
   ##
-  #set $storeObjects = $store.fetchObjectsOfClass($tableStore,'%s LIMIT %i,%i' % ($clause,$index,$rows))
+  #set $storeObjects = $search(str($request.field('search','')))
+  ## $index,$rows
 
   ##
   ## title of the table
@@ -85,32 +84,10 @@
         &nbsp;
         $tableTitle
         &nbsp;
-        #if len($storeObjects) == $rows
+        #if $storeObjects.count() == $rows
           <a href="$name?index=$nextIndex&search=$search"><img src="right.png" border=0></a>
         #end if
       </th>
-    </tr>
-  </table>
-
-  ##
-  ## Suchen
-  ##
-  <table width="100%" cellpadding=0>
-    <tr bgcolor="yellow" valign=top>
-      <td>
-        <form action="$searchPage" method=post>
-          &nbsp;<input name="search" type="text" size=10 maxlength=40>
-          &nbsp;<input type=image src="search.png">
-          &nbsp;&nbsp;&nbsp;
-          #for $letter in "0123456789"
-            <a href="$searchPage?search=$letter*">$letter</a>
-          #end for
-          &nbsp;&nbsp;
-          #for $letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            <a href="$searchPage?search=$letter*">$letter</a>
-          #end for
-        </form>
-      </td>
     </tr>
   </table>
 
@@ -124,7 +101,6 @@
         $fields[$field].title
       </td>
       #end for
-      <td>&nbsp;</td>
     </tr>
 
     #for $entries in $storeObjects:
@@ -133,7 +109,7 @@
       ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
       ## Geldbeträge und Datum
       ##
-      #set $attrs = $entries.allAttrs(0)
+      #set $attrs = $entries.allAttrs()
       <tr bgcolor="lightblue">
         #for $field in $fieldkeys
           #if $attrs[$field] == None
@@ -160,7 +136,6 @@
         #end if
         </td>
       #end for
-      <td>&nbsp;</td>
     </tr>
   #end for
   </table>

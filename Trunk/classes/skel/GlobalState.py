@@ -49,7 +49,10 @@ f.close()
 dbUser = config['dbUser']
 dbPassword = config['dbPassword']
 
-from MiddleKit.Run.MySQLObjectStore import MySQLObjectStore
+try:
+  from MiddleKit.Run.MySQLObjectStore import MySQLObjectStore
+except:
+    pass
     
 class Store:
 
@@ -94,6 +97,8 @@ class Version(SQLObject):
     versionNb = IntCol()
 
 Version.createTable(ifNotExists=True)
+dbConnection.query('ALTER TABLE %s.`version` TYPE = MYISAM;' % dbConnection.db)
+
 v = Version.selectBy(context='version')
 if v.count() == 1:
     versionNb = v[0].versionNb
