@@ -26,10 +26,11 @@
 #   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 __author__ = "Jan Gottschick"
-__revision__ = "$Rev$"[4,-2]
+__revision__ = "$Rev$"[6:-2]
 
 from SiteTemplate import SiteTemplate
 from mx import DateTime
+import string
 
 class SetYear(SiteTemplate):
 
@@ -37,7 +38,7 @@ class SetYear(SiteTemplate):
     SiteTemplate.__init__(self, *args, **KWs)
 
   def writeContent(self, trans=None):
-    year = int(self.transaction.request().field('year',DateTime.now().year))
+    year = int(string.strip(self.transaction.request().field('year',DateTime.now().year)))
     self.transaction.session().setValue('accountYear',year)
-    page = self.transaction.request().field('page','Main')
+    page = self.transaction.request().environ()['HTTP_REFERER']
     self.transaction.response().sendRedirect(page)

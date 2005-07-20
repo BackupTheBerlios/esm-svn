@@ -149,6 +149,7 @@ class PrintRevenues(PDFDownload):
         ('LINEBELOW',(0,0),(-1,0),0.25,colors.black),
         ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.black),
         ('ALIGN',(-1,1),(-1,-1),'RIGHT'),
+        ('VALIGN',(0,1),(0,-1),'TOP'),
         ]))
       story.append(t)
     if self.groups:

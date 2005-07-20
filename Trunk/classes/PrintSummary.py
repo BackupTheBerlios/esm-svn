@@ -189,8 +189,10 @@ class PrintSummary(PDFDownload):
           story.append(Paragraph(string.replace('Vermögen von %5.2f' % (-1.0 * total),'.',','), self.styleH3))
       else:
         if total >= 0.0:
-          story.append(Paragraph(string.replace('Gewinn von %5.2f' % total,'.',','), self.styleH3))
+          ## story.append(Paragraph(string.replace('Überschuss von %5.2f' % total,'.',','), self.styleH3))
+          story.append(Paragraph(string.replace('Ergebnis von %5.2f' % total,'.',','), self.styleH3))
         else:
-          story.append(Paragraph(string.replace('Verlust von %5.2f' % (-1.0 * total),'.',','), self.styleH3))
+          ## story.append(Paragraph(string.replace('Verlust von %5.2f' % (-1.0 * total),'.',','), self.styleH3))
+          story.append(Paragraph(string.replace('Ergebnis von %5.2f' % (total),'.',','), self.styleH3))
     return story
 

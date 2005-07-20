@@ -30,6 +30,8 @@
 
 #import string
 #import misc
+#from Transfer import Transfer
+#from Price import Price
 
 #extends SiteTemplate
 
@@ -55,10 +57,7 @@
 
 #attr rows = 12
 
-#attr accountStore = ''
-#attr ledgerStore = ''
 #attr ledgerTitle = ''
-#attr bookingStore = 'Prices'
 
 #attr bank = 0
 
@@ -69,77 +68,94 @@
 ##################################################################################
 
 #silent $response.flush()
-#if $ledgerStore != ''
 
-  ##
-  ## get actual index and startSaldo. Further
-  ## calculate the new indexes for paging in the table.
-  ##
-  #if $request.hasField('index')
+##
+## search and clause for database select
+##
+#set $account = str($request.field('account',$transaction.session.value('account',0)))
+#silent $transaction.session.setValue('account',$account)
+
+##
+## read objects from database
+##
+#set $transferObjects = Transfer.searchForAccount($accountYear,$account)
+#set $accountObjects = $search($account[2:])
+#set $priceObjects = Price.search()
+#set $count = $transferObjects.count
+
+##
+## get actual index and startsaldo. Further
+## calculate the new indexes for paging in the table.
+##
+#if $request.hasField('index')
     #set $index = int($request.field('index',0))
-    #set $startSaldo = $transaction.session.value('saldo'+str($index),0.0)
-  #else
+    #set $startsaldo = $transaction.session.value('saldo'+str($index),0.0)
+#else
     #set $index = 0
-    #set $startSaldo = 0.0
+    #set $startsaldo = 0.0
     #silent $transaction.session.setValue('saldo'+str($index),0.0)
-  #end if
-  #set $nextIndex = $index + $rows
-  #set $prevIndex = max(($index / $rows - 1) * $rows,0)
+#end if
+#set $nextIndex = $index + $rows
+#set $endIndex = $index + $rows
+#if $nextIndex >= $count
+      #set $endIndex = $count
+#end if
+#set $prevIndex = max(($index / $rows - 1) * $rows,0)
+#set $lastIndex = ($count / $rows) * $rows
+  
+##
+## extract descriptions from Price
+##
+#set $transferCodes = []
+#set $transferCodeDescription = {}
+#for $x in $priceObjects
+    #silent $transferCodes.append($x.allAttrs()['transferCode'])
+    #silent $transferCodeDescription[$x.allAttrs()['transferCode']] = $x.allAttrs()['description']
+#end for
 
-  ##
-  ## search and clause for database select
-  ##
-  #set $account = str($request.field('account',$transaction.session.value('account',0)))
-  #silent $transaction.session.setValue('account',$account)
-  ##
-  ## read objects from database
-  ##
-  #set $transferObjects = $store.fetchObjectsOfClass($ledgerStore,'WHERE (Konto1="%s" OR Konto2="%s") AND Jahr="%s" ORDER BY Datum LIMIT %i,%i' % ($account,$account,$accountYear,$index,$rows))
-  #set $accountObjects = $store.fetchObjectsOfClass($accountStore,'WHERE %s="%s"' % ($accountIndexField,$account[2:]))
-  #set $bookingObjects = $store.fetchObjectsOfClass($bookingStore)
-  #set $BKZs = []
-  #set $BKZdescription = {}
-  #for $x in $bookingObjects
-    #silent $BKZs.append($x.allAttrs(0)['BKZ'])
-    #silent $BKZdescription[$x.allAttrs(0)['BKZ']] = $x.allAttrs(0)['Beschreibung']
-  #end for
-
-  ##
-  ## Tabellen-Überschrift
-  ##
-  <table width="100%">
+##
+## Tabellen-Überschrift
+##
+<table width="100%">
     <tr bgcolor="yellow" valign=top>
       <th>
         #if $index != 0
-          <a href="$name?index=0&account=$account"><img src="toStart.png" border=0></a>
+          <a href="$name?index=0&account=$account"><img src="images/start.png" border=0></a>
         #end if
         &nbsp;
         #if $index != $prevIndex
-          <a href="$name?index=$prevIndex&account=$account"><img src="left.png" border=0></a>
+          <a href="$name?index=$prevIndex&account=$account"><img src="images/left.png" border=0></a>
         #end if
         &nbsp;
         $ledgerTitle
         &nbsp;
-        #if len($transferObjects) == $rows
-          <a href="$name?index=$nextIndex&account=$account"><img src="right.png" border=0></a>
+        #if $nextIndex < $count
+          <a href="$name?index=$nextIndex&account=$account"><img src="images/right.png" border=0></a>
+        #end if
+        #if $lastIndex > 0 and $nextIndex <= $lastIndex
+          <a href="$name?index=$lastIndex&search=$account"><img src="images/end.png" border=0></a>
         #end if
       </th>
     </tr>
-  </table>
+</table>
 
-  ##
-  ## display Account Infos
-  ##
-  <table width="100%" cellpadding=0>
+##
+## display Account Infos
+##
+<table width="100%" cellpadding=0>
     <tr bgcolor="aqua" valign=middle>
-    #set $attrs = $accountObjects[0].allAttrs(0)
+    #set $attrs = $accountObjects[0].allAttrs()
       <td>
         #for $field in $accountFields
           #if $field.type == 'date'
             &nbsp;&nbsp;&nbsp;
             $field.title:
             #if $attrs[$field.name]
-              <b>$attrs[$field.name].strftime($dateFormat)</b>
+                #try
+                    <b>$attrs[$field.name].strftime($dateFormat)</b>
+                #except
+                    <b>** Error **</b>
+                #end try
             #end if
           #elif $field.type == 'name'
             <b>$attrs[$field.name]</b>
@@ -151,9 +167,9 @@
         #end for
       </td>
     </tr>
-  </table>
+</table>
 
-  <table width="100%">
+<table width="100%">
     ##
     ## column titles
     ##
@@ -165,34 +181,34 @@
       #end for
     </tr>
 
-    #set $saldo = $startSaldo
+    #set $saldo = $startsaldo
     #for $entries in $transferObjects:
-      #set $attrs = $entries.allAttrs(0)
+      #set $attrs = $entries.allAttrs()
 
       ##
-      ## if needed exchange Haben and Soll
+      ## if needed exchange credit and debit
       ##
-      #if $attrs['Konto1'] != $account
-        #set $attrs['Konto'] = $attrs['Konto1']
-        #set $x = $attrs['Haben']
-        #set $attrs['Haben'] = $attrs['Soll']
-        #set $attrs['Soll'] = $x
+      #if $attrs['account1'] != $account
+        #set $attrs['account'] = $attrs['account1']
+        #set $x = $attrs['credit']
+        #set $attrs['credit'] = $attrs['debit']
+        #set $attrs['debit'] = $x
       #else
-        #set $attrs['Konto'] = $attrs['Konto2']
+        #set $attrs['account'] = $attrs['account2']
       #end if
 
       ##
       ## calculate saldo
       ##
-      #if $attrs['Haben']
-        #set $saldo = $saldo + float($attrs['Haben'])
-      #elif $attrs['Soll']
-        #set $saldo = $saldo - float($attrs['Soll'])
+      #if $attrs['credit']
+        #set $saldo = $saldo + float($attrs['credit'])
+      #elif $attrs['debit']
+        #set $saldo = $saldo - float($attrs['debit'])
       #end if
       #if $bank
-        #set $attrs['Saldo'] = -1 * $saldo
+        #set $attrs['saldo'] = -1 * $saldo
       #else
-        #set $attrs['Saldo'] = $saldo
+        #set $attrs['saldo'] = $saldo
       #end if
       ##
       ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
@@ -205,10 +221,10 @@
             #set $content = "&nbsp;"
           #elif $field.type == 'editlink'
             <td>
-            #if $attrs['BKZ'] in $BKZs
-              <img src="info.gif" border=0 alt="$BKZdescription[$attrs['BKZ']] -> " onMouseOver="zeigetip(this,event,'$BKZdescription[$attrs['BKZ']] -> ')" onMouseOut="verbergetip()">
-              &nbsp;<a href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="edit.png" border=0></a>
-              &nbsp;<a href="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="delete.png" border=0></a>
+            #if $attrs['transferCode'] in $transferCodes
+              <img src="images/info.gif" border=0 alt="$transferCodeDescription[$attrs['transferCode']] -> " onMouseOver="zeigetip(this,event,'$transferCodeDescription[$attrs['transferCode']] -> ')" onMouseOut="verbergetip()">
+              &nbsp;<a href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/edit.png" border=0></a>
+              &nbsp;<a href="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/delete.png" border=0></a>
             #end if
             #set $content = ''
           #elif $attrs[$field.name] == None
@@ -216,14 +232,18 @@
             #set $content = '&nbsp;'
           #elif $field.type == 'currency'
             <td align="right"><b>
-            #if $attrs[$field.name] != 0.0 or $field.name == 'Saldo'
+            #if $attrs[$field.name] != 0.0 or $field.name == 'saldo'
               #set $content = string.replace('%5.2f' % $attrs[$field.name],'.',',')
             #else
               #set $content = '&nbsp;'
             #end if
           #elif $field.type == 'date'
             <td><b>
-            #set $content = $attrs[$field.name].strftime($dateFormat)
+            #try
+                #set $content = $attrs[$field.name].strftime($dateFormat)
+            #except
+                #set $content = '** Error **'
+            #end try
           #elif $field.type == 'string'
             <td><b>
             #set $content = $attrs[$field.name]
@@ -248,11 +268,11 @@
             #set $content = '&nbsp;'
           #elif $field.type == 'editlink'
             <td>
-            #if $attrs['BKZ'] in $BKZs
-              <img src="info.gif" border=0 alt="$BKZdescription[$attrs['BKZ']] -> " onMouseOver="zeigetip(this,event,'$BKZdescription[$attrs['BKZ']] -> ')" onMouseOut="verbergetip()">
-              #if $hasRole('auditor')
-                &nbsp;<A href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="edit.png" border=0></A>
-                &nbsp;<A HREF="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="delete.png" border=0></A>
+            #if $attrs['transferCode'] in $transferCodes
+              <img src="images/info.gif" border=0 alt="$transferCodeDescription[$attrs['transferCode']] -> " onMouseOver="zeigetip(this,event,'$transferCodeDescription[$attrs['transferCode']] -> ')" onMouseOut="verbergetip()">
+              #if $checkRole('auditor')
+                &nbsp;<A href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/edit.png" border=0></A>
+                &nbsp;<A HREF="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/delete.png" border=0></A>
               #end if
             #end if
             #set $content = ''
@@ -265,14 +285,18 @@
             #else
               <td align="right">
             #end if
-            #if $attrs[$field.name] != 0.0 or $field.name == 'Saldo'
+            #if $attrs[$field.name] != 0.0 or $field.name == 'saldo'
               #set $content = string.replace('%5.2f' % $attrs[$field.name],'.',',')
             #else
               #set $content = '&nbsp;'
             #end if
           #elif $field.type == 'date'
             <td>
-            #set $content = $attrs[$field.name].strftime($dateFormat)
+            #try
+                #set $content = $attrs[$field.name].strftime($dateFormat)
+            #except
+                #set $content = '** Error **'
+            #end try
           #elif $field.type == 'string'
             <td>
             #set $content = $attrs[$field.name]
@@ -293,5 +317,4 @@
       </tr>
     #end for
     #silent $transaction.session.setValue('saldo'+ str($nextIndex), $saldo)
-  </table>
-#end if
+</table>

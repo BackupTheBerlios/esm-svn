@@ -57,11 +57,11 @@ class BankCode(SQLObject):
         pattern = string.replace(string.lower(pattern),'?','_')
         if pattern:
             if pattern[0] in '0123456789':
-                return self.select("bank_code LIKE '%s'" % pattern)
+                return self.select("bank_code LIKE '%s'" % pattern, orderBy = "bank_code")
             else:
-                return self.select("bank_name LIKE '%s'" % pattern)
+                return self.select("bank_name LIKE '%s'" % pattern, orderBy = "bank_name")
         else:
-            return self.select()
+            return self.select(orderBy = "bank_code")
             
     search = classmethod(search)
         
@@ -74,16 +74,22 @@ class BankCode(SQLObject):
         attrs['changedBy'] = self.changedBy
         return attrs    
 
-class blz(SQLObject):
-    '''
-        SQLObject for the MiddleKit database format
-    '''
-
-    _connection = dbConnection
-    _fromDatabase = True
-    _idName = 'bLZId'
-    _style = MixedCaseStyle(longID=True)
-
+#
+# old table and its class is only required if version <= 0
+#
+try:
+    class blz(SQLObject):
+        '''
+            SQLObject for the MiddleKit database format
+        '''
+    
+        _connection = dbConnection
+        _fromDatabase = True
+        _idName = 'bLZId'
+        _style = MixedCaseStyle(longID=True)
+except:
+    pass
+    
 #
 # Transform and update database if required
 #

@@ -126,8 +126,12 @@
             #for field in fields
               <td><b>
                 #if $field['type'] == 'date' and $attrs[$field['name']+str($index)]
-                  #set $content = DateTime.DateTimeFrom($attrs[$field['name']+str($index)])
-                  $content.strftime($dateFormat)
+                    #try
+                        #set $content = DateTime.DateTimeFrom($attrs[$field['name']+str($index)])
+                        $content.strftime($dateFormat)
+                    #except:
+                        #set $content = '** Error **'
+                    #end try
                 #elif $field['type'] == 'string'
                   $attrs[$field['name']+str($index)]
                 #elif $field['type'] == 'currency' and $attrs[$field['name']+str($index)]
@@ -162,6 +166,18 @@
 ##
 
 <table cellspacing="2" cellpadding="2" width="90%">
+  ##
+  ## Set year
+  ##
+  <tr>
+    <td>
+        <form name="year" action="SetYear" method=post>
+            <input name="year" type="text" size=10 maxlength=40 value="$accountYear">
+            &nbsp;
+            <input type="submit" value="Jahr">
+        </form>
+    </td>
+  </tr>
   ##
   ## Suchen
   ##

@@ -1,7 +1,7 @@
 #
-# File:      $URL$
-# Version:   $Rev$
-# Changed:   $Date$
+# File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/classes/PrintPersonalRevenues.py $
+# Version:   $Rev: 10 $
+# Changed:   $Date: 2005-04-19 10:33:21 +0200 (Tue, 19 Apr 2005) $
 #
 # Homepage:  http://esm.berlios.de
 # Copyright: GNU Public License Version 2 (see license.txt)
@@ -26,17 +26,16 @@
 #   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 __author__ = "Jan Gottschick"
-__revision__ = "$Rev$"[6:-2]
+__revision__ = "$Rev: 10 $"[6:-2]
 
-from PrintSummary import PrintSummary
+from PrintRevenues import PrintRevenues
 
-class PrintGVSummary(PrintSummary):
+class PrintPersonalEarnings(PrintRevenues):
 
-  description = ['Nr','Name']
-  groups = [
-    ['EK','Einnahmen'],
-    ['AK','Ausgaben'],
-  ]
+  description = ['Nachname',', ','Vorname','\n','Strasse','\n','PLZ',' ','Ort']
+  revenueAccountPrefix = 'BK'
+  bank = 1
+
   def __init__(self, *args, **KWs):
-    PrintSummary.__init__(self, *args, **KWs)
-    self.title = '‹bersicht Einnahmen/‹berschuﬂ ( %s )' % self.organisation
+    PrintRevenues.__init__(self, *args, **KWs)
+    self.title = 'Auszahlungen an Personal ( %s )' % self.organisation

@@ -51,7 +51,6 @@
 #attr searchPage = ''
 #attr sortField = ''
 
-#attr tableStore = ''
 #attr tableTitle = ''
 
 #attr helpText = 'Zum Suchen können Muster angegeben werden. So kann * einen ' + \
@@ -59,49 +58,56 @@
 
 ##################################################################################
 
-#if $tableStore != ''
+##
+## select all objects from database
+##
+#set $searchPattern = $request.field('search','')
+#set $storeObjects = $search(str($searchPattern))
+#set $count = $storeObjects.count
 
-  ##
-  ## read index and calculate the new indexes for paging in the table.
-  ##
-  #set $index = int($request.field('index',0))
-  #set $nextIndex = $index + $rows
-  #set $prevIndex = max(($index / $rows - 1) * $rows,0)
+##
+## read index and calculate the new indexes for paging in the table.
+##
+#set $index = int($request.field('index',0))
+#set $nextIndex = $index + $rows
+#set $endIndex = $index + $rows
+#if $nextIndex >= $count
+  #set $endIndex = $count
+#end if
+#set $prevIndex = max(($index / $rows - 1) * $rows,0)
+#set $lastIndex = ($count / $rows) * $rows
 
-  ##
-  ## search and clause for database select
-  ##
-  #set $search = str($request.field('search',''))
-  #set $clause = misc.buildAccountClause($search,$alphaSearchFields,$numericSearchFields,$sortField)
-  ##
-  ## read objects from database
-  ##
-  #set $storeObjects = $store.fetchObjectsOfClass($tableStore,'%s LIMIT %i,%i' % ($clause,$index,$rows))
+#if $count == 1
+#silent $response.sendRedirect($linkPattern + $storeObjects[0].allAttrs()[$linkFields[0]])
+#end if
 
-  #if len($storeObjects) == 1
-    #silent $response.sendRedirect($linkPattern + $storeObjects[0].allAttrs(0)[$linkFields[0]])
-  #end if
-
-  ##
-  ## title of table
-  ##
-  <table width="100%">
+##
+## title of table
+##
+<table width="100%">
     <tr bgcolor="yellow" valign=top>
       <th>
+        #if $index != 0
+          <a href="$name?index=0&search=$searchPattern"><img src="images/start.png" border=0></a>
+        #end if
         #if $index != $prevIndex
-          <a href="$name?index=$prevIndex&search=$search"><img src="images/left.png" border=0></a>
+          <a href="$name?index=$prevIndex&search=$searchPattern"><img src="images/left.png" border=0></a>
         #end if
         &nbsp;
         $tableTitle
         &nbsp;
-        #if len($storeObjects) == $rows
-          <a href="$name?index=$nextIndex&search=$search"><img src="images/right.png" border=0></a>
+        #if $nextIndex < $count
+          <a href="$name?index=$nextIndex&search=$searchPattern"><img src="images/right.png" border=0></a>
+        #end if
+        #if $lastIndex > 0 and $nextIndex <= $lastIndex
+          <a href="$name?index=$lastIndex&search=$searchPattern"><img src="images/end.png" border=0></a>
         #end if
       </th>
     </tr>
-  </table>
+</table>
 
-  <table width="100%">
+<table width="100%">
+
     ##
     ## Spalten-Überschrift
     ##
@@ -113,14 +119,14 @@
       #end for
       <td>&nbsp;</td>
     </tr>
-
-    #for $entries in $storeObjects:
-
+    
+    #for $entries in $storeObjects[$index:$endIndex]:
+    
       ##
       ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
       ## Geldbeträge und Datum
       ##
-      #set $attrs = $entries.allAttrs(0)
+      #set $attrs = $entries.allAttrs()
       <tr bgcolor="lightblue">
       #for $field in $fieldkeys
         #if $attrs[$field] == None
@@ -133,25 +139,27 @@
           #end if
         #elif $fields[$field].type == 'date'
           <td>
-          #set $content = $attrs[$field].strftime($dateFormat)
+          #try
+              #set $content = $attrs[$field].strftime($dateFormat)
+          #except
+              #set $content = "** Error **"
+          #end try
         #else
           <td>
           #set $content = $attrs[$field]
         #end if
-		  #if $fields[$field].has_key('format') and $content
-        #set $content = eval($fields[$field]["format"] % $content)
-		  #end if
-      #if $field in $linkFields
-        <a href='$linkPattern$content'>$content</a>
-      #else
-        $content
-      #end if
-      </td>
+        #if $fields[$field].has_key('format') and $content
+            #set $content = eval($fields[$field]["format"] % $content)
+        #end if
+        #if $field in $linkFields
+            <a href='$linkPattern$content'>$content</a>
+        #else
+            $content
+        #end if
+        </td>
       #end for
       <td>&nbsp;</td>
     </tr>
     #end for
 
-  </table>
-
-#end if
+</table>

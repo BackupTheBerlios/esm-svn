@@ -57,35 +57,44 @@
 #if $tableStore
 
   ##
+  ## select all objects from database
+  ##
+  #set $searchPattern = $request.field('search','')
+  #set $storeObjects = $search(str($searchPattern))
+  #set $count = $storeObjects.count
+
+  ##
   ## read index and calculate the new indexes for paging in the table.
   ##
   #set $index = int($request.field('index',0))
   #set $nextIndex = $index + $rows
+  #set $endIndex = $index + $rows
+  #if $nextIndex >= $count
+      #set $endIndex = $count
+  #end if
   #set $prevIndex = max(($index / $rows - 1) * $rows,0)
-
-  ##
-  ## search and clause for database select
-  ##
-  ##
-  ## read objects from database
-  ##
-  #set $storeObjects = $search(str($request.field('search','')))
-  ## $index,$rows
-
+  #set $lastIndex = ($count / $rows) * $rows
+  
   ##
   ## title of the table
   ##
   <table width="100%">
     <tr bgcolor="yellow" valign=top>
       <th>
+        #if $index != 0
+          <a href="$name?index=0&search=$searchPattern"><img src="images/start.png" border=0></a>
+        #end if
         #if $index != $prevIndex
-          <a href="$name?index=$prevIndex&search=$search"><img src="left.png" border=0></a>
+          <a href="$name?index=$prevIndex&search=$searchPattern"><img src="images/left.png" border=0></a>
         #end if
         &nbsp;
         $tableTitle
         &nbsp;
-        #if $storeObjects.count() == $rows
-          <a href="$name?index=$nextIndex&search=$search"><img src="right.png" border=0></a>
+        #if $nextIndex < $count
+          <a href="$name?index=$nextIndex&search=$searchPattern"><img src="images/right.png" border=0></a>
+        #end if
+        #if $lastIndex > 0 and $nextIndex <= $lastIndex
+          <a href="$name?index=$lastIndex&search=$searchPattern"><img src="images/end.png" border=0></a>
         #end if
       </th>
     </tr>
@@ -103,7 +112,7 @@
       #end for
     </tr>
 
-    #for $entries in $storeObjects:
+    #for $entries in $storeObjects[$index:$endIndex]:
 
       ##
       ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:

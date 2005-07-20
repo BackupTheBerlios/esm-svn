@@ -38,16 +38,16 @@ class Prices(Tables):
     searchPage = 'Prices'
     tableStore = 'Price'
 
-    fieldkeys = ['transferCode','description','account','soll','haben','newFrom','newSoll','newHaben']
+    fieldkeys = ['transferCode','description','account','debit','credit','newFrom','newDebit','newCredit']
     fields = {
               'transferCode':{'title':'BKZ','width':'5%','type':''},
               'description':{'title':'Beschreibung','width':'45%','type':''},
               'account':{'title':'Konto','width':'8%','type':''},
-              'soll':{'title':'Soll','width':'8%','type':'currency'},
-              'haben':{'title':'Haben','width':'8%','type':'currency'},
+              'debit':{'title':'Soll','width':'8%','type':'currency'},
+              'credit':{'title':'Haben','width':'8%','type':'currency'},
               'newFrom':{'title':'Neu ab ->','width':'8%','type':'date'},
-              'newSoll':{'title':'Soll','width':'8%','type':'currency'},
-              'newHaben':{'title':'Haben','width':'8%','type':'currency'}
+              'newDebit':{'title':'Soll','width':'8%','type':'currency'},
+              'newCredit':{'title':'Haben','width':'8%','type':'currency'}
             }
     
     tableTitle = 'Mitgliedsbeiträge und Gebühren'
