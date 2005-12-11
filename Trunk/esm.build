@@ -163,7 +163,7 @@ Copyright (C) 2005 Jan Gottschick
     </target>
     
     <target name="install" description="install all files in webware directory"
-        depends="required.software,install.workdir,install.configure,install.images,install.middle,install.templates,install.classes">
+        depends="required.software,install.workdir,install.configure,install.images,install.styles,install.middle,install.templates,install.classes">
         
         <copy todir="${install.dir}">
             <fileset>
@@ -196,6 +196,37 @@ Copyright (C) 2005 Jan Gottschick
             <fileset basedir="images">
                 <include name="*.png" />
                 <include name="*.gif" />
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="install.styles" description="install styles">
+        <mkdir dir="${install.dir}/styles" />
+        <mkdir dir="${install.dir}/styles/basic" />
+        <copy todir="${install.dir}/styles/basic">
+            <fileset basedir="styles/basic">
+                <include name="*.css" />
+                <include name="*.png" />
+                <include name="*.gif" />
+                <include name="*.txt" />
+            </fileset>
+        </copy>
+        <mkdir dir="${install.dir}/styles/debug" />
+        <copy todir="${install.dir}/styles/debug">
+            <fileset basedir="styles/debug">
+                <include name="*.css" />
+                <include name="*.png" />
+                <include name="*.gif" />
+                <include name="*.txt" />
+            </fileset>
+        </copy>
+        <mkdir dir="${install.dir}/styles/_text" />
+        <copy todir="${install.dir}/styles/_text">
+            <fileset basedir="styles/_text">
+                <include name="*.css" />
+                <include name="*.png" />
+                <include name="*.gif" />
+                <include name="*.txt" />
             </fileset>
         </copy>
     </target>
