@@ -132,8 +132,8 @@ Copyright (C) 2005 Jan Gottschick
         </foreach>
         <delete file="password" />
         
-        <copy todir="classes">
-            <fileset basedir="classes/skel">
+        <copy todir="Libs">
+            <fileset basedir="Libs/skel">
                 <include name="*.py" />
             </fileset>
             <filterchain>
@@ -163,7 +163,7 @@ Copyright (C) 2005 Jan Gottschick
     </target>
     
     <target name="install" description="install all files in webware directory"
-        depends="required.software,install.workdir,install.configure,install.images,install.styles,install.middle,install.templates,install.classes">
+        depends="required.software,install.workdir,install.configure,install.styles,install.middle,install.templates,install.servlets,install.sqlobjects">
         
         <copy todir="${install.dir}">
             <fileset>
@@ -190,38 +190,28 @@ Copyright (C) 2005 Jan Gottschick
         </copy>
     </target>
     
-    <target name="install.images" description="install images">
-        <mkdir dir="${install.dir}/images" />
-        <copy todir="${install.dir}/images">
-            <fileset basedir="images">
-                <include name="*.png" />
-                <include name="*.gif" />
-            </fileset>
-        </copy>
-    </target>
-    
     <target name="install.styles" description="install styles">
-        <mkdir dir="${install.dir}/styles" />
-        <mkdir dir="${install.dir}/styles/basic" />
-        <copy todir="${install.dir}/styles/basic">
-            <fileset basedir="styles/basic">
+        <mkdir dir="${install.dir}/Styles" />
+        <mkdir dir="${install.dir}/Styles/basic" />
+        <copy todir="${install.dir}/Styles/basic">
+            <fileset basedir="Styles/basic">
                 <include name="*.css" />
                 <include name="*.png" />
                 <include name="*.gif" />
                 <include name="*.txt" />
             </fileset>
         </copy>
-        <mkdir dir="${install.dir}/styles/debug" />
-        <copy todir="${install.dir}/styles/debug">
-            <fileset basedir="styles/debug">
+        <mkdir dir="${install.dir}/Styles/debug" />
+        <copy todir="${install.dir}/Styles/debug">
+            <fileset basedir="Styles/debug">
                 <include name="*.css" />
                 <include name="*.png" />
                 <include name="*.gif" />
                 <include name="*.txt" />
             </fileset>
         </copy>
-        <mkdir dir="${install.dir}/styles/_text" />
-        <copy todir="${install.dir}/styles/_text">
+        <mkdir dir="${install.dir}/Styles/_text" />
+        <copy todir="${install.dir}/Styles/_text">
             <fileset basedir="styles/_text">
                 <include name="*.css" />
                 <include name="*.png" />
@@ -248,9 +238,16 @@ Copyright (C) 2005 Jan Gottschick
         <copy file="Middle/${product}.mkmodel/Classes.csv" todir="${install.dir}/Middle/${product}.mkmodel" />
     </target>
 
-    <target name="install.classes">
+    <target name="install.servlets">
         <copy todir="${install.dir}">
-            <fileset basedir="classes">
+            <fileset basedir="Servlets">
+                <include name="*.py" />
+            </fileset>
+        </copy>
+    </target>
+    <target name="install.sqlobjects">
+        <copy todir="${install.dir}">
+            <fileset basedir="SqlObjects">
                 <include name="*.py" />
             </fileset>
         </copy>
@@ -259,7 +256,7 @@ Copyright (C) 2005 Jan Gottschick
     <target name="install.templates">
         <foreach item="File" property="filename">
             <in>
-                <items basedir="templates">
+                <items basedir="Templates">
                     <include name="*.tmpl" />
                 </items>
             </in>
@@ -272,7 +269,7 @@ Copyright (C) 2005 Jan Gottschick
             </do>
         </foreach>
         <copy todir="${install.dir}">
-            <fileset basedir="templates">
+            <fileset basedir="Templates">
                 <include name="*.py" />
             </fileset>
         </copy>
@@ -321,7 +318,7 @@ Copyright (C) 2005 Jan Gottschick
             </fileset>
         </delete>
         <delete>
-            <fileset basedir="classes">
+            <fileset basedir="Libs">
                 <include name="*.pyc" />
                 <include name="*.py_bak" />
                 <include name="GlobalState.py" />
@@ -329,7 +326,19 @@ Copyright (C) 2005 Jan Gottschick
             </fileset>
         </delete>
         <delete>
-            <fileset basedir="templates">
+            <fileset basedir="Servlets">
+                <include name="*.pyc" />
+                <include name="*.py_bak" />
+            </fileset>
+        </delete>
+        <delete>
+            <fileset basedir="SqlObjects">
+                <include name="*.pyc" />
+                <include name="*.py_bak" />
+            </fileset>
+        </delete>
+        <delete>
+            <fileset basedir="Templates">
                 <include name="*.py" />
                 <include name="*.pyc" />
                 <include name="*.py_bak" />
