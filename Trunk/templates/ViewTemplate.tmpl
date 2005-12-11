@@ -32,15 +32,13 @@
 #import misc
 #from mx import DateTime
 
-#extends SiteTemplate
+#extends SiteContent
 
 #implements writeContent
 ##################################################################################
 
 #attr activeMenuPoint = ''
 #attr activeSubmenuPoint = ''
-
-#attr indexField = ''
 
 #attr viewTitle = ''
 
@@ -57,26 +55,27 @@
 ##
 ## read index and object
 ##
-#set $index = $request.field('index','')
-#set $storeObjects = $search($index)
-#set $neighbourObjects = $search($index[:-1]+'_')
+#set $accountNb = $request.field('accountNb','')
+#set $storeObjects = $search($accountNb)
+#set $neighbourObjects = $search($accountNb[:-1]+'_')
 #set neighbours=[]
 #for $entry in $neighbourObjects:
     #if $entry.allAttrs().has_key("lastName") and $entry.allAttrs().has_key("firstName")
-      #silent $neighbours.append(($entry.allAttrs()[$indexField],$entry.allAttrs()['lastName'] + ", " + $entry.allAttrs()['firstName']))
+      #silent $neighbours.append(($entry.allAttrs()['accountNb'],$entry.allAttrs()['lastName'] + ", " + $entry.allAttrs()['firstName']))
     #else
-      #silent $neighbours.append(($entry.allAttrs()[$indexField],$entry.allAttrs()[$indexField]))
+      #silent $neighbours.append(($entry.allAttrs()['accountNb'],$entry.allAttrs()['accountNb']))
     #end if
 #end for
 
 <table width="100%">
-    #for $entries in $storeObjects    
+    #if $storeObjects.count()
+        #set $entry = $storeObjects[0]   
         ##
         ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
         ## Geldbeträge und Datum
         ##
-        #set $attrs = $entries.allAttrs()
+        #set $attrs = $entry.allAttrs()
         #set $attrs['_neighbours'] = $neighbours
         $writeRecord($attrs)
-    #end for
+    #end if
 </table>

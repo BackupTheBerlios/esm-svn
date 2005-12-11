@@ -1,4 +1,34 @@
-#extends SiteTemplate
+##
+## File:      $URL$
+## Version:   $Rev$
+## Changed:   $Date$
+##
+## Homepage:  http://esm.berlios.de
+## Copyright: GNU Public License Version 2 (see license.txt)
+##
+## E-Sportmanager (esm)
+##
+## Copyright (C) 2005 Jan Gottschick
+##
+##   This program is free software; you can redistribute it and/or modify it
+##   under the terms of the GNU General Public License as published by the
+##   Free Software Foundation; either version 2 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful, but
+##   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+##   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+##   for more details.
+##
+##   You should have received a copy of the GNU General Public License along
+##   with this program; if not, write to the
+##
+##   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+#attr __author__ = "Jan Gottschick"
+#attr __revision__ = "$Rev$"[6:-2]
+
+#extends EditTemplate
 
 #implements writeContent
 ##################################################################################
@@ -23,95 +53,6 @@
 ##################################################################################
 
 #attr newIndex = 1
-
-#def writeInputForm(attrs,fields)
-  #for $field in $fields
-    #if ($field.type == 'fixed') and $attrs.has_key($field.name)
-      <input type="HIDDEN" name="$field.name" value="$attrs[$field.name]">
-    #elif ($field.type == 'fixed') and $field.has_key('value')
-      <input type="HIDDEN" name="$field.name" value="$field.value">
-    #else
-      <tr>
-        <td align="right"><b>$field.title:</b></td>
-        <td>
-        #if $field.has_key('default')
-          #set $attrs[$field.name] = $field.default
-        #end if
-        #if $field.type == 'text'
-          #if $attrs.has_key($field.name)
-            <input type="TEXT" name="$field.name" size="$field.size" value="$attrs[$field.name]">
-          #else
-            <input type="TEXT" name="$field.name" size="$field.size">
-          #end if
-        #elif $field.type == 'date'
-          #if $attrs.has_key($field.name) and $attrs[$field.name]
-            <input type="TEXT" name="$field.name" size="10" value="$attrs[$field.name].strftime('%d.%m.%Y')">
-          #else
-            <input type="TEXT" name="$field.name" size="10">
-          #end if
-        #elif $field.type == 'select'
-          <select name="$field.name" size="1">
-          #for $option in $field.options
-            #if $attrs.has_key($field.name) and ($option.value == $attrs[$field.name])
-              <option value="$option.value" selected>$option.title</option>
-            #else
-              <option value="$option.value">$option.title</option>
-            #end if
-          #end for
-          </select>
-        #elif $field.type == 'textarea'
-          #if $attrs.has_key($field.name)
-            <textarea name="$field.name" rows=$field.size cols=60>$attrs[$field.name]</textarea>
-          #else
-            <textarea name="$field.name" rows=$field.size cols=60></textarea>
-          #end if
-        #elif $field.type == 'table'
-          <table>
-            <tr>
-            #for $f in $field.fieldlist
-              <th>
-                $field.fieldTitle[$f]
-              </th>
-            #end for
-            </tr>
-            #for x in range(1,$field.number + 1)
-              <tr>
-              #for $f in $field.fieldlist
-                <td>
-                #if $field.fieldType[$f] == 'text'
-                  #set $fx = '%s%s' % ($f,$x)
-                  #if $attrs.has_key($fx)
-                    <input type="TEXT" name="$fx" value="$attrs[$fx]">
-                  #else
-                    <input type="TEXT" name="$fx">
-                  #end if
-                #elif $field.fieldType[$f] == 'date'
-                  #set $fx = '%s%s' % ($f,$x)
-                  #if $attrs.has_key($fx) and $attrs[$fx]
-                    #set $v = $DateTime.DateTimeFrom($attrs[$fx]).strftime($dateFormat)
-                    <input type="TEXT" name="$fx" value="$v">
-                  #else
-                    <input type="TEXT" name="$fx">
-                  #end if
-                #elif $field.fieldType[$f] == 'currency'
-                  #set $fx = '%s%s' % ($f,$x)
-                  #if $attrs.has_key($fx) and $attrs[$fx]
-                    <input type="TEXT" name="$fx" value="#echo string.replace('%.2f' % float($attrs[$fx]),'.',',')#">
-                  #else
-                    <input type="TEXT" name="$fx">
-                  #end if
-                #end if
-                </td>
-              #end for
-              </tr>
-            #end for
-          </table>
-        #end if
-        </td>
-      </tr>
-    #end if
-  #end for
-#end def
 
 #def writeRecord(attrs)
 

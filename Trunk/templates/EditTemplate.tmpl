@@ -31,19 +31,16 @@
 #from mx import DateTime
 #import string
 
-#extends SiteTemplate
+#extends SiteContent
+
 #implements writeContent
 
 ##################################################################################
 
 #attr role = 'editor'
 
-#attr indexField = ''
-#attr indexPrefix = ''
-
-#attr editStore = ''
 #attr editTitle = ''
-#attr editTemplate = ''
+#attr editPage = ''
 
 #attr inputForm = ''
 
@@ -57,6 +54,8 @@
   #for $field in $fields
     #if $field.type == 'fixed'
       <input type="HIDDEN" name="$field.name" value="$field.value">
+    #elif $field.type == 'hidden' and $attrs.has_key($field.name)
+      <input type="HIDDEN" name="$field.name" value="$attrs[$field.name]">
     #else
       <tr>
         <td align="right"><b>$field.title:</b></td>
@@ -67,6 +66,8 @@
           #else
             <input type="TEXT" name="$field.name" size="$field.size">
           #end if
+        #elif $field.type == 'noedit'
+            $attrs[$field.name]
         #elif $field.type == 'date'
           #if $attrs.has_key($field.name) and $attrs[$field.name]
             <input type="TEXT" name="$field.name" size="10" value="$attrs[$field.name].strftime('%d.%m.%Y')">
@@ -138,42 +139,40 @@
 #end def
 
 #silent $response.flush()
-#if $editStore != ''
 
-  ##
-  ## read index and object
-  ##
-  #set $index = $request.field('index','')
-  #set $storeObjects = $store.fetchObjectsOfClass($editStore,'WHERE %s = "%s"' % ($indexField,$index))
-  #set $attrs = $storeObjects[0].allAttrs(0)
+#set $accountNb = $request.field('accountNb','')
+#set $attrs = $getAttrs($accountNb)
 
-    <table width="600" cellpadding="0" cellspacing="0">
-      <tr><td>
-        <form name ="data" method="post" action="$editTemplate">
-          <input type="hidden" name="account" value="$indexPrefix$index">
-          <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
-            <tr>
-              <td width="200" bgcolor="yellow">$editTitle2</td>
-              <td width="400" bgcolor="yellow">&nbsp;</td>
-            </tr>
-				  </table>
-          <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
-            <tr>
-              <td>&nbsp;</td><td>&nbsp;</td>
-            </tr>
-            $writeInputForm($attrs,$inputForm)
-            <tr>
-              <td>&nbsp;</td>
-              <td><input type="submit" value="OK"></td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td><td>&nbsp;</td>
-            </tr>
-          </table>
-        </form>
-      </td></tr>
-      <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
-      <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
-    </table>
-
-#end if
+<table width="600" cellpadding="0" cellspacing="0">
+  <tr><td>
+    <form name ="data" method="post" action="$editPage">
+      #if $accountNb
+          <input type="hidden" name="accountNb" value="$accountNb">
+      #end if
+      <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
+        <tr>
+          <td width="200" bgcolor="yellow">$editTitle2</td>
+          <td width="400" bgcolor="yellow">&nbsp;</td>
+        </tr>
+      </table>
+      <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
+          $writeRecord($attrs)
+      </table>
+      <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
+        <tr>
+          <td>&nbsp;</td><td>&nbsp;</td>
+        </tr>
+        $writeInputForm($attrs,$inputForm)
+        <tr>
+          <td>&nbsp;</td>
+          <td><input type="submit" value="OK"></td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td><td>&nbsp;</td>
+        </tr>
+      </table>
+    </form>
+  </td></tr>
+  <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+  <tr><td bgcolor="green">&nbsp;</td><td bgcolor="green">&nbsp;</td></tr>
+</table>

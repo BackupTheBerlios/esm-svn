@@ -31,7 +31,7 @@
 #import string
 #import misc
 
-#extends SiteTemplate
+#extends SiteContent
 
 #implements writeContent
 ##################################################################################
@@ -78,7 +78,7 @@
 #set $lastIndex = ($count / $rows) * $rows
 
 #if $count == 1
-#silent $response.sendRedirect($linkPattern + $storeObjects[0].allAttrs()[$linkFields[0]])
+    #silent $response.sendRedirect($linkPattern + str($storeObjects[0].allAttrs()[$linkFields[0]]))
 #end if
 
 ##

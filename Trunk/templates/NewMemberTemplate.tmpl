@@ -28,17 +28,8 @@
 #attr __author__ = "Jan Gottschick"
 #attr __revision__ = "$Rev$"[6:-2]
 
-#extends SiteContent
-##################################################################################
+#extends NewTemplate
 
-#attr contentBox = {
-  "border":"0",
-  "align":"center",
-  "valign":"middle",
-  "frameColor":"#DDDDDD",
-  "bgColor":"green",
-  "background":""
-  }
-
-##################################################################################
-
+#def writeRecord(attrs)
+  $writeLine('Mitgliedsnr', $attrs['accountNb'])
+#end def

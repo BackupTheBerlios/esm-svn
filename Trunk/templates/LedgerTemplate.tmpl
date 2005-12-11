@@ -33,7 +33,7 @@
 #from Transfer import Transfer
 #from Price import Price
 
-#extends SiteTemplate
+#extends SiteContent
 
 #implements writeContent
 ##################################################################################
@@ -222,7 +222,7 @@
           #elif $field.type == 'editlink'
             <td>
             #if $attrs['transferCode'] in $transferCodes
-              <img src="images/info.gif" border=0 alt="$transferCodeDescription[$attrs['transferCode']] -> " onMouseOver="zeigetip(this,event,'$transferCodeDescription[$attrs['transferCode']] -> ')" onMouseOut="verbergetip()">
+              <img src="images/info.gif" border=0 alt="$transferCodeDescription[$attrs['transferCode']] -> " onMouseOver="showtip(this,event,'$transferCodeDescription[$attrs['transferCode']] -> ')" onMouseOut="hidetip()"/>
               &nbsp;<a href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/edit.png" border=0></a>
               &nbsp;<a href="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/delete.png" border=0></a>
             #end if
@@ -269,7 +269,7 @@
           #elif $field.type == 'editlink'
             <td>
             #if $attrs['transferCode'] in $transferCodes
-              <img src="images/info.gif" border=0 alt="$transferCodeDescription[$attrs['transferCode']] -> " onMouseOver="zeigetip(this,event,'$transferCodeDescription[$attrs['transferCode']] -> ')" onMouseOut="verbergetip()">
+              <img src="images/info.gif" border=0 alt="$transferCodeDescription[$attrs['transferCode']] -> " onMouseOver="showtip(this,event,'$transferCodeDescription[$attrs['transferCode']] -> ')" onMouseOut="hidetip()"/>
               #if $checkRole('auditor')
                 &nbsp;<A href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/edit.png" border=0></A>
                 &nbsp;<A HREF="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/delete.png" border=0></A>
