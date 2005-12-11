@@ -1,0 +1,6 @@
+#version > span:before {
+    content:"Version ";
+}
+#siteTitle > span:before {
+    content:"Die ultimative Vereinsverwaltung";
+}

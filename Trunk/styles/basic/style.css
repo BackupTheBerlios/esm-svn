@@ -1,0 +1,167 @@
+/*
+    File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/templates/LedgerTemplate.tmpl $
+    Version:   $Rev: 15 $
+    Changed:   $Date: 2005-05-09 15:06:11 +0200 (Mon, 09 May 2005) $
+    
+    Homepage:  http://esm.berlios.de
+    Copyright: GNU Public License Version 2 (see license.txt)
+    
+    E-Sportmanager (esm)
+    
+    Copyright (C) 2005 Jan Gottschick
+    
+      This program is free software; you can redistribute it and/or modify it
+      under the terms of the GNU General Public License as published by the
+      Free Software Foundation; either version 2 of the License, or
+      (at your option) any later version.
+    
+      This program is distributed in the hope that it will be useful, but
+      WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+      or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+      for more details.
+    
+      You should have received a copy of the GNU General Public License along
+      with this program; if not, write to the
+    
+      Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
+
+/* default values */
+* {
+    font-family: Verdana,Helvetica,sans-serif;
+    border-width: thin;
+}
+
+/*
+    The following layout were implemented with the containers:
+      - the header is positioned at the top
+      - the navigation list is below the header and at the left side
+      - the content area is below the header and to the right
+        the content area includes the help, content and error part
+      - the footer is at the bottom
+*/
+
+body {
+    text-align:center;
+}
+
+.container {
+    /* border-style: solid; */ /* to debug the layout */
+}
+
+#wrapper {
+    width: 60em;
+    margin: 0 auto;
+    text-align: left;
+    position: relative;
+    padding: 0;
+    /* border-style: dotted; */
+}
+
+#header {
+    clear: both;
+    height: 12ex;
+}
+
+#navigation {
+    width: 10em;
+    margin: 10px 1em 10px 0;
+    float: left;
+}
+
+#contentArea {
+    width: 49em;
+    margin: 10px 0;
+    float: left;
+}
+
+#content {
+    margin: 10px 0;
+}
+
+#footer {
+    clear: both;
+    height: 4ex;
+}
+
+/*
+    Styling the header. It hat a solid background and a logo to the left.
+*/
+
+#header {
+    text-align: center;
+    background-color: #c0c0c0;
+    background-image:url(/styles/basic/logo-atoosa-small.png);
+    background-repeat:no-repeat;
+}
+
+/* h1#esmTitle {display:none;} */ /* hide "E-Sportmanager" as the main title */
+#siteTitle {display:none;} /* hide configured text as the main title */
+
+h1 {
+}
+
+/*
+    Styling the navigation list
+*/
+
+#navigation {
+    background-color: #E0E0E0;
+}
+
+#yearForm {
+    text-align: center;
+    margin-top: 10px;
+}
+
+#yearForm > button {
+    display: none;
+}
+
+#searchForm {
+    text-align: center;
+}
+
+#searchForm > button {
+    display: none;
+}
+
+/*
+    Styling the content area
+*/
+
+#help {
+    border-style: dotted;
+}
+
+#helpText:before {
+    content:url(/styles/basic/idea.gif);
+    margin: 0 5px;
+}
+
+/*
+    Styling the footer. All items are placed centered in a line.
+*/
+
+#footer {
+    background-color: #c0c0c0;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.listItem {
+    /* display: list-item; */
+    display: inline;
+}
+
+#esmShort, #esmHome, #license {
+    display:none;
+}
+
+t-item; */
+    display: inline;
+}
+
+#esmShort, #esmHome, #license {
+    display:none;
+}
