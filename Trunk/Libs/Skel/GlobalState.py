@@ -1,7 +1,7 @@
 #
-# File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/classes/skel/GlobalState.py $
-# Version:   $Rev: 24 $
-# Changed:   $Date: 2005-05-22 18:39:44 +0200 (Sun, 22 May 2005) $
+# File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/Servlets/skel/GlobalState.py $
+# Version:   $Rev: 37 $
+# Changed:   $Date: 2005-12-11 15:20:47 +0100 (So, 11 Dez 2005) $
 #
 # Homepage:  http://esm.berlios.de
 # Copyright: GNU Public License Version 2 (see license.txt)
@@ -26,7 +26,7 @@
 #   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 __author__ = "Jan Gottschick"
-__revision__ = "$Rev: 24 $"[6:-2]
+__revision__ = "$Rev: 37 $"[6:-2]
 
 from sqlobject.mysql.mysqlconnection import *
 
@@ -35,8 +35,8 @@ import os
 #
 # read configuration file
 #
-if os.path.exists('sfw/product.config'):
-    f = open('sfw/product.config','r')
+if os.path.exists('@CONTEXT@/product.config'):
+    f = open('@CONTEXT@/product.config','r')
 else:
     f = open('../product.config','r')
 config = eval(f.read())
@@ -58,7 +58,7 @@ class Store:
     # Do something
     self.store = None
     # self.store = MySQLObjectStore(user=dbUser, passwd=dbPassword)
-    # self.store.readModelFileNamed('sfw/Middle/esm')
+    # self.store.readModelFileNamed('@CONTEXT@/Middle/@PRODUCT@')
 
   def __call__(self):
     return self
@@ -85,4 +85,4 @@ class ID:
 
 ID = ID()
 
-dbConnection = MySQLConnection(user=dbUser,passwd=dbPassword,db='esm')
+dbConnection = MySQLConnection(user=dbUser,passwd=dbPassword,db='@PRODUCT@')

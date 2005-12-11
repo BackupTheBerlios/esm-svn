@@ -1,7 +1,7 @@
 #
-# File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/classes/skel/SiteBase.py $
-# Version:   $Rev: 15 $
-# Changed:   $Date: 2005-05-09 15:06:11 +0200 (Mon, 09 May 2005) $
+# File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/Servlets/skel/SiteBase.py $
+# Version:   $Rev: 37 $
+# Changed:   $Date: 2005-12-11 15:20:47 +0100 (So, 11 Dez 2005) $
 #
 # Homepage:  http://esm.berlios.de
 # Copyright: GNU Public License Version 2 (see license.txt)
@@ -26,7 +26,7 @@
 #   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 __author__ = "Jan Gottschick"
-__revision__ = "$Rev: 15 $"[6:-2]
+__revision__ = "$Rev: 37 $"[6:-2]
 
 from Cheetah.Templates._SkeletonPage import _SkeletonPage
 from MiscUtils.Funcs import uniqueId
@@ -43,7 +43,7 @@ stylesDir = 'styles'
 #
 # read configuration file
 #
-f = open('sfw/product.config','r')
+f = open('@CONTEXT@/product.config','r')
 config = eval(f.read())
 f.close()
 #
@@ -61,7 +61,7 @@ title = config['title']
 #
 # read version file
 #
-f = open('sfw/version.txt','r')
+f = open('@CONTEXT@/version.txt','r')
 version = f.readline()
 f.close()
 
