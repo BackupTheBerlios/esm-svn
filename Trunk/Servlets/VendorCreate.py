@@ -32,7 +32,6 @@ from SiteContent import SiteContent
 from mx import DateTime
 from Middle.AccountsVE import AccountsVE
 from WebUtils.Funcs import urlEncode
-from GlobalState import ID
 from MySQLdb import OperationalError
 import string
 

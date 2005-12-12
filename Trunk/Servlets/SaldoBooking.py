@@ -31,7 +31,7 @@ __revision__ = "$Rev$"[4,-2]
 from SiteContent import SiteContent
 from mx import DateTime
 from Middle.Transfers import Transfers
-from GlobalState import ID
+from UniqueID import UniqueID
 import string
 
 class SaldoBooking(SiteContent):
@@ -109,7 +109,7 @@ class SaldoBooking(SiteContent):
           if member:
             attrs = member[0].allAttrs(0)
             transfer = Transfers()
-            transfer.setTAID(self.getSite() + DateTime.now().strftime("%Y%m%d%H%M%S") + "%04d" % ID.next())
+            transfer.setTAID(self.getSite() + DateTime.now().strftime("%Y%m%d%H%M%S") + "%04d" % UniqueID.next())
             if attrs.has_key('Firma') and attrs['Firma']:
               transfer.setImportWho(attrs['Firma'])
               transfer.setWho(attrs['Firma'])

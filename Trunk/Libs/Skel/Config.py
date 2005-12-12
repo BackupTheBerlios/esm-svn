@@ -1,7 +1,7 @@
 #
-# File:      $URL$
-# Version:   $Rev$
-# Changed:   $Date$
+# File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/Servlets/skel/GlobalState.py $
+# Version:   $Rev: 37 $
+# Changed:   $Date: 2005-12-11 15:20:47 +0100 (So, 11 Dez 2005) $
 #
 # Homepage:  http://esm.berlios.de
 # Copyright: GNU Public License Version 2 (see license.txt)
@@ -26,15 +26,37 @@
 #   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 __author__ = "Jan Gottschick"
-__revision__ = "$Rev$"[6:-2]
+__revision__ = "$Rev: 37 $"[6:-2]
 
-from SiteTemplate import SiteTemplate
+from sqlobject.mysql.mysqlconnection import *
 
-class Logout(SiteTemplate):
+import os
 
-    def __init__(self, *args, **KWs):
-        SiteTemplate.__init__(self, *args, **KWs)
+context = "@CONTEXT@"
 
-    def writeContent(self, trans=None):
-        self.transaction.session().values().clear()
-        self.transaction.response().sendRedirect('Login')
+#
+# read configuration file
+#
+if os.path.exists('Libs/product-@CONTEXT@.config'):
+    f = open('Libs/product-@CONTEXT@.config','r')
+else:
+    f = open('../product-@CONTEXT@.config','r')
+config = eval(f.read())
+f.close()
+#
+# and select required configuration information
+#
+dbUser = config['dbUser']
+dbName = config['dbName']
+dbPassword = config['dbPassword']
+
+roles = config['roles']
+users = config['users']
+
+site = config['site']
+organisation = config['organisation']
+link = config['link']
+mail = config['mail']
+title = config['title']
+
+dbConnection = MySQLConnection(user=dbUser,passwd=dbPassword,db=dbName)

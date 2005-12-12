@@ -35,7 +35,7 @@ from sqlobject.col import *
 from sqlobject.styles import *
 from sqlobject.mysql.mysqlconnection import *
 
-from GlobalState import dbConnection,Version
+from Config import dbConnection,Version
 from mx import DateTime
 
 class Price(SQLObject):

@@ -31,7 +31,6 @@ __revision__ = "$Rev$"[6:-2]
 from SiteContent import SiteContent
 from mx import DateTime
 from Middle.Transfers import Transfers
-from GlobalState import ID
 import string
 from MiscUtils.Funcs import uniqueId
 

@@ -1,6 +1,10 @@
 #version > span:before {
     content:"Version ";
 }
-#siteTitle > span:before {
+
+#labelEsmSubtitle > span {
+    display:none;
+}
+#labelEsmSubtitle:after {
     content:"Die ultimative Vereinsverwaltung";
 }

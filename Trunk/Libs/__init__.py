@@ -1,7 +1,7 @@
 #
-# File:      $URL$
-# Version:   $Rev$
-# Changed:   $Date$
+# File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/Servlets/__init__.py $
+# Version:   $Rev: 37 $
+# Changed:   $Date: 2005-12-11 15:20:47 +0100 (So, 11 Dez 2005) $
 #
 # Homepage:  http://esm.berlios.de
 # Copyright: GNU Public License Version 2 (see license.txt)
@@ -26,11 +26,4 @@
 #   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 __author__ = "Jan Gottschick"
-__revision__ = "$Rev$"[6:-2]
-
-from PrintTransfers import PrintTransfers
-
-class PrintVendorTransfers(PrintTransfers):
-
-  description = ['Firma','Nachname','Vorname']
-  subTitle = '- Lieferanten '
+__revision__ = "$Rev: 37 $"[6:-2]

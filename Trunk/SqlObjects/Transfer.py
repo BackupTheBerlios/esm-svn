@@ -35,7 +35,7 @@ from sqlobject.col import *
 from sqlobject.styles import *
 from sqlobject.mysql.mysqlconnection import *
 
-from GlobalState import dbConnection
+from Config import dbConnection
 from Version import Version
 from mx import DateTime
 

@@ -29,7 +29,7 @@ __author__ = "Jan Gottschick"
 __revision__ = "$Rev$"[6:-2]
 
 from SiteBase import SiteBase
-from GlobalState import Store
+from Config import Store
 
 class DownloadTemplate(SiteBase):
 

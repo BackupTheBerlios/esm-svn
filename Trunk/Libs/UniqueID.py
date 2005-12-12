@@ -28,47 +28,7 @@
 __author__ = "Jan Gottschick"
 __revision__ = "$Rev: 37 $"[6:-2]
 
-from sqlobject.mysql.mysqlconnection import *
-
-import os
-
-#
-# read configuration file
-#
-if os.path.exists('@CONTEXT@/product.config'):
-    f = open('@CONTEXT@/product.config','r')
-else:
-    f = open('../product.config','r')
-config = eval(f.read())
-f.close()
-#
-# and select required configuration information
-#
-dbUser = config['dbUser']
-dbPassword = config['dbPassword']
-
-try:
-  from MiddleKit.Run.MySQLObjectStore import MySQLObjectStore
-except:
-    pass
-    
-class Store:
-
-  def __init__(self):
-    # Do something
-    self.store = None
-    # self.store = MySQLObjectStore(user=dbUser, passwd=dbPassword)
-    # self.store.readModelFileNamed('@CONTEXT@/Middle/@PRODUCT@')
-
-  def __call__(self):
-    return self
-
-  def store(self):
-    return self.store
-
-Store = Store()
-
-class ID:
+class UniqueID:
 
   def __init__(self):
     self.id = 0
@@ -83,6 +43,4 @@ class ID:
     self.id = (self.id + 1) % 1000
     return self.id
 
-ID = ID()
-
-dbConnection = MySQLConnection(user=dbUser,passwd=dbPassword,db='@PRODUCT@')
+UniqueID = UniqueID()

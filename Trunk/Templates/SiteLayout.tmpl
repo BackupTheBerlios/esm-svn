@@ -28,9 +28,10 @@
 #attr __author__ = "Jan Gottschick"
 #attr __revision__ = "$Rev$"[6:-2]
 
-#from GlobalState import Store
 #from mx import DateTime
 #import string
+
+#from Libs.SiteBase import SiteBase
 
 #extends SiteBase
 
@@ -106,8 +107,11 @@ $checkRole($role)
     <head>
       <title>$title</title>
       $formatMetaTags($metaTags)
+      
+      <script src="Javascript/base.js" type="text/javascript"></script>
     
       <link rel="stylesheet" type="text/css" media="screen" href="$getStylesDir/$styleSheet" />
+      <link rel="stylesheet" type="text/css" media="screen" href="Styles/_text/${getLanguage('base')}-base.css" />
       <link rel="stylesheet" type="text/css" media="print" href="$getStylesDir/$printSheet" />
       
       ##################################################################################
@@ -116,52 +120,17 @@ $checkRole($role)
       ##
     
       <SCRIPT type="text/javascript">
-        <!--
     
         if (!document.layers&&!document.all)
-          event="";
-    
-        function showtip(current,e,text)
-        // show a tool tip, e.g. usually for mouse over effects
-        //
-        // for example:  onMouseOver="showtip(this,event,'This is a tool tip')"
-        {
-          if (document.all) {
-            thetitle=text.split('<BR>')
-            if (thetitle.length>1) {
-                thetitles=''
-                for (i=0;i<thetitle.length;i++)
-                  thetitles+=thetitle[i]
-                current.title=thetitles
-            } else
-                current.title=text
-          } else
-            if (document.layers){
-              document.tooltip.document.write('<layer bgColor="white" style="border:1px solid black;">'+text+'<\/layer>')
-              document.tooltip.document.close()
-              document.tooltip.left=e.pageX+5
-              document.tooltip.top=e.pageY+5
-              document.tooltip.visibility="show"
-            }
-        }
-    
-        function hidetip()
-        // hide the tooltip
-        //
-        // for example:  onMouseOut="hidetip()"
-        {
-          if (document.layers)
-          document.tooltip.visibility="hidden"
-        }
-        
+          event=""
+            
         #####################
         #block javascript
         
         #end block
         #####################
-    
-        //-->
       </SCRIPT>
+      
     </head>
     
     <body id="body" onload="document.#echo $focusField #.focus()">
@@ -169,9 +138,9 @@ $checkRole($role)
         <div id="wrapper" class="container">
         
             <div id="header" class="container">
-                <h1 id="esmTitle"><span>E-Sportmanager</span></h1>
-                <h1 id="siteTitle"><span>$getTitle</span></h1>
-                <h2><span>the ultimate management for your sport club</span></h2>
+                <h1 id="labelEsmTitle"><span>ESM</span></h1>
+                <h1 id="labelSiteTitle"><span>$getTitle</span></h1>
+                <h2 id="labelEsmSubtitle"><span>the ultimate management for your sport club</span></h2>
             </div>
             
             <div id="navigation" class="container">
@@ -205,11 +174,11 @@ $checkRole($role)
                 
                 #if $helpText
                     <div id="help" class="hasHelp,container">
-                        <p id="helpTitle">Hinweis<p>
-                        <p id="helpText">$helptext</p>
+                        <p id="labelHelpTitle">Hinweis<p>
+                        <p id="labelHelpText">$helptext</p>
                     </div>
                 #else
-                    <div id="help" class="hasNoHelp,container"
+                    <div id="help" class="hasNoHelp,container">
                         <p id="helpText" class="debug">Help block</p>
                     </div>
                 #end if
@@ -251,17 +220,17 @@ $checkRole($role)
             ##
             <div id="footer" class="container">
                 <div class="list">
-                    <div id="club" class="listItem"><a href="$getLink" target="_blank"><span>$getOrganisation</span></a></div>
-                    <div id="esm" class="listItem"><a href="$esmLink" target="_blank"><span>E-Sportmanager</span></a></div>
-                    <div id="esmShort" class="listItem"><a href="$esmLink" target="_blank"><span>esm</span></a></div>
+                    <div id="club" class="listItem"><a id="labelOrganisation" href="$getLink" target="_blank"><span>$getOrganisation</span></a></div>
+                    <div id="esm" class="listItem"><a id="labelESportmanager" href="$esmLink" target="_blank"><span>E-Sportmanager</span></a></div>
+                    <div id="esmShort" class="listItem"><a id="labelESportmanagerShort" href="$esmLink" target="_blank"><span>esm</span></a></div>
                     <div id="version" class="listItem"><span>$getVersion</span></div>
-                    <div id="copyright" class="listItem"><a href="$licenseLink" target="_blank"><span>&copy; 2000 - $currentYr</span></a></div>
-                    <div id="license" class="listItem"><a href="$licenseLink" target="_blank"><span>Lizenz</span></a></div>
-                    <div id="about" class="listItem"><a href="$aboutPage" target="_blank"><span>About</span></a></div>
-                    <div id="helppages" class="listItem"><a href="$helpLink" target="_blank"><span>Hilfe</span></a></div>
-                    <div id="support" class="listItem"><a href="mailto:$getMail"><span>Support</span></a></div>
-                    <div id="forum" class="listItem"><a href="$forumPage" target="_blank"><span>Forum</span></a></div>
-                    <div id="esmHome" class="listItem"><a href="$esmLink" target="_blank"><span>Home</span></a></div>
+                    <div id="copyright" class="listItem"><a id="labelCopyright" href="$licenseLink" target="_blank"><span>&copy; 2000 - $currentYr</span></a></div>
+                    <div id="license" class="listItem"><a id="labelLicense" href="$licenseLink" target="_blank"><span>Lizenz</span></a></div>
+                    <div id="about" class="listItem"><a id="labelAbout" href="$aboutPage" target="_blank"><span>Über</span></a></div>
+                    <div id="helppages" class="listItem"><a id="labelHelp" href="$helpLink" target="_blank"><span>Hilfe</span></a></div>
+                    <div id="support" class="listItem"><a id="labelSupport" href="mailto:$getMail"><span>Support</span></a></div>
+                    <div id="forum" class="listItem"><a id="labelForum" href="$forumPage" target="_blank" onMouseOver="showtip(this,event,'Use forum for discussion')" onMouseOut="hidetip()"><span>Forum</span></a></div>
+                    <div id="esmHome" class="listItem"><a id="labelHome" href="$esmLink" target="_blank"><span>Home</span></a></div>
                 </div>
             </div>
         

@@ -32,7 +32,7 @@ from SiteContent import SiteContent
 from mx import DateTime
 from MySQLdb import OperationalError,Warning
 from Middle.Transfers import Transfers
-from GlobalState import ID
+from UniqueID import UniqueID
 import string
 
 class TransferCreate(SiteContent):
@@ -80,7 +80,7 @@ class TransferCreate(SiteContent):
       # create transfer object
       #
       transfer = Transfers()
-      transfer.setTAID(self.getSite() + DateTime.now().strftime("%Y%m%d%H%M%S") + "%04d" % ID.next())
+      transfer.setTAID(self.getSite() + DateTime.now().strftime("%Y%m%d%H%M%S") + "%04d" % UniqueID.next())
       transfer.setTransferID(account + "_" + self.transaction.request().field('bkz',''))
       transfer.setImportWho(self.transaction.request().field('name',''))
       transfer.setImportBeschreibung(string.strip(self.transaction.request().field('description','') + ' ' + self.transaction.request().field('notice','')))

@@ -33,7 +33,6 @@ from mx import DateTime
 from MySQLdb import OperationalError,Warning
 from Middle.AccountsMI import AccountsMI
 from WebUtils.Funcs import urlEncode
-from GlobalState import ID
 from MySQLdb import OperationalError,Warning
 import string
 

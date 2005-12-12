@@ -95,8 +95,8 @@ body {
     background-repeat:no-repeat;
 }
 
-/* h1#esmTitle {display:none;} */ /* hide "E-Sportmanager" as the main title */
-#siteTitle {display:none;} /* hide configured text as the main title */
+/* h1#labelEsmTitle {display:none;} */ /* hide "E-Sportmanager" as the main title */
+#labelSiteTitle {display:none;} /* hide configured text as the main title */
 
 h1 {
 }
@@ -150,15 +150,6 @@ h1 {
 }
 
 .listItem {
-    /* display: list-item; */
-    display: inline;
-}
-
-#esmShort, #esmHome, #license {
-    display:none;
-}
-
-t-item; */
     display: inline;
 }
 

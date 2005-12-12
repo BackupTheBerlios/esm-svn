@@ -33,35 +33,19 @@ from MiscUtils.Funcs import uniqueId
 from string import lower
 import sha, os
 
+from Config import *
+
 #
 # Constants
 #
 dateFormat = '%d.%m.%Y'
 basicStyle = 'basic'
-stylesDir = 'styles'
-
-#
-# read configuration file
-#
-f = open('@CONTEXT@/product.config','r')
-config = eval(f.read())
-f.close()
-#
-# and select required configuration information
-#
-roles = config['roles']
-users = config['users']
-
-site = config['site']
-organisation = config['organisation']
-link = config['link']
-mail = config['mail']
-title = config['title']
+stylesDir = 'Styles'
 
 #
 # read version file
 #
-f = open('@CONTEXT@/version.txt','r')
+f = open('Libs/version.txt','r')
 version = f.readline()
 f.close()
 
@@ -110,6 +94,15 @@ class SiteBase(_SkeletonPage):
     # no logged-in user.
     return self.transaction.session().value('authenticated_user', None)
 
+  def getLanguage(self,usage):
+      langFiles = os.listdir("%s/%s/_text" % (context,stylesDir))
+      langs = self.transaction.request().environ()['HTTP_ACCEPT_LANGUAGE'].split(',')
+      for x in langs:
+          l = x.split(';')[0]
+          if '%s-%s.css' % (l,usage) in langFiles:
+              return l
+      return "_"
+      
   def getStyle(self):
     style = self.transaction.session().value('style',None)
     if style:

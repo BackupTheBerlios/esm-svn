@@ -32,7 +32,6 @@ from SiteContent import SiteContent
 from mx import DateTime
 from MySQLdb import OperationalError,Warning
 from Middle.Transfers import Transfers
-from GlobalState import ID
 import string
 
 class TransferDelete(SiteContent):
