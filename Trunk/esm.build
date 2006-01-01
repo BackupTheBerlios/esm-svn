@@ -265,6 +265,26 @@ Copyright (C) 2005 Jan Gottschick
                 <include name="*.py" />
             </fileset>
         </copy>
+        
+        <foreach item="File" property="filename">
+            <in>
+                <items basedir="Templates/Libs">
+                    <include name="*.tmpl" />
+                </items>
+            </in>
+            <do>
+                <regex pattern="^(?'basename'.*)\.(?'extension'\w+)$" input="${filename}" />
+                <exec program="python" if="${file::up-to-date(basename+'.py',basename+'.tmpl') or (file::exists(basename+'.py') == false)}">
+                    <arg value="${cheetah}" />
+                    <arg value="${filename}" />
+                </exec>
+            </do>
+        </foreach>
+        <copy todir="${install.home}/Libs">
+            <fileset basedir="Templates/Libs">
+                <include name="*.py" />
+            </fileset>
+        </copy>
     </target>
 
     <target name="install.sql"
