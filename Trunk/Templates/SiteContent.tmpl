@@ -43,17 +43,12 @@
 ##
 
 #attr menuPoints = [
-  {'tmpl':'Member','title':'Mitglieder','link':'MemberLedgerSearch'},
-  {'tmpl':'Personal','title':'Mitarbeiter','link':'PersonalLedgerSearch'},
-  {'tmpl':'Vendor','title':'Lieferanten','link':'VendorLedgerSearch'},
-  {'tmpl':'Bank','title':'Bank','link':'BankLedgerSearch'},
-  {'tmpl':'Assets','title':'Bestand','link':'AssetsLedgerSearch'},
-  {'tmpl':'Receipts','title':'Einnahmen','link':'ReceiptsLedgerSearch'},
-  {'tmpl':'Expenses','title':'Ausgaben','link':'ExpensesLedgerSearch'},
-  {'tmpl':'ListsTemplate','title':'Listen','link':'ListsTemplate'},
-  {'tmpl':'Export','title':'Export','link':'ExportsTemplate'},
-  {'tmpl':'Tables','title':'Tabellen','link':'Tables'},
-  {'tmpl':'Administration','title':'Administration','link':'Administration','role':'auditor'},
+  {'tmpl':'Member','link':'MemberLedgerSearch'},
+  {'tmpl':'Personal','link':'PersonalLedgerSearch'},
+  {'tmpl':'Vendor','link':'VendorLedgerSearch'},
+  {'tmpl':'Accounting','link':'BankLedgerSearch'},
+  {'tmpl':'Administration','link':'Administration','role':'auditor'},
+  {'tmpl':'Profile','link':'Profile'},
   {'tmpl':'Logout','title':'Ausloggen','link':'Logout'}
   ]
 
@@ -149,7 +144,7 @@
     <form name="year" action="SetYear" method=post>
         <div id="yearForm">
             <input name="year" type="text" size=10 maxlength=40 value="$accountYear"/>
-            <button type="submit"><span>Jahr</span></button>
+            <button type="submit"><span id="labelButtonYear" /></button>
         </div>
     </form>
     
@@ -159,7 +154,7 @@
     <form name="searchForm" action="$searchPage" method=post>
         <div id="searchForm">
             <input name="search" type="text" size=10 maxlength=40/>
-            <button type="submit"><span>Suchen</span></button>
+            <button type="submit"><span id="labelButtonSearch" /></button>
         </div>
     </form>
 
@@ -183,11 +178,16 @@
                 ##
                 ## show active menu point
                 ##
+                #if $x.has_key('title')
+                    #set $title = '<span>' + $x.title+ '</span>'
+                #else
+                    #set $title = '<span id="labelMenu' + $x.tmpl + '" />'
+                #end if
                 <h3 class="active">
                     #if $x.link
-                        <a href="$x.link"><span>$x.title</span></a>
+                        <a href="$x.link" class="notabbing">$title</a>
                     #else
-                        <span>$x.title</span>
+                        <span class="notabbing">$title</span>
                     #end if
                 </h3>
                 ##
@@ -227,13 +227,76 @@
                 ##
                 ## show not active menu point
                 ##
+                #if $x.has_key('title')
+                    #set $title = '<span>' + $x.title+ '</span>'
+                #else
+                    #set $title = '<span id="labelMenu' + $x.tmpl + '" />'
+                #end if
                 #if $x.link
-                    <h3 class="notActive">
-                        <a href="$x.link"><span>$x.title</span></a>
+                    <h3 class="notActive notabbing">
+                        <a href="$x.link">$title</a>
                     </h3>
                 #else
-                    <h3 class="notAvailable">
-                        <span>$x.title</span>
+                    <h3 class="notAvailable notabbing">
+                        $title
+                    </h3>
+                #end for
+            #end if
+        #end if
+    #end for
+#end def
+#####################
+
+#####################
+#def writeTabbing
+
+    ##
+    ## Each menu point is represented simple text and a link. If the link information of a menu point
+    ## is empty, no link is available and only the text is shown.
+    ##
+    
+    #for x in $menuPoints
+        #if $x.tmpl == $activeMenuPoint
+            ##
+            ## if a link has a role info, the link is only shown is the user has the role
+            ##
+            #if not ($x.has_key('role') and $x.role not in $transaction.session.value('authenticated_roles',[]))
+                ##
+                ## show active menu point
+                ##
+                #if $x.has_key('title')
+                    #set $title = '<span>' + $x.title+ '</span>'
+                #else
+                    #set $title = '<span id="labelMenu' + $x.tmpl + '" />'
+                #end if
+                <h3 class="active tabbingItem">
+                    #if $x.link
+                        <a href="$x.link">$title</a>
+                    #else
+                        $title
+                    #end if
+                </h3>
+            #end if
+        #else
+            ##
+            ## if a link has a role info, the link is only shown is the user has the role
+            ##
+            #if not ($x.has_key('role') and (not $transaction.session.value('authenticated_user','') or $x.role not in $transaction.session.value('authenticated_roles',[])))
+                ##
+                ## show not active menu point
+                ##
+                #if $x.has_key('title')
+                    #set $title = '<span>' + $x.title+ '</span>'
+                #else
+                    #set $title = '<span id="labelMenu' + $x.tmpl + '" />'
+                #end if
+                #if $x.link
+                    <h3 class="notActive tabbingItem">
+                        <a href="$x.link">$title</a>
+                    </h3>
+                #else
+                    <h3 class="notAvailable tabbingItem">
+                        $title
                     </h3>
                 #end for
             #end if

@@ -1,10 +1,81 @@
-#version > span:before {
-    content:"Version ";
-}
+/*
+ File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/Templates/SiteLayout.tmpl $
+ Version:   $Rev: 45 $
+ Changed:   $Date: 2005-12-12 21:24:13 +0100 (Mo, 12 Dez 2005) $
 
-#labelEsmSubtitle > span {
-    display:none;
-}
-#labelEsmSubtitle:after {
-    content:"Die ultimative Vereinsverwaltung";
-}
+ Homepage:  http://esm.berlios.de
+ Copyright: GNU Public License Version 2 (see license.txt)
+
+ E-Sportmanager (esm)
+
+ Copyright (C) 2005 Jan Gottschick
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+   for more details.
+
+   You should have received a copy of the GNU General Public License along
+   with this program; if not, write to the
+
+   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
+/*
+  Please set the value of each label for the German language "de".
+  
+  The form of each entry should be: #labelName:after { content:"value"; }
+  If you want to extend an automatically set value by an prefix, you should
+  insert the value "before". 
+  
+  If you want to substitute a label by an icon, this should be done in the
+  style sheet as an icon should normally be language independant.
+*/
+#labelEsmTitle:after { content:"E-Sportmanager"; }
+#labelEsmSubtitle:after { content:"Die ultimative Vereinsverwaltung"; }
+#labelHelpTitle:after { content:"Hinweis"; }
+#labelUsername:before { content:"Nutzer = '"; }
+#labelUsername:after { content:"'"; }
+#labelESportmanager:after { content:"E-Sportmanager"; }
+#labelESportmanagerShort:after { content:"esm"; }
+#labelVersion:before { content:"Version "; }
+#labelLicense:after { content:"Lizenz"; }
+#labelAbout:after { content:"Über"; }
+#labelHelp:after { content:"Hilfe"; }
+#labelSupport:after { content:"Support"; }
+#labelForum:after { content:"Forum"; }
+#labelHome:after { content:"Home"; }
+
+#labelHelpTitle:after { content:"Hilfe"; }
+#labelErrorTitle:after { content:"Problem"; }
+
+#labelMenuMember:after { content:"Mitglieder"; }
+#labelMenuPersonal:after { content:"Mitarbeiter"; }
+#labelMenuVendor:after { content:"Lieferanten"; }
+#labelMenuAccounting:after { content:"Buchhaltung"; }
+#labelMenuAdministration:after { content:"Administration"; }
+#labelMenuProfile:after { content:"Einstellungen"; }
+#labelMenuLogout:after { content:"Beenden"; }
+
+#labelButtonYear:after { content:""; }
+#labelButtonSearch:after { content:""; }
+#labelButtonOK:after { content:"Ok"; }
+
+#labelHelpLogin:after { content:"Bitte autorisieren Sie sich. Trainer/Personal geben im Feld Mitgliedsnr. bitte zusätzlich noch den Prefix 'TR' an, z.B. 'TR10'."; }
+#labelFormLoginTitle:after { content:"Anmelden"; }
+#labelFormLoginUsername:after { content:"Mitgliedsnr"; }
+#labelFormLoginPassword:after { content:"Kennwort"; }
+#labelHintLogin:before { content:"Wenn Sie Ihr Passwort vergessen haben, können sie"; }
+#labelHintLoginLink:after { content:"hier"; }
+#labelHintLogin:after { content:"ein neues Passwort anfordern."; }
+#labelErrorWrongUsername:after { content:"Die angegebene Mitgliedsnr ist nicht korrekt"; }
+#labelErrorWrongPassword:after { content:"Das angegebene Kennwort ist nicht korrekt"; }
+
+#labelHelpNewPassword:after { content:"Bitte geben Sie Ihre Mitgliedsnr. an. Trainer/Personal geben im Feld Mitgliedsnr. bitte zusätzlich noch den Prefix 'TR' an, z.B. 'TR10'."; }
+#labelFormNewPasswordTitle:after { content:"Neues Passwort anfordern"; }
+#labelFormNewPasswordUsername:after { content:"Mitgliedsnr"; }
+#labelHintNewPassword:after { content:"Ihr neues Passwort wird Ihnen per Mail zugesendet."; }

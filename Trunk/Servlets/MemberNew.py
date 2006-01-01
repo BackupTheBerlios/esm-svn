@@ -29,7 +29,7 @@ __author__ = "Jan Gottschick"
 __revision__ = "$Rev: 15 $"[6:-2]
 
 from EditMemberTemplate import EditMemberTemplate
-from Member import Member
+from SqlObjects.Member import Member
 from Id import Id
     
 class MemberNew(EditMemberTemplate):

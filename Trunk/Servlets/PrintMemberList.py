@@ -30,7 +30,7 @@ __revision__ = "$Rev$"[6:-2]
 
 from PDFDownload import PDFDownload
 
-import string, misc
+import string, Libs.misc
 from reportlab.platypus import Paragraph, Spacer, Frame, Table, TableStyle
 from reportlab.lib.units import inch
 from reportlab.lib import colors

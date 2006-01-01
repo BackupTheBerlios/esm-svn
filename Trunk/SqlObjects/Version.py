@@ -32,7 +32,7 @@ from sqlobject.main import *
 from sqlobject.col import *
 from sqlobject.mysql.mysqlconnection import *
 
-from Config import dbConnection
+from Libs.Config import dbConnection
 
 class Version(SQLObject):
     '''

@@ -85,61 +85,6 @@ set /p _CONTEXT=$ Installation Name =
 if "%_CONTEXT%" EQU "" goto nocontext
 
 SET _ERRORS=0
-:organisation
-echo :
-echo : Enter the full name of your club,
-echo : e.g. "My Sport Club e.V."
-IF NOT DEFINED _ORGANISATION set _ORGANISATION=%_CONTEXT%
-IF DEFINED _ORGANISATION echo : default value = %_ORGANISATION%
-echo :
-set /p _ORGANISATION=$ Club Name = 
-if "%_ORGANISATION%" EQU "" goto noorganisation
-
-SET _ERRORS=0
-:title
-echo :
-echo : Enter the title of your installation,
-echo : e.g. "My Sport Club Management"
-IF NOT DEFINED _TITLE set _TITLE=%_CONTEXT%
-IF DEFINED _TITLE echo : default value = %_TITLE%
-echo :
-set /p _TITLE=$ Title = 
-if "%_TITLE%" EQU "" goto notitle
-
-SET _ERRORS=0
-:site
-echo :
-echo : Enter the unique shortcut/site of your installation,
-echo : e.g. "sc1"
-IF NOT DEFINED _SITE set _SITE=%_CONTEXT%
-IF DEFINED _SITE echo : default value = %_SITE%
-echo :
-set /p _SITE=$ Site = 
-if "%_SITE%" EQU "" goto nosite
-
-SET _ERRORS=0
-:link
-echo :
-echo : Enter the link to the website of your organisation,
-echo : e.g. "http://www.My-Sport-Club.us"
-IF NOT DEFINED _LINK set _LINK=
-IF DEFINED _LINK echo : default value = %_LINK%
-echo :
-set /p _LINK=$ Link = 
-if "%_LINK%" EQU "" goto nolink
-
-SET _ERRORS=0
-:mail
-echo :
-echo : Enter the mail address of your support/information,
-echo : e.g. "support@My-Sport-Club.us"
-IF NOT DEFINED _MAIL set _MAIL=
-IF DEFINED _MAIL echo : default value = %_MAIL%
-echo :
-set /p _MAIL=$ Mail = 
-if "%_MAIL%" EQU "" goto nomail
-
-SET _ERRORS=0
 :home
 echo :
 echo : Enter the path for your installation,
@@ -214,41 +159,6 @@ echo :ERROR: The name of the installation must be given
 SET /A _ERRORS+=1
 IF "%_ERRORS%" GTR "%_MAX_ERRORS%" GOTO end
 goto context
-
-:noorganisation
-echo :
-echo :ERROR: The full name of the sport club must be given
-SET /A _ERRORS+=1
-IF "%_ERRORS%" GTR "%_MAX_ERRORS%" GOTO end
-goto organisation
-
-:notitle
-echo :
-echo :ERROR: The title of the installation must be given
-SET /A _ERRORS+=1
-IF "%_ERRORS%" GTR "%_MAX_ERRORS%" GOTO end
-goto title
-
-:nosite
-echo :
-echo :ERROR: The unique shortcut for your organization/site must be given
-SET /A _ERRORS+=1
-IF "%_ERRORS%" GTR "%_MAX_ERRORS%" GOTO end
-goto site
-
-:nolink
-echo :
-echo :ERROR: The link to the website of your organization must be given
-SET /A _ERRORS+=1
-IF "%_ERRORS%" GTR "%_MAX_ERRORS%" GOTO end
-goto link
-
-:nomail
-echo :
-echo :ERROR: The mail address of your organization must be given
-SET /A _ERRORS+=1
-IF "%_ERRORS%" GTR "%_MAX_ERRORS%" GOTO end
-goto mail
 
 :nohome
 echo :

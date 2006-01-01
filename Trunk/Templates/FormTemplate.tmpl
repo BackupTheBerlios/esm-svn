@@ -36,44 +36,50 @@
 #attr inputForm = []
 
 #attr editTemplate = ''
-#attr editTitle = ''
+#attr editAction = ''
 
-#attr bodyTagAttribs = {'text':'black',"onload":"document.form.username.focus()"}
+#def cursor()
+    #set $focusField = ""
+    #for $x in $inputForm
+        #if ($x.type != "hidden") and ($focusField == "")
+            #set $focusField = $x.name
+        #end if
+    #end for
+    onload="document.form.${focusField}.focus()"
+#end def
+
 
 ##################################################################################
 
-<table border="0" width="300" cellpadding="0" cellspacing="0"><tr><td>
-  <form name ="form" method="post" action="$editTemplate">
-    <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="yellow">
-      <tr valign=top>
-        <th>
-          $editTitle
-        </th>
-      </tr>
-    </table>
-    <table border="0" width="100%" cellpadding="3" cellspacing="0" bgcolor="aqua">
-      <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-      #for $x in $inputForm
-        #if $x.type == "hidden"
-          #if $x.value
-            <input type="hidden" name="$x.name" value="$x.value">
-          #else
-            <input type="hidden" name="$x.name" value="$request.field($x.var,'')">
-          #end if
-        #else
-          <tr>
-            <td align="right">$x.title</td>
-            <td><input type="$x.type" name="$x.name"></td>
-          </tr>
-        #end if
-      #end for
-      <tr>
-        <td>&nbsp;</td>
-        <td><input type="submit" value="OK"></td>
-      </tr>
-      <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-    </table>
-  </form>
-</td></tr></table>
-<tr><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td></tr>
+    <form name ="form" method="post" action="$editAction">
+        <h4 id="formTitle">
+            <span id="labelForm${editTemplate}Title" />
+        </h4>
+        <div id="formFields">
+            #for $x in $inputForm
+                #if $x.type == "hidden"
+                    #if $x.value
+                        <input type="hidden" name="$x.name" value="$x.value" />
+                    #else
+                        <input type="hidden" name="$x.name" value="$request.field($x.var,'')" />
+                    #end if
+                #elif $x.type == "hint"
+                    <div id="formField${x.name}" class="hintField">
+                        #if $x.has_key("link") and $x.link
+                            <span id="label$x.name" class="hint"><a href="$x.link"><span id="label${x.name}Link" /></a></span>
+                        #else
+                            <span id="label$x.name" class="hint" />
+                        #end if
+                    </div>
+                #else
+                    <div id="formField${x.name}" class="formField">
+                        <div class="formFieldTitle"><span id="labelForm${editTemplate}$x.title" /></div>
+                        <div class="formFieldInput"><input type="$x.type" name="$x.name" /></div>
+                    </div>
+                #end if
+            #end for
+            <div>
+                <button class="formButton" type="submit"><span id="labelButtonOK" /></button>
+            </div>
+        </div>
+    </form>

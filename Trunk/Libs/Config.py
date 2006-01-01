@@ -31,16 +31,21 @@ __revision__ = "$Rev: 37 $"[6:-2]
 from sqlobject.mysql.mysqlconnection import *
 
 import os
+import logging
 
-context = "sfw"
+'''
+    Provides global configuration variables read from the config file.
+'''
+
+context = "sfw" # TODO: should be given as parameter at startup time
 
 #
 # read configuration file
 #
-if os.path.exists('Libs/product-sfw.config'):
-    f = open('Libs/product-sfw.config','r')
+if os.path.exists('Libs/product-%s.config' % context):
+    f = open('Libs/product-%s.config' % context,'r')
 else:
-    f = open('../product-sfw.config','r')
+    f = open('../product-%s.config' % context,'r')
 config = eval(f.read())
 f.close()
 #
@@ -52,11 +57,21 @@ dbPassword = config['dbPassword']
 
 roles = config['roles']
 users = config['users']
-
-site = config['site']
-organisation = config['organisation']
-link = config['link']
-mail = config['mail']
-title = config['title']
-
+    
 dbConnection = MySQLConnection(user=dbUser,passwd=dbPassword,db=dbName)
+
+#
+# get logging level from config file
+#
+logLevelTable = {
+    'debug': logging.DEBUG,
+    'info': logging.INFO,
+    'warning': logging.WARNING,
+    'error': logging.ERROR,
+    'critical': logging.CRITICAL,
+}
+
+if 'logging' in config:
+    loggingLevel = logLevelTable[config['logging']]
+else:
+    loggingLevel = logging.WARNING

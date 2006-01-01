@@ -27,14 +27,31 @@
 */
 
 /* default values */
+
+
+*.debug {
+    display:none;
+}
+    
 * {
     font-family: Verdana,Helvetica,sans-serif;
-    border-width: thin;
+    font-size: 1.0em;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    padding:0 5px;
+}
+a:hover, 
+a.active {
+    color: lightgrey;
 }
 
 /*
     The following layout were implemented with the containers:
       - the header is positioned at the top
+      - the tabbing bar is positioned below the header
       - the navigation list is below the header and at the left side
       - the content area is below the header and to the right
         the content area includes the help, content and error part
@@ -45,7 +62,7 @@ body {
     text-align:center;
 }
 
-.container {
+*.container {
     /* border-style: solid; */ /* to debug the layout */
 }
 
@@ -60,13 +77,28 @@ body {
 
 #header {
     clear: both;
-    height: 12ex;
+    height: 9ex;
+}
+
+#tabbing {
+    /* display: none; to disable tabbing bar */
+    clear: both;
+}
+
+*.notabbing {
+    display:none;
 }
 
 #navigation {
-    width: 10em;
+    width: 9em;
     margin: 10px 1em 10px 0;
     float: left;
+    min-height: 450px;
+}
+
+#helpTitle {
+    float:left;
+    margin:0px 10px;
 }
 
 #contentArea {
@@ -81,7 +113,24 @@ body {
 
 #footer {
     clear: both;
-    height: 4ex;
+    height: 3ex;
+}
+
+*.footerItem {
+    display: inline;
+}
+
+#yearForm, #searchForm {
+    margin: 5px;
+}
+
+*.formFieldTitle {
+    float:left;
+    width:100px;
+}
+
+*.formFieldInput {
+    margin:5px 0px;
 }
 
 /*
@@ -90,15 +139,25 @@ body {
 
 #header {
     text-align: center;
-    background-color: #c0c0c0;
-    background-image:url(/styles/basic/logo-atoosa-small.png);
+    /* background-color: #c0c0c0; */
+    background-image:url(/Styles/basic/logo-atoosa.png);
     background-repeat:no-repeat;
+    /* border-bottom: 1px dotted; */
+    margin: 0 20px;
 }
 
 /* h1#labelEsmTitle {display:none;} */ /* hide "E-Sportmanager" as the main title */
 #labelSiteTitle {display:none;} /* hide configured text as the main title */
 
-h1 {
+h1,h2 {
+    font-size:1.3em;
+}
+
+h3 > a {
+    color: grey;
+}
+h3.active > a {
+    color: #284156;
 }
 
 /*
@@ -106,24 +165,26 @@ h1 {
 */
 
 #navigation {
-    background-color: #E0E0E0;
+    /* background-color: #E0E0E0; */
+    border-right: 1px dotted;
 }
 
-#yearForm {
-    text-align: center;
-    margin-top: 10px;
-}
-
-#yearForm > button {
-    display: none;
-}
-
-#searchForm {
-    text-align: center;
-}
-
+#yearForm > button,
 #searchForm > button {
     display: none;
+}
+
+#yearForm,
+#searchForm {
+    text-align: center;
+    font-size: 0.8em;
+}
+
+#submenu {
+    list-style-type: none;
+    padding: 0px 5px;
+    font-size: 0.9em;
+    font-weight: bold;
 }
 
 /*
@@ -131,12 +192,53 @@ h1 {
 */
 
 #help {
-    border-style: dotted;
+    border-bottom: 1px dotted;
+    min-height: 40px;
 }
 
-#helpText:before {
-    content:url(/styles/basic/idea.gif);
-    margin: 0 5px;
+#help.hasNoHelp {
+    display: none;
+}
+
+#labelHelpTitle {
+    display: none;
+}
+
+#helpText {
+    font-size: 0.8em;
+    color: green;
+}
+
+#helpTitle:before {
+    content: url(/Styles/basic/idea.gif);
+}
+
+*.hintField {
+  padding: 10px 0px;
+  font-size: 0.8em;
+  color: green;
+}
+
+#error {
+    border-top: 1px dotted;
+    min-height: 40px;
+}
+
+#error.hasNoError {
+    display: none;
+}
+
+#labelErrorTitle {
+    display: none;
+}
+
+#errorText {
+    font-size: 0.8em;
+    color: red;
+}
+
+#errorTitle:before {
+    content: url(/Styles/basic/error.gif);
 }
 
 /*
@@ -144,15 +246,49 @@ h1 {
 */
 
 #footer {
-    background-color: #c0c0c0;
+    /* background-color: #c0c0c0; */
+    border-top: 1px dotted;
     text-align: center;
     vertical-align: middle;
 }
 
-.listItem {
-    display: inline;
+*.footerItem {
+    font-size: 0.8em;
+}
+
+*.footerList > #username {
+    display: none;
 }
 
 #esmShort, #esmHome, #license {
     display:none;
+}
+
+/*
+    Styling the tabbing bar. All items are placed centered in a line.
+*/
+#tabbing {
+    background-color: #e8e8e8;
+    text-align: right;
+    vertical-align: center;
+}
+
+*.tabbingItem {
+    display: inline;
+}
+
+/*
+    Styling input forms
+*/
+
+*.formFieldTitle {
+    font-size:0.8em;
+}
+
+*.formFieldInput {
+    font-size:0.8em;
+}
+
+.formButton {
+    font-size:0.8em;
 }

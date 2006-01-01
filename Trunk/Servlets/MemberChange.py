@@ -29,7 +29,7 @@ __author__ = "Jan Gottschick"
 __revision__ = "$Rev$"[6:-2]
 
 from Change import Change
-from Member import Member
+from SqlObjects.Member import Member
 
 from mx import DateTime
 import string

@@ -32,7 +32,7 @@ from SiteContent import SiteContent
 from mx import DateTime
 from MySQLdb import OperationalError,Warning
 from Middle.Transfers import Transfers
-from misc import fee
+from Libs.misc import fee
 import string
 from MiscUtils.Funcs import uniqueId
 

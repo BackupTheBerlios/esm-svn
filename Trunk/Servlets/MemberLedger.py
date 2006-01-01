@@ -30,7 +30,7 @@ __author__ = "Jan Gottschick"
 __revision__ = "$Rev: 12 $"[6:-2]
 
 from LedgerTemplate import LedgerTemplate
-from Member import Member
+from SqlObjects.Member import Member
 
 class MemberLedger(LedgerTemplate):
 

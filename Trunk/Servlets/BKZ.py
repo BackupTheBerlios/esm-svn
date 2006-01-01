@@ -29,8 +29,8 @@
 __author__ = "Jan Gottschick"
 __revision__ = "$Rev: 12 $"[6:-2]
 
-from Tables import Tables
-from Price import Price
+from SqlObjects.Tables import Tables
+from SqlObjects.Price import Price
 
 class BKZ(Tables):
 

@@ -35,13 +35,18 @@
 #attr inputForm = [
   {
     'name':"username",
-    'title':"Benutzer",
+    'title':"Username",
     'type':"TEXT"
   },
   {
     'name':"password",
-    'title':"Passwort",
+    'title':"Password",
     'type':"password"
+  },
+  {
+    'name':"HintLogin",
+    'link':"NewPassword",
+    'type':"hint"
   },
   {
     'name':"action",
@@ -50,10 +55,9 @@
   }
   ]
 
-#attr editTemplate = 'Main'
-#attr editTitle = 'Anmeldung'
-
-#attr bodyTagAttribs = {'text':'black',"onload":"document.form.username.focus()"}
+#attr editTemplate = 'Login'
+#attr editAction = 'Main'
+#attr helpText = '<span id="labelHelpLogin" />'
 
 ##################################################################################
 

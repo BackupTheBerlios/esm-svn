@@ -53,6 +53,8 @@
 #attr helpLink = "/help/index.html"
 #attr licenseLink = "http://esm.berlios.de"
 
+#attr tooltip_options = "this.T_BGCOLOR='yellow';this.T_BORDERWIDTH=0;this.T_WIDTH=150;this.T_DELAY=1000;"
+
 #attr helpText = ''
 
 #attr metaTags = {
@@ -70,6 +72,24 @@
     'author':'Jan Gottschick',
   }
 }
+
+##################################################################################
+##
+## macro to position cursor in a form
+##
+
+#def cursor()
+    ## something like "onload=document.form.username.focus()"
+#end def
+
+##################################################################################
+##
+## macro to insert tooltips
+##
+
+#def tooltip(item)
+    onmouseover="$tooltip_options return escape(${item}())"
+#end def
 
 ##################################################################################
 ##
@@ -105,42 +125,39 @@ $checkRole($role)
     -->
     
     <head>
-      <title>$title</title>
-      $formatMetaTags($metaTags)
+        <title>$title</title>
+        $formatMetaTags($metaTags)
+        
+        <link rel="stylesheet" type="text/css" media="screen" href="$getStylesDir/$styleSheet" />
+        <link rel="stylesheet" type="text/css" media="screen" href="Styles/_text/${getLanguage('Styles/_text','base.css')}-base.css" />
+        <link rel="stylesheet" type="text/css" media="print" href="$getStylesDir/$printSheet" />
+        
+        <script src="Javascript/${getLanguage('Javascript','base.js')}-base.js" type="text/javascript"></script>
       
-      <script src="Javascript/base.js" type="text/javascript"></script>
-    
-      <link rel="stylesheet" type="text/css" media="screen" href="$getStylesDir/$styleSheet" />
-      <link rel="stylesheet" type="text/css" media="screen" href="Styles/_text/${getLanguage('base')}-base.css" />
-      <link rel="stylesheet" type="text/css" media="print" href="$getStylesDir/$printSheet" />
-      
-      ##################################################################################
-      ##
-      ## Javascript code to be used by all pages
-      ##
-    
-      <SCRIPT type="text/javascript">
-    
-        if (!document.layers&&!document.all)
-          event=""
-            
         #####################
-        #block javascript
+        #block Javascript
         
         #end block
         #####################
-      </SCRIPT>
-      
+
     </head>
     
-    <body id="body" onload="document.#echo $focusField #.focus()">
+    <body id="body" $cursor()>
     
         <div id="wrapper" class="container">
         
             <div id="header" class="container">
-                <h1 id="labelEsmTitle"><span>ESM</span></h1>
-                <h1 id="labelSiteTitle"><span>$getTitle</span></h1>
-                <h2 id="labelEsmSubtitle"><span>the ultimate management for your sport club</span></h2>
+                <h1><span id="labelEsmTitle"/></h1>
+                <h1><span id="labelSiteTitle">$getTitle</span></h1>
+                <h2><span id="labelEsmSubtitle"/></h2>
+            </div>
+            
+            <div id="tabbing" class="container">
+                #####################
+                #block writeTabbing
+                <span class="debug">Tabbing block</span>
+                #end block
+                #####################
             </div>
             
             <div id="navigation" class="container">
@@ -173,19 +190,19 @@ $checkRole($role)
                 ##
                 
                 #if $helpText
-                    <div id="help" class="hasHelp,container">
-                        <p id="labelHelpTitle">Hinweis<p>
-                        <p id="labelHelpText">$helptext</p>
+                    <div id="help" class="hasHelp container">
+                        <div id="helpTitle"><span id="labelHelpTitle"/></div>
+                        <div id="helpText">$helpText</div>
                     </div>
                 #else
-                    <div id="help" class="hasNoHelp,container">
-                        <p id="helpText" class="debug">Help block</p>
+                    <div id="help" class="hasNoHelp container">
+                        <div id="helpText" class="debug">Help block</div>
                     </div>
                 #end if
             
                 <div id="content" class="container">
                     #####################
-                    ##block writeContent
+                    #block writeContent
                     
                     ##
                     ## Every page can show an error message after the content. Therefor
@@ -194,7 +211,7 @@ $checkRole($role)
                     
                     <span class="debug">Content block</span>
                     
-                    ##end block
+                    #end block
                     #####################
                 </div>
                 
@@ -204,11 +221,12 @@ $checkRole($role)
                 
                 #set $errorText = $request.field('error','')
                 #if $errorText
-                    <div id="error" class="hasError,container">
-                        <p>$errortext</p>
+                    <div id="error" class="hasError container">
+                        <div id="errorTitle"><span id="labelErrorTitle"/></div>
+                        <div id="errorText"><span id="labelError$errorText"/></div>
                     </div>
                 #else
-                    <div id="error" class="hasNoError,container">
+                    <div id="error" class="hasNoError container">
                         <p class="debug">Error block</p>
                     </div>
                 #end if
@@ -216,26 +234,30 @@ $checkRole($role)
             </div>
         
             ##
-            ## Footer
+            ## Footer (various Links including Tooltips)
             ##
             <div id="footer" class="container">
-                <div class="list">
-                    <div id="club" class="listItem"><a id="labelOrganisation" href="$getLink" target="_blank"><span>$getOrganisation</span></a></div>
-                    <div id="esm" class="listItem"><a id="labelESportmanager" href="$esmLink" target="_blank"><span>E-Sportmanager</span></a></div>
-                    <div id="esmShort" class="listItem"><a id="labelESportmanagerShort" href="$esmLink" target="_blank"><span>esm</span></a></div>
-                    <div id="version" class="listItem"><span>$getVersion</span></div>
-                    <div id="copyright" class="listItem"><a id="labelCopyright" href="$licenseLink" target="_blank"><span>&copy; 2000 - $currentYr</span></a></div>
-                    <div id="license" class="listItem"><a id="labelLicense" href="$licenseLink" target="_blank"><span>Lizenz</span></a></div>
-                    <div id="about" class="listItem"><a id="labelAbout" href="$aboutPage" target="_blank"><span>Über</span></a></div>
-                    <div id="helppages" class="listItem"><a id="labelHelp" href="$helpLink" target="_blank"><span>Hilfe</span></a></div>
-                    <div id="support" class="listItem"><a id="labelSupport" href="mailto:$getMail"><span>Support</span></a></div>
-                    <div id="forum" class="listItem"><a id="labelForum" href="$forumPage" target="_blank" onMouseOver="showtip(this,event,'Use forum for discussion')" onMouseOut="hidetip()"><span>Forum</span></a></div>
-                    <div id="esmHome" class="listItem"><a id="labelHome" href="$esmLink" target="_blank"><span>Home</span></a></div>
+                <div class="footerList">
+                    <div id="username" class="footerItem"><span id="labelUsername">$getLoggedInUser</span></div>
+                    <div id="club" class="footerItem"><a href="$getLink" target="_blank" $tooltip("ttOrganisation")><span id="labelOrganisation">$getOrganisation</span></a></div>
+                    <div id="esm" class="footerItem"><a href="$esmLink" target="_blank" $tooltip("ttESportmanager")><span id="labelESportmanager"/></a></div>
+                    <div id="esmShort" class="footerItem"><a href="$esmLink" target="_blank" $tooltip("ttESportmanagerShort")><span id="labelESportmanagerShort"/></a></div>
+                    <div id="version" class="footerItem"><span id="labelVersion">$getVersion</span></div>
+                    <div id="copyright" class="footerItem"><a href="$licenseLink" target="_blank" $tooltip("ttCopyright")><span id="labelCopyright">&copy; 2000 - $currentYr</span></a></div>
+                    <div id="license" class="footerItem"><a href="$licenseLink" target="_blank" $tooltip("ttLicense")><span id="labelLicense"/></a></div>
+                    <div id="about" class="footerItem"><a href="$aboutPage" target="_blank" $tooltip("ttAbout")><span id="labelAbout"/></a></div>
+                    <div id="helppages" class="footerItem"><a href="$helpLink" target="_blank" $tooltip("ttHelp")><span id="labelHelp"/></a></div>
+                    <div id="support" class="footerItem"><a href="mailto:$getMailAddress" $tooltip("ttSupport")><span id="labelSupport"/></a></div>
+                    <div id="forum" class="footerItem"><a href="$forumPage" target="_blank" $tooltip("ttForum")><span id="labelForum"/></a></div>
+                    <div id="esmHome" class="footerItem"><a href="$esmLink" target="_blank" $tooltip("ttHome")><span id="labelHome"/></a></div>
                 </div>
             </div>
         
         </div>
         
+        ##
+        ## extra div's to insert graphics
+        ##
         <div id="extraDiv1"/>
         <div id="extraDiv2"/>
         <div id="extraDiv3"/>
@@ -243,6 +265,11 @@ $checkRole($role)
         <div id="extraDiv5"/>
         <div id="extraDiv6"/>
         
+        ##
+        ## support tooltips using http://www.walterzorn.de/tooltip
+        ##
+        <script src="Javascript/wz_tooltip.js" type="text/javascript"></script>
+    
     </body>
 
 </html>

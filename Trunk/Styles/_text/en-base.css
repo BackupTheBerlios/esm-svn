@@ -1,0 +1,10 @@
+#version > span:before {
+    content:"Version ";
+}
+
+#labelEsmSubtitle > span {
+    display:none;
+}
+#labelEsmSubtitle:after {
+    content:"The ultimate sport management system";
+}

@@ -1,5 +1,5 @@
 #
-# File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/Servlets/skel/GlobalState.py $
+# File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/Servlets/skel/SiteBase.py $
 # Version:   $Rev: 37 $
 # Changed:   $Date: 2005-12-11 15:20:47 +0100 (So, 11 Dez 2005) $
 #
@@ -28,29 +28,31 @@
 __author__ = "Jan Gottschick"
 __revision__ = "$Rev: 37 $"[6:-2]
 
-from sqlobject.mysql.mysqlconnection import *
+import logging
+from Config import loggingLevel
 
-import os
+class Log:
 
-context = "@CONTEXT@"
-
-#
-# read configuration file
-#
-if os.path.exists('Libs/product-@CONTEXT@.config'):
-    f = open('Libs/product-@CONTEXT@.config','r')
-else:
-    f = open('../product-@CONTEXT@.config','r')
-config = eval(f.read())
-f.close()
-#
-# and select required configuration information
-#
-dbUser = config['dbUser']
-dbName = config['dbName']
-dbPassword = config['dbPassword']
-
-roles = config['roles']
-users = config['users']
-
-dbConnection = MySQLConnection(user=dbUser,passwd=dbPassword,db=dbName)
+  def __init__(self, *args, **KWs):
+    #
+    # use the standard logging package
+    # log all messages into files
+    #
+    self.myLogger = logging.getLogger('esm')
+    hdlr = logging.FileHandler('Logs/esm.log')
+    if loggingLevel == logging.DEBUG:
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(message)s')
+    else:
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    hdlr.setFormatter(formatter)
+    self.myLogger.addHandler(hdlr) 
+    self.myLogger.setLevel(loggingLevel)
+    
+    # self.myLogger.critical("set logging level = %s." % loggingLevel)
+    
+    self.myLogger.info("esm started.")
+    
+  def logger(self):
+    return self.myLogger
+    
+Log = Log()

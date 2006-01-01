@@ -90,26 +90,6 @@ Copyright (C) 2005 Jan Gottschick
     <if test="${property::exists('sys.env._PASSWORD')}">
         <property name="install.password" value="${sys.env._PASSWORD}" />
     </if>
-    <property name="install.title" value="${install.context}"/>
-    <if test="${property::exists('sys.env._TITLE')}">
-        <property name="install.title" value="${sys.env._TITLE}" />
-    </if>
-    <property name="install.organisation" value="${install.context}"/>
-    <if test="${property::exists('sys.env._ORGANISATION')}">
-        <property name="install.organisation" value="${sys.env._ORGANISATION}" />
-    </if>
-    <property name="install.site" value="${install.context}"/>
-    <if test="${property::exists('sys.env._SITE')}">
-        <property name="install.site" value="${sys.env._SITE}" />
-    </if>
-    <property name="install.link" value=""/>
-    <if test="${property::exists('sys.env._LINK')}">
-        <property name="install.link" value="${sys.env._LINK}" />
-    </if>
-    <property name="install.mail" value=""/>
-    <if test="${property::exists('sys.env._MAIL')}">
-        <property name="install.mail" value="${sys.env._MAIL}" />
-    </if>
     <property name="db.name" value="${install.context}"/>
     <if test="${property::exists('sys.env._DBNAME')}">
         <property name="db.user" value="${sys.env._DBNAME}" />
@@ -162,11 +142,6 @@ Copyright (C) 2005 Jan Gottschick
             <filterchain>
                 <replacetokens>
                     <token key="CONTEXT" value="${install.context}" />
-                    <token key="TITLE" value="${install.title}" />
-                    <token key="ORGANISATION" value="${install.organisation}" />
-                    <token key="SITE" value="${install.site}" />
-                    <token key="LINK" value="${install.link}" />
-                    <token key="MAIL" value="${install.mail}" />
                     <token key="HOME" value="${install.home}" />
                     <token key="PASSWORD" value="${encoded.password}" />
                     <token key="DBNAME" value="${db.name}" />
