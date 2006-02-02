@@ -26,6 +26,16 @@
       Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
+/*
+    The following layout were implemented with the containers:
+      - the header is positioned at the top
+      - the tabbing bar is positioned below the header
+      - the navigation list is below the header and at the left side
+      - the content area is below the header and to the right
+        the content area includes the help, content and error part
+      - the footer is at the bottom
+*/
+
 /* default values */
 
 
@@ -38,46 +48,74 @@
     font-size: 1.0em;
 }
 
-a {
+A {
     color: black;
     text-decoration: none;
     padding:0 5px;
 }
-a:hover, 
-a.active {
-    color: lightgrey;
+A:hover, 
+A.active {
+    color: orange;
 }
 
-/*
-    The following layout were implemented with the containers:
-      - the header is positioned at the top
-      - the tabbing bar is positioned below the header
-      - the navigation list is below the header and at the left side
-      - the content area is below the header and to the right
-        the content area includes the help, content and error part
-      - the footer is at the bottom
-*/
+.notActive A:hover {
+    color: orange;
+}
 
 body {
     text-align:center;
 }
 
-*.container {
-    /* border-style: solid; */ /* to debug the layout */
-}
-
-#wrapper {
-    width: 60em;
-    margin: 0 auto;
-    text-align: left;
-    position: relative;
-    padding: 0;
-    /* border-style: dotted; */
-}
+/*
+    Styling the header. It hat a solid background and a logo to the left.
+*/
 
 #header {
     clear: both;
     height: 9ex;
+    text-align: center;
+    /* background-color: #c0c0c0; */
+    background-image:url(/Styles/basic/logo.png);
+    background-repeat:no-repeat;
+    /* border-bottom: 1px dotted; */
+    margin: 0 20px;
+}
+
+/* h1#labelEsmTitle {display:none;} */ /* hide "E-Sportmanager" as the main title */
+#labelSiteTitle {display:none;} /* hide configured text as the main title */
+
+H1, H2 {
+    font-size:1.3em;
+}
+
+/*
+    Styling the navigation list
+*/
+
+H3 > A {
+    color: grey;
+}
+
+H3.active > A {
+    color: #284156;
+}
+
+H3.notActive > A {
+    color:grey;
+}
+
+H4 {
+    font-size:0.9em;
+    margin:4px;
+}
+
+H4.active {
+    display: none;
+}
+
+H4.notActive > A {
+    font-size:0.9em;
+    color:grey;
 }
 
 #tabbing {
@@ -93,80 +131,16 @@ body {
     width: 9em;
     margin: 10px 1em 10px 0;
     float: left;
-    min-height: 450px;
+    min-height: 480px;
 }
-
-#helpTitle {
-    float:left;
-    margin:0px 10px;
-}
-
-#contentArea {
-    width: 49em;
-    margin: 10px 0;
-    float: left;
-}
-
-#content {
-    margin: 10px 0;
-}
-
-#footer {
-    clear: both;
-    height: 3ex;
-}
-
-*.footerItem {
-    display: inline;
-}
-
-#yearForm, #searchForm {
-    margin: 5px;
-}
-
-*.formFieldTitle {
-    float:left;
-    width:100px;
-}
-
-*.formFieldInput {
-    margin:5px 0px;
-}
-
-/*
-    Styling the header. It hat a solid background and a logo to the left.
-*/
-
-#header {
-    text-align: center;
-    /* background-color: #c0c0c0; */
-    background-image:url(/Styles/basic/logo-atoosa.png);
-    background-repeat:no-repeat;
-    /* border-bottom: 1px dotted; */
-    margin: 0 20px;
-}
-
-/* h1#labelEsmTitle {display:none;} */ /* hide "E-Sportmanager" as the main title */
-#labelSiteTitle {display:none;} /* hide configured text as the main title */
-
-h1,h2 {
-    font-size:1.3em;
-}
-
-h3 > a {
-    color: grey;
-}
-h3.active > a {
-    color: #284156;
-}
-
-/*
-    Styling the navigation list
-*/
 
 #navigation {
     /* background-color: #E0E0E0; */
     border-right: 1px dotted;
+}
+
+#yearForm, #searchForm {
+    margin: 5px;
 }
 
 #yearForm > button,
@@ -182,7 +156,7 @@ h3.active > a {
 
 #submenu {
     list-style-type: none;
-    padding: 0px 5px;
+    padding: 10px 5px;
     font-size: 0.9em;
     font-weight: bold;
 }
@@ -190,6 +164,29 @@ h3.active > a {
 /*
     Styling the content area
 */
+
+*.container {
+    /* border-style: solid; */ /* to debug the layout */
+}
+
+#wrapper {
+    width: 60em;
+    margin: 0 auto;
+    text-align: left;
+    position: relative;
+    padding: 0;
+    /* border-style: dotted; */
+}
+
+#contentArea {
+    width: 49em;
+    margin: 10px 0;
+    float: left;
+}
+
+#content {
+    margin: 10px 0;
+}
 
 #help {
     border-bottom: 1px dotted;
@@ -207,6 +204,11 @@ h3.active > a {
 #helpText {
     font-size: 0.8em;
     color: green;
+}
+
+#helpTitle {
+    float:left;
+    margin:0px 10px;
 }
 
 #helpTitle:before {
@@ -246,6 +248,8 @@ h3.active > a {
 */
 
 #footer {
+    clear: both;
+    height: 3ex;
     /* background-color: #c0c0c0; */
     border-top: 1px dotted;
     text-align: center;
@@ -253,6 +257,7 @@ h3.active > a {
 }
 
 *.footerItem {
+    display: inline;
     font-size: 0.8em;
 }
 
@@ -270,7 +275,7 @@ h3.active > a {
 #tabbing {
     background-color: #e8e8e8;
     text-align: right;
-    vertical-align: center;
+    vertical-align: middle;
 }
 
 *.tabbingItem {
@@ -291,4 +296,224 @@ h3.active > a {
 
 .formButton {
     font-size:0.8em;
+}
+
+/*
+    Styling search result tables
+*/
+
+#pageNavigation {
+    text-align: center;
+}
+
+.hasMove {
+    display:inline;
+    font-size:0.8em;
+}
+
+.hasNoMove {
+    display:inline;
+    font-size:0.8em;
+    color: grey;
+}
+
+*.currency {
+    text-align: right;
+}
+
+#searchTable {
+    display:table;
+}
+
+*.searchHeader {
+    display:table-header-group;
+    background-color: #e8e8e8;
+}
+
+*.searchHeaderItem {
+    display:table-cell;
+    font-size:0.8em;
+    font-weight: bold;
+    border-bottom: 1px solid;
+    padding:0px 2px;
+}
+
+*.searchEntry {
+    display:table-row;
+}
+
+*.oddEntry.searchEntry .searchItem{
+    background-color: #e8e8e8;
+}
+
+*.searchItem {
+    display:table-cell;
+    font-size:0.8em;
+    padding:0px 2px;
+}
+
+#ledgerTable {
+    display:table;
+}
+
+*.ledgerHeader {
+    display:table-header-group;
+    background-color: #e8e8e8;
+}
+
+*.ledgerHeaderItem {
+    display:table-cell;
+    font-size:0.8em;
+    font-weight: bold;
+    border-bottom: 1px solid;
+    padding:0px 2px;
+}
+
+*.ledgerEntryLine1 {
+    display:table-row;
+}
+
+*.ledgerEntryLine2 {
+    display:table-row;
+}
+
+/*
+*.ledgerEntryLine2 .ledgerItem {
+    background-color: #e8e8e8;
+}
+*/
+
+*.oddEntry.ledgerEntryLine1 .ledgerItem{
+    background-color: #e8e8e8;
+    border-top: 0px solid;
+}
+
+*.oddEntry.ledgerEntryLine2 .ledgerItem{
+    background-color: #e8e8e8;
+    border-bottom: 0px solid;
+}
+
+*.ledgerItem {
+    display:table-cell;
+    font-size:0.8em;
+    padding:0px 2px;
+}
+
+/*
+    Styling ledger tables
+*/
+
+#ledgerInfo {
+    margin:5px 0px 5px;
+}
+
+*.ledgerInfoTitle {
+    display: inline;
+    font-size:0.7em;
+    color: grey;
+}
+    
+*.ledgerInfoValue {
+    display: inline;
+    font-size:0.7em;
+    font-weight: bold;
+    color: grey;
+}
+
+*.infoImage:before{
+    content:" ";
+    padding:10px;
+}
+
+*.infoImage{
+    background:url(Styles/basic/info.gif);
+    background-repeat:no-repeat;
+}
+
+/*
+    Styling forms
+*/
+
+*.formFieldTitle {
+    float:left;
+    width:100px;
+}
+
+*.formFieldInput {
+    margin:5px 0px;
+}
+
+*.formFieldValue {}
+    
+/*
+    Styling lines in records
+*/
+
+*.linePart {
+    display:table;
+    width:100%;
+}
+
+*.line {
+    display: table-row;
+}
+
+*.lineTitle {
+    display: table-cell;
+    font-size: 0.8em;
+    color: grey;
+    width: 35%;
+    vertical-align:top;
+}
+
+*.lineValue {
+    display: table-cell;
+    font-size: 0.8em;
+    font-weight:bold;
+}
+
+*.lineText.empty:before {
+    content: "---";
+}
+
+
+*.oddLine {
+    background-color: lightgrey;
+}
+
+/*
+    Styling tables in records
+*/
+
+*.table{
+    display:table;
+    width: 100%;
+    margin:0px 0px 5px 0px;
+}
+
+*.tableHeaders {
+    display:table-row;
+    background-color:#F0F0F0;
+}
+
+*.tableHeader {
+    display:table-cell;
+}
+
+*.headerItem {
+    font-size: 0.8em;
+}
+
+*.tableLine {
+    display:table-row;
+}
+
+*.tableItem {
+    display:table-cell;
+    font-size: 0.8em;
+    font-weight:bold;
+}
+
+*.oddEntry.tableLine .tableItem{
+    background-color: #F0F0F0;
 }

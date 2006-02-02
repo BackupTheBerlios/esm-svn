@@ -32,75 +32,87 @@
 ##################################################################################
 
 #def writeRecord(attrs)
-    #set $neighbours = ''
-    #for $n in $attrs['_neighbours']
-        #if $n[0] != $attrs['accountNb']
-            #set $neighbours = $neighbours + " <a href='MemberView?accountNb=%s'>%s</a>" % ($n[0],$n[1])
+    <div class="linePart">
+        #set $neighbours = ''
+        #for $n in $attrs['_neighbours']
+            #if $n[0] != $attrs['accountNb']
+                #set $neighbours = $neighbours + " <a href='MemberView?accountNb=%s'>%s</a>" % ($n[0],$n[1])
+            #end if
+        #end for
+        #if $neighbours
+            #set $neighbours = "%s" % $neighbours[1:]
         #end if
-    #end for
-    #if $neighbours
-        #set $neighbours = "(%s)" % $neighbours[1:]
-    #end if
-    #if $attrs['newAccountNb']
-        $writeLine('Mitgliedsnr', "%s %s" % ($attrs['accountNb'], $neighbours),$attrs['newAccountNb'],
-            " (Neu: <a href='MemberView?accountNb=%s'>%s</a>)" %
-                ($attrs['newAccountNb'],$attrs['newAccountNb']))
-    #else
-        $writeLine('Mitgliedsnr', "%s %s" % ($attrs['accountNb'], $neighbours))
-    #end if
-    #if $attrs['endsAt']
-        $writeLine('Mitgliedschaft',
-            "vom %s" % $attrs['startFrom'].strftime('%d.%m.%Y'),$attrs['endsAt'],
-            " bis %s (%s)" % ($attrs['endsAt'].strftime('%d.%m.%Y'),$attrs['terminationReason']))
-    #elif $attrs['startFrom']
-        $writeLine('Mitgliedschaft',"seit dem %s" % $attrs['startFrom'].strftime('%d.%m.%Y'))
-    #else
-        $writeLine('Mitgliedschaft',"",error="Eintrittsdatum fehlt")
-    #end if
-    $writeLine('Name',"%s, %s %s" % ($attrs['lastName'],$attrs['title'],$attrs['firstName']),$trans)
-    #if $attrs['guardianFirstName'] or $attrs['guardianLastName']
-        $writeLine('gesetzlicher Vertreter',"%s, %s" % ($attrs['guardianLastName'],$attrs['guardianFirstName']),$trans)
-    #else
-        $writeLine('gesetzlicher Vertreter',"-" ,$trans)
-    #end if
-    #if $attrs['addressExtension']
-        $writeLine('Adresse',"%s, %s %s, %s" % ($attrs['addressExtension'],$attrs['zipCode'],$attrs['city'],$attrs['street']))
-    #else
-        $writeLine('Adresse',"%s %s, %s" % ($attrs['zipCode'],$attrs['city'],$attrs['street']))
-    #end if
-    $writeLine('Telefon (privat, dienstlich, mobil)',"%s<br>%s<br>%s" %
-        ($attrs['telefonPrivate'],$attrs['telefonOffice'],$attrs['telefonMobile']))
-    $writeLine('FAX',attrs['fax'])
-    $writeLine('E-Mail',$attrs['email'])
-    #if $attrs['birthDate']
-        $writeLine('Geburtsdatum &amp; Geschlecht',"%s %s" % ($attrs['birthDate'].strftime('%d.%m.%Y'),$attrs['gender']))
-    #else
-        $writeLine('Geburtsdatum &amp; Geschlecht',"%s %s" % ('-',$attrs['gender']))
-    #end if
-    #if str($attrs['accountNb'])[-1:] == '0'
-        $writeLine('Bankverbindungen','')
-        $writeTable($attrs,range(1,3),
-          ['Kontonr','BLZ','Bank','Kontoinhaber'],
-          [{'name':'bankAccountNb','type':'string'},
-          {'name':'bankCode','type':'string'},
-          {'name':'bankName','type':'string'},
-          {'name':'bankAccountOwner','type':'string'}])
-    #if ($attrs['payBy'] == "Lastschrift") and $attrs['automaticPayFrom']
-        $writeLine('Beiträge',attrs['payBy'],$attrs['automaticPayFrom'],' ab %s' % $attrs['automaticPayFrom'].strftime('%d.%m.%Y'))
-    #elif ($attrs['payBy'] == "Rechnung") and $attrs['invoiceFrom']
-        $writeLine('Beiträge',$attrs['payBy'],$attrs['invoiceFrom'],' ab %s' % $attrs['invoiceFrom'].strftime('%d.%m.%Y'))
-    #else
-        $writeLine('Beiträge',$attrs['payBy'])
-    #end if
-    #if $attrs['reminderLevel']
-        $writeLine('Mahnung',"<b>%s vom %s</b>" % ($attrs['reminderLevel'],$attrs['lastReminderAt'].strftime('%d.%m.%Y')))
-    #end if
-    $writeTable($attrs,range(1,6),
-        ['Art','ab','BFA','nächste Erhebung'],
-        [{'name':'membershipKind','type':'string'},
-        {'name':'membershipFrom','type':'date'},
-        {'name':'membershipEndFrom','type':'date'},
-        {'name':'membershipPayNextFrom','type':'date'}])
-    $writeLine('Kommentare',$attrs['comments'])
-    $writeLine('Letzte Änderung','%s von %s' % ($attrs['changedAt'].strftime('%d.%m.%Y'),$attrs['changedBy']))
+        #if $attrs['newAccountNb']
+            $writeLine('accountNb2', $attrs['accountNb'], $attrs['newAccountNb'],
+                "<a href='MemberView?accountNb=%s'>%s</a>" % ($attrs['newAccountNb'],$attrs['newAccountNb']))
+        #else
+            $writeLine('accountNb', $attrs['accountNb'], $neighbours, $neighbours)
+        #end if
+        #if $attrs['endsAt']
+            $writeLine2('membership',
+                $attrs['startFrom'].strftime('%d.%m.%Y'),
+                $attrs['endsAt'],
+                "%s (%s)" % ($attrs['endsAt'].strftime('%d.%m.%Y'),$attrs['terminationReason']))
+        #elif $attrs['startFrom']
+            $writeLine2('membershipFrom',$attrs['startFrom'].strftime('%d.%m.%Y'))
+        #else
+            $writeLine2('membership',"",error="Eintrittsdatum fehlt")
+        #end if
+        $writeLine('name',"%s, %s %s" % ($attrs['lastName'],$attrs['title'],$attrs['firstName']),$trans)
+        #if $attrs['guardianFirstName'] or $attrs['guardianLastName']
+            $writeLine2('guardian',"%s, %s" % ($attrs['guardianLastName'],$attrs['guardianFirstName']),$trans)
+        #else
+            $writeLine2('guardian',"" ,$trans)
+        #end if
+        #if $attrs['addressExtension']
+            $writeLine('address',"%s, %s %s, %s" % ($attrs['addressExtension'],$attrs['zipCode'],$attrs['city'],$attrs['street']))
+        #else
+            $writeLine('address',"%s %s, %s" % ($attrs['zipCode'],$attrs['city'],$attrs['street']))
+        #end if
+        $writeLine2('telephone',"%s , %s , %s" %
+            ($attrs['telefonPrivate'],$attrs['telefonOffice'],$attrs['telefonMobile']))
+        $writeLine('fax',attrs['fax'])
+        $writeLine2('email',$attrs['email'])
+        #if $attrs['birthDate']
+            $writeLine('birthDateAndGender',$attrs['birthDate'].strftime('%d.%m.%Y'),$attrs['gender'],$attrs['gender'])
+        #else
+            $writeLine('birthDateAndGender','',$attrs['gender'],$attrs['gender']))
+        #end if
+        #if str($attrs['accountNb'])[-1:] == '0'
+            $writeLine2('bankAccounts','&nbsp;')
+            </div>
+                $writeTable($attrs,range(1,3),
+                  ['bankAccountNb','bankCode','bankName','bankAccountOwner'],
+                  [{'name':'bankAccountNb','type':'string'},
+                  {'name':'bankCode','type':'string'},
+                  {'name':'bankName','type':'string'},
+                  {'name':'bankAccountOwner','type':'string'}])
+            <div class="linePart">
+        #if ($attrs['payBy'] == "Lastschrift") and $attrs['automaticPayFrom']
+            $writeLine2('payBy',attrs['payBy'],$attrs['automaticPayFrom'],$attrs['automaticPayFrom'].strftime('%d.%m.%Y'))
+        #elif ($attrs['payBy'] == "Rechnung") and $attrs['invoiceFrom']
+            $writeLine2('payBy',$attrs['payBy'],$attrs['invoiceFrom'], $attrs['invoiceFrom'].strftime('%d.%m.%Y'))
+        #else
+            $writeLine2('payBy',$attrs['payBy'])
+        #end if
+        #if $attrs['reminderLevel']
+            $writeLine('reminder',$attrs['reminderLevel'],$attrs['lastReminderAt'],$attrs['lastReminderAt'].strftime('%d.%m.%Y'))
+        #else
+            $writeLine('reminder','')
+        #end if
+        $writeLine2('memberships','&nbsp;')
+        </div>
+            $writeTable($attrs,range(1,6),
+                ['membershipKind','membershipFrom','membershipEndFrom','membershipPayNextFrom'],
+                [{'name':'membershipKind','type':'string'},
+                {'name':'membershipFrom','type':'date'},
+                {'name':'membershipEndFrom','type':'date'},
+                {'name':'membershipPayNextFrom','type':'date'}])
+        <div class="linePart">
+        $writeLine2('comments',$attrs['comments'])
+        $writeLine('lastChange',
+            $attrs['changedAt'].strftime('%d.%m.%Y'),
+            $attrs['changedBy'],
+            $attrs['changedBy'])
+    </div>
 #end def

@@ -28,10 +28,9 @@
 #attr __author__ = "Jan Gottschick"
 #attr __revision__ = "$Rev$"[6:-2]
 
-#from mx import DateTime
 #import string
 
-#extends SiteLayout
+#extends Libs.SiteLayout
 ##################################################################################
 
 ##
@@ -55,7 +54,6 @@
 #attr activeMenuPoint = ''
 #attr activeSubmenuPoint = ''
 #attr activeTemplate = ''
-#attr focusField = 'searchForm.search'
 
 #attr searchPage = 'MemberSearch'
 
@@ -67,15 +65,19 @@
     ##
     ## writes a line with a title, value, optional value and an error text
     ##
-    <div class="line">
-        <p>$title</p>
-        <div>
-            <p class="lineValue">$line</p>
-            #if $condition
-                <p class="lineOption">$optional</p>
+    <div class="line evenLine">
+        <div class="lineTitle"><span id="labelLineTitle$title" /></div>
+        <div class="lineValue">
+            #if $line
+                <span id="labelLineValue$title"  class="lineText">$line</span>
+            #else
+                <span class="lineText empty" />
+            #end if
+            #if $condition and $optional
+                <span id="labelLineOption$title"  class="lineOption">$optional</span>
             #end if
             #if $error
-                <p class="lineError">$error</p>
+                <span class="$error lineError" />
             #end if
         </div>
     </div>
@@ -86,15 +88,19 @@
     ## writes a second line with a title, value, optional value and an error text
     ## as the second line it could be decorated differently to the first one
     ##
-    <div class="line2">
-        <p>$title</p>
-        <div>
-            <p class="lineValue">$line</p>
-            #if $condition
-                <p class="lineOption">$optional</p>
+    <div class="line oddLine">
+        <div class="lineTitle"><span id="labelLineTitle$title" /></div>
+        <div class="lineValue">
+            #if $line
+                <span id="labelLineValue$title" class="lineText">$line</span>
+            #else
+                <span class="lineText empty" />
+            #end if
+            #if $condition and $optional
+                <span id="labelLineOption$title" class="lineOption">$optional</span>
             #end if
             #if $error
-                <p class="lineError">$error</p>
+                <span class="$error lineError" />
             #end if
         </div>
     </div>
@@ -102,29 +108,38 @@
 
 #def writeTable(attrs,indexs,headers,fields)
     <div class="table">
-        <div class="tableHeader">
+        <div class="tableHeaders">
             #for header in headers
-                <div>
-                    <p class="headerItem">$header<p>
+                <div class="tableHeader">
+                    <span id="labelTableHeader$header" class="headerItem" />
                 </div>
             #end for
         </div>
+        #set $evenEntry = False
         #for index in indexs
+            #set $evenEntry = not $evenEntry
             #if $attrs[$fields[0]['name']+str($index)]
-                <div class="tableLine">
+                #if $evenEntry
+                    #set $evenEntryClass = "evenEntry"
+                #else
+                    #set $evenEntryClass = "oddEntry"
+                #end if
+                <div class="tableLine $evenEntryClass">
                     #for field in fields
                         <div class="tableItem">
                             #if $field['type'] == 'date' and $attrs[$field['name']+str($index)]
                                 #try
-                                    #set $content = DateTime.DateTimeFrom($attrs[$field['name']+str($index)])
-                                    $content.strftime($dateFormat)
+                                    #set $content = $attrs[$field['name']+str($index)]
+                                    <span class="date">$content.strftime($dateFormat)</span>
                                 #except:
-                                    ** Error **
+                                    <span class="error" />
                                 #end try
                             #elif $field['type'] == 'string'
-                                $attrs[$field['name']+str($index)]
+                                <span>$attrs[$field['name']+str($index)]</span>
                             #elif $field['type'] == 'currency' and $attrs[$field['name']+str($index)]
-                                #echo string.replace('%.2f' % float($attrs[$field['name']+str($index)]),'.',',')
+                                <span class="currency">#echo string.replace('%.2f' % float($attrs[$field['name']+str($index)]),'.',',')#</span>
+                            #else
+                                <span class="empty" />
                             #end if
                         </div>
                     #end for
@@ -179,21 +194,23 @@
                 ## show active menu point
                 ##
                 #if $x.has_key('title')
-                    #set $title = '<span>' + $x.title+ '</span>'
+                    #set $title = 'labelMenu' + $x.title
                 #else
-                    #set $title = '<span id="labelMenu' + $x.tmpl + '" />'
+                    #set $title = 'labelMenu' + $x.tmpl
                 #end if
-                <h3 class="active">
-                    #if $x.link
-                        <a href="$x.link" class="notabbing">$title</a>
-                    #else
-                        <span class="notabbing">$title</span>
-                    #end if
-                </h3>
+                #if $x.link
+                    <h3 class="active notabbing">
+                        <a href="$x.link"><span id="$title" /></a>
+                    </h3>
+                #else
+                    <h3 class="active notabbing">
+                        <span id="$title" />
+                    </h3>
+                #end if
                 ##
                 ## submenus are shown below the active menu point
                 ##
-                <ul id="submenu">
+                <div id="submenu">
                 #for y in $subMenuPoints
                     ##
                     ## show submenu only if an optional condition is true
@@ -203,21 +220,26 @@
                         ## if a link has a role info, the link is only shown is the user has the role
                         ##
                         #if not ($y.has_key('role') and (not $transaction.session.value('authenticated_user','') or $y.role not in $transaction.session.value('authenticated_roles',[])))
+                            #if $y.has_key('title')
+                                #set $title = 'labelMenu' + $y.title
+                            #else
+                                #set $title = 'labelMenu' + $y.tmpl
+                            #end if
                             #if $y.tmpl == $activeSubmenuPoint
-                                <li class="activeSubmenu">$y.title</li>
+                                <h4 class="active"><span id="$title" /></h4>
                             #elif $y.title
                                 #if $y.link
-                                    <li class="notActiveSubmenu">
-                                        <a href="#include source=$y.link #"><span>$y.title</span></a>
-                                    </li>
+                                    <h4 class="notActive">
+                                        <a href="#include source=$y.link #"><span id="$title" /></a>
+                                    </h4>
                                 #else
-                                    <li class="notAvailableSubmenu">$y.title</li>
+                                    <h4 class="notAvailable"><span id="$title" /></h4>
                                 #end if
                             #end if
                         #end if
                     #end if
                 #end for
-                </ul>
+                </div>
             #end if
         #else
             ##
@@ -228,17 +250,17 @@
                 ## show not active menu point
                 ##
                 #if $x.has_key('title')
-                    #set $title = '<span>' + $x.title+ '</span>'
+                    #set $title = 'labelMenu' + $x.title
                 #else
-                    #set $title = '<span id="labelMenu' + $x.tmpl + '" />'
+                    #set $title = 'labelMenu' + $x.tmpl
                 #end if
                 #if $x.link
                     <h3 class="notActive notabbing">
-                        <a href="$x.link">$title</a>
+                        <a href="$x.link"><span id="$title" /></a>
                     </h3>
                 #else
                     <h3 class="notAvailable notabbing">
-                        $title
+                        <span id="$title" />
                     </h3>
                 #end for
             #end if

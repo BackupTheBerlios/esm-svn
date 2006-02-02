@@ -33,7 +33,7 @@
 #from SqlObjects.Transfer import Transfer
 #from SqlObjects.Price import Price
 
-#extends SiteContent
+#extends Libs.SiteContent
 
 #implements writeContent
 ##################################################################################
@@ -63,7 +63,9 @@
 
 #attr helpText = 'Währung bis 31.12.2001 in DM und ab dem 01.01.2002 in Euro'
 
-#attr bodyTagAttribs = {'text':'black',"onload":"document.search.search.focus()"}
+#def cursor()
+    onload="document.searchForm.search.focus()"
+#end def
 
 ##################################################################################
 
@@ -114,77 +116,88 @@
 #end for
 
 ##
-## Tabellen-Überschrift
+## navigation between the pages
 ##
-<table width="100%">
-    <tr bgcolor="yellow" valign=top>
-      <th>
-        #if $index != 0
-          <a href="$name?index=0&account=$account"><img src="images/start.png" border=0></a>
-        #end if
-        &nbsp;
-        #if $index != $prevIndex
-          <a href="$name?index=$prevIndex&account=$account"><img src="images/left.png" border=0></a>
-        #end if
-        &nbsp;
-        $ledgerTitle
-        &nbsp;
-        #if $nextIndex < $count
-          <a href="$name?index=$nextIndex&account=$account"><img src="images/right.png" border=0></a>
-        #end if
-        #if $lastIndex > 0 and $nextIndex <= $lastIndex
-          <a href="$name?index=$lastIndex&search=$account"><img src="images/end.png" border=0></a>
-        #end if
-      </th>
-    </tr>
-</table>
+<div id="pageNavigation">
+    #if $index != 0
+        <div id="moveToStart" class="hasMove">
+            <a href="$name?index=0&amp;account=$account"><span id="labelMoveToStart" /></a>
+        </div>
+    #else
+        <div id="moveToStart" class="hasNoMove">
+            <span id="labelMoveToStart"/>
+        </div>
+    #end if
+    #if $index != $prevIndex
+        <div id="movePageUp" class="hasMove">
+            <a href="$name?index=$prevIndex&amp;account=$account"><span id="labelMovePageUp" /></a>
+        </div>
+    #else
+        <div id="movePageUp" class="hasNoMove">
+            <span id="labelMovePageUp" />
+        </div>
+    #end if
+    #if $nextIndex < $count
+        <div id="movePageDown" class="hasMove">
+            <a href="$name?index=$nextIndex&amp;account=$account"><span id="labelMovePageDown" /></a>
+        </div>
+    #else
+        <div id="movePageDown" class="hasNoMove">
+            <span id="labelMovePageDown" />
+        </div>
+    #end if
+    #if ($lastIndex > 0) and ($nextIndex <= $lastIndex)
+        <div id="moveToEnd" class="hasMove">
+            <a href="$name?index=$lastIndex&amp;search=$account"><span id="labelMoveToEnd" /></a>
+        </div>
+    #else
+        <div id="moveToEnd" class="hasNoMove">
+            <span id="labelMoveToEnd" />
+        </div>
+    #end if
+</div>
 
 ##
 ## display Account Infos
 ##
-<table width="100%" cellpadding=0>
-    <tr bgcolor="aqua" valign=middle>
+<div id="ledgerInfo">
     #set $attrs = $accountObjects[0].allAttrs()
-      <td>
-        #for $field in $accountFields
-          #if $field.type == 'date'
-            &nbsp;&nbsp;&nbsp;
-            $field.title:
+    #for $field in $accountFields
+        #if $field.type == 'date'
+            <div class="ledgerInfoTitle"><span id="labelLedgerInfo$field.name" /></div>
             #if $attrs[$field.name]
                 #try
-                    <b>$attrs[$field.name].strftime($dateFormat)</b>
+                    <div class="ledgerInfoValue"><span>$attrs[$field.name].strftime($dateFormat)</span></div>
                 #except
-                    <b>** Error **</b>
+                    <div class="ledgerInfoValue"><span class="empty" /></div>
                 #end try
             #end if
-          #elif $field.type == 'name'
-            <b>$attrs[$field.name]</b>
-          #else
-            &nbsp;&nbsp;&nbsp;
-            $field.title:
-            <b>$attrs[$field.name]</b>
-          #end if
-        #end for
-      </td>
-    </tr>
-</table>
+        #elif $field.type == 'name'
+            <div class="ledgerInfoValue"><span>$attrs[$field.name]</span></div>
+        #else
+            <div class="ledgerInfoTitle"><span id="labelLedgerInfo$field.name" /></div>
+            <div class="ledgerInfoValue"><span>$attrs[$field.name]</span></div>
+        #end if
+    #end for
+</div>
 
-<table width="100%">
+<div id="ledgerTable">
     ##
     ## column titles
     ##
-    <tr bgcolor="yellow" valign=top>
+    <div class="ledgerHeader">
       #for $title in $titles
-      <td width="$title.width">
-        $title.title
-      </td>
+          <div id="header$title.title" class="ledgerHeaderItem" style="width:$title.width">
+            <span id="labelSearch$title.title" />
+          </div>
       #end for
-    </tr>
+    </div>
 
     #set $saldo = $startsaldo
+    #set $evenEntry = False
     #for $entries in $transferObjects:
       #set $attrs = $entries.allAttrs()
-
+      #set $evenEntry = not $evenEntry
       ##
       ## if needed exchange credit and debit
       ##
@@ -214,107 +227,116 @@
       ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
       ## Geldbeträge und Datum
       ##
-      <tr bgcolor="aqua">
+      #if $evenEntry
+        #set $evenEntryClass = "evenEntry"
+      #else
+        #set $evenEntryClass = "oddEntry"
+      #end if
+      <div class="ledgerEntryLine1 $evenEntryClass">
         #for $field in $fields1
           #if $field.type == ''
-            <td>
-            #set $content = "&nbsp;"
+            <div class="ledgerItem" style="width:$field.width">
+            #set $content = ''
           #elif $field.type == 'editlink'
-            <td>
+            <div class="ledgerItem" style="width:$field.width">
             #if $attrs['transferCode'] in $transferCodes
-              <img src="images/info.gif" border=0 alt="$transferCodeDescription[$attrs['transferCode']] -> " onMouseOver="showtip(this,event,'$transferCodeDescription[$attrs['transferCode']] -> ')" onMouseOut="hidetip()"/>
-              &nbsp;<a href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/edit.png" border=0></a>
-              &nbsp;<a href="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/delete.png" border=0></a>
+                <img class="infoImage" src="Styles/basi/info.gif" border=0 alt="?" onMouseOver="showtip(this,event,'$transferCodeDescription[$attrs['transferCode']] -> ')" onMouseOut="hidetip()"/>
+                #if $checkRole('auditor')
+                    <a href="$editLink?id=$account&taid=$attrs['TAID']&amp;index=$index"><span class="editLink"/></a>
+                    <a href="$deleteLink?id=$account&taid=$attrs['TAID']&amp;index=$index"><span class="deleteLink" /></a>
+                #end if
             #end if
             #set $content = ''
           #elif $attrs[$field.name] == None
-            <td>
-            #set $content = '&nbsp;'
+            <div class="ledgerItem $field.name" style="width:$field.width">
+            #set $content = ''
           #elif $field.type == 'currency'
-            <td align="right"><b>
+            <div class="ledgerItem $field.name currency" style="width:$field.width">
             #if $attrs[$field.name] != 0.0 or $field.name == 'saldo'
               #set $content = string.replace('%5.2f' % $attrs[$field.name],'.',',')
             #else
-              #set $content = '&nbsp;'
+              #set $content = ''
             #end if
           #elif $field.type == 'date'
-            <td><b>
             #try
+                <div class="ledgerItem $field.name" style="width:$field.width">
                 #set $content = $attrs[$field.name].strftime($dateFormat)
             #except
-                #set $content = '** Error **'
+                <div class="ledgerItem $field.name error" style="width:$field.width">
+                #set $content = ''
             #end try
           #elif $field.type == 'string'
-            <td><b>
+            <div class="ledgerItem $field.name" style="width:$field.width">
             #set $content = $attrs[$field.name]
           #else
-            <td>
-            #set $content = "&nbsp;"
+            <div class="ledgerItem $field" style="width:$field.width">
+            #set $content = ''
           #end if
-        #if $field in $linkFields
-          <a href='$linkTemplate?index=$content'>$content</a>
-        #else
-          $content
-        #end if
-        #if (($field.type == 'currency') and ($attrs[$field.name] < 0.0)) or ($field.type in ['date','string'])
-          </b>
-	#end if
-        </td>
-      #end for
-      <tr bgcolor="fuchsia">
+          #if $field in $linkFields
+              <a href='$linkTemplate?index=$content'><span>$content</span></a>
+          #elif $content
+              <span>$content</span>
+          #else
+              <span class="empty" />
+          #end if
+          </div>
+        #end for
+      </div>
+      <div class="ledgerEntryLine2 $evenEntryClass">
         #for $field in $fields2
           #if $field.type == ''
-            <td>
-            #set $content = '&nbsp;'
+            <div class="ledgerItem $field.name" style="width:$field.width">
+            #set $content = ''
           #elif $field.type == 'editlink'
-            <td>
+            <div class="ledgerItem $field.name" style="width:$field.width">
             #if $attrs['transferCode'] in $transferCodes
-              <img src="images/info.gif" border=0 alt="$transferCodeDescription[$attrs['transferCode']] -> " onMouseOver="showtip(this,event,'$transferCodeDescription[$attrs['transferCode']] -> ')" onMouseOut="hidetip()"/>
+              #set $tt = $transferCodeDescription[$attrs['transferCode']]
+              <div class="infoAccountNb"><span class="infoImage" $tooltipString($tt)></span></div>
               #if $checkRole('auditor')
-                &nbsp;<A href="$editLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/edit.png" border=0></A>
-                &nbsp;<A HREF="$deleteLink?id=$account&taid=$attrs['TAID']&index=$index"><img src="images/delete.png" border=0></A>
+                <a href="$editLink?id=$account&taid=$attrs['TAID']&amp;index=$index"><span class="editLink" /></a>
+                <a href="$deleteLink?id=$account&taid=$attrs['TAID']&amp;index=$index"><span class="deleteLink" /></a>
               #end if
             #end if
             #set $content = ''
           #elif $attrs[$field.name] == None
-            <td>
-            #set $content = '&nbsp;'
+            <div class="ledgerItem $field.name" style="width:$field.width">
+            #set $content = ''
           #elif $field.type == 'currency'
             #if $attrs[$field.name] < 0.0
-              <td align="right"><b><font color="maroon">
+              <div class="ledgerItem $field.name currency negativeSaldo" style="width:$field.width">
             #else
-              <td align="right">
+              <div class="ledgerItem $field.name currency positiveSaldo" style="width:$field.width">
             #end if
             #if $attrs[$field.name] != 0.0 or $field.name == 'saldo'
               #set $content = string.replace('%5.2f' % $attrs[$field.name],'.',',')
             #else
-              #set $content = '&nbsp;'
+              #set $content = ''
             #end if
           #elif $field.type == 'date'
-            <td>
             #try
+                <div class="ledgerItem $field.name date" style="width:$field.width">
                 #set $content = $attrs[$field.name].strftime($dateFormat)
             #except
-                #set $content = '** Error **'
+                <div class="ledgerItem $field.name error" style="width:$field.width">
+                #set $content = ''
             #end try
           #elif $field.type == 'string'
-            <td>
+            <div class="ledgerItem $field.name" style="width:$field.width">
             #set $content = $attrs[$field.name]
           #else
-            <td>
-            #set $content = "&nbsp;"
+            <div class="ledgerItem $field.name" style="width:$field.width">
+            #set $content = ""
           #end if
           #if $field in $linkFields
-            <a href='$linkTemplate?index=$content'>$content</a>
+            <a href='$linkTemplate?index=$content'><span>$content</span></a>
+          #elif $content
+            <span>$content</span>
           #else
-            $content
+              <span class="empty" />
           #end if
-          #if ($field.type == 'currency') and ($attrs[$field.name] < 0.0)
-            </font></b>
-	  #end if
-	  </td>
+	  </div>
         #end for
-      </tr>
+      </div>
     #end for
     #silent $transaction.session.setValue('saldo'+ str($nextIndex), $saldo)
-</table>
+</div>

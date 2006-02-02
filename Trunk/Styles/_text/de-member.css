@@ -1,0 +1,139 @@
+/*
+ File:      $URL: svn+ssh://jgottschick@svn.berlios.de/svnroot/repos/esm/Trunk/Templates/SiteLayout.tmpl $
+ Version:   $Rev: 45 $
+ Changed:   $Date: 2005-12-12 21:24:13 +0100 (Mo, 12 Dez 2005) $
+
+ Homepage:  http://esm.berlios.de
+ Copyright: GNU Public License Version 2 (see license.txt)
+
+ E-Sportmanager (esm)
+
+ Copyright (C) 2005 Jan Gottschick
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+   for more details.
+
+   You should have received a copy of the GNU General Public License along
+   with this program; if not, write to the
+
+   Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
+/*
+  Please set the value of each label for the German language "de".
+  
+  The form of each entry should be: #labelName:after { content:"value"; }
+  If you want to extend an automatically set value by an prefix, you should
+  insert the value "before". 
+  
+  If you want to substitute a label by an icon, this should be done in the
+  style sheet as an icon should normally be language independant.
+*/
+
+/*
+  MemberLedgerSearch
+*/
+#labelSearchaccountNb:after { content:"Nr"; }
+#labelSearchnewAccountNb:after { content:"Neu"; }
+#labelSearchfirstName:after { content:"Vorname"; }
+#labelSearchlastName:after { content:"Nachname"; }
+#labelSearchbirthDate:after { content:"Geburt"; }
+#labelSearchtelefonPrivate:after { content:"Privat"; }
+#labelSearchstartFrom:after { content:"Ein"; }
+#labelSearchendsAt:after { content:"Aus"; }
+
+/*
+  MemberLedger
+*/
+#labelSearchdate:after { content:"Datum"; }
+#labelSearchtransferCode-account:after { content:"BKZ / Kto"; }
+#labelSearchreceiver-comment:after { content:"Empfänger / Kommentar"; }
+#labelSearchdebit:after { content:"Soll"; }
+#labelSearchcredit:after { content:"Haben"; }
+#labelSearchsaldo:after { content:"Saldo"; }
+
+#labelLedgerInfoaccountNb:after { content:"Nr:"; }
+#labelLedgerInfofirstName:after { content:"Name:"; }
+#labelLedgerInfobirthDate:after { content:"Geb:"; }
+#labelLedgerInfotelefonPrivate:after { content:"Tel:"; }
+#labelLedgerInfostartFrom:after { content:"Ein:"; }
+#labelLedgerInfoendsAt:after { content:"Aus:"; }
+
+/*
+  MemberView
+*/
+
+#labelLineTitleaccountNb:after { content:"Nr:"; }
+#labelLineOptionaccountNb:before { content:" ("; }
+#labelLineOptionaccountNb:after { content:")"; }
+#labelLineTitleaccountNb2:after { content:"Nr:"; }
+#labelLineOptionaccountNb2:before { content:" (NEU: "; }
+#labelLineOptionaccountNb2:after { content:")"; }
+#labelLineTitlemembership:after { content:"Mitgliedschaft:"; }
+#labelLineValuemembership:before { content:"vom "; }
+#labelLineOptionmembership:before { content:" bis "; }
+#labelLineTitlemembershipFrom:after { content:"Mitgliedschaft:"; }
+#labelLineValuemembershipFrom:before { content:"seit dem "; }
+#labelLineTitlename:after { content:"Name:"; }
+#labelLineTitleguardian:after { content:"gesetzlicher Vertreter:"; }
+#labelLineTitlebirthDateAndGender:after { content:"Geburtsdatum & Geschlecht:"; }
+#labelLineOptionbirthDateAndGender:before { content:" "; }
+#labelLineTitletelephone:after { content:"Telefon (privat, dienstlich, mobil)"; }
+#labelLineTitlefax:after { content:"FAX:"; }
+#labelLineTitleemail:after { content:"E-Mail:"; }
+#labelLineTitlereminder:after { content:"Mahnung:"; }
+#labelLineOptionreminder:before { content:" vom "; }
+#labelLineTitlepayBy:after { content:"Zahlungsart:"; }
+#labelLineOptionpayBy:before { content:" ab "; }
+#labelLineTitlecomments:after { content:"Kommentare:"; }
+#labelLineTitlelastChange:after { content:"Letzte Änderung:"; }
+#labelLineOptionlastChange:before { content:" von "; }
+
+#labelLineTitlebankAccounts:after { content:"Bankverbindungen:"; }
+#labelTableHeaderbankAccountNb:after { content:"KontoNr"; }
+#labelTableHeaderbankCode:after { content:"BLZ"; }
+#labelTableHeaderbankName:after { content:"Bank"; }
+#labelTableHeaderbankAccountOwner:after { content:"Inhaber"; }
+
+#labelLineTitlememberships:after { content:"Beiträge:"; }
+#labelTableHeadermembershipKind:after { content:"Art"; }
+#labelTableHeadermembershipFrom:after { content:"Ab"; }
+#labelTableHeadermembershipEndFrom:after { content:"BFA"; }
+#labelTableHeadermembershipPayNextFrom:after { content:"nächste Erhebung"; }
+
+/*
+  Menu
+*/
+#labelMenuInfo:after { content:"Info"; }
+#labelMenuAccount:after { content:"Konto"; }
+#labelMenuMemberNew:after { content:"Neues Mitglied"; }
+#labelMenuMemberNewFamily:after { content:"Neues Fam.mitgl."; }
+#labelMenuMemberModify:after { content:"Ändern"; }
+#labelMenuMemberOfFamilyModify:after { content:"Ändern"; }
+#labelMenuMemberAustritt:after {content: "Austritt"; }
+#labelMenuMemberReactivate:after {content: "Reaktivieren"; }
+#labelMenuMemberFee:after {content: "Beitrag ändern"; }
+#labelMenuMemberToFamily:after {content: "Zur Familie"; }
+#labelMenuMemberToSinge:after {content: "Einzelmitgliedschaft"; }
+#labelMenuMemberToPersonal:after {content: "Neuer Mitarbeiter"; }
+#labelMenuMemberPrintEintritt:after {content: "Eintrittsschreiben"; }
+#labelMenuCredit:after { content:"Einzahlung"; }
+#labelMenuDebit:after { content:"Auszahlung"; }
+#labelMenuCancel:after { content:"Stornierung"; }
+#labelMenuSwimming:after { content:"Schwimmkurs"; }
+#labelMenuReminder:after { content:"Mahnung"; }
+#labelMenuManagement:after { content:"Verwaltung"; }
+#labelMenuCreditNewmember:after { content:"Gut. Aufnahme"; }
+#labelMenuCreditMembership:after { content:"Gut. Beitrag"; }
+#labelMenuCreditCourse:after { content:"Gut. Kurs"; }
+#labelMenuCreditCancel:after { content:"Gut. Stornierung"; }
+#labelMenuCreditReminder:after { content:"Gut. Mahnung"; }
+#labelMenuPayStepByStep:after { content:"Ratenzahlung"; }
+#labelMenuGift:after { content:"Spende"; }
+#labelMenuPrint:after { content:"Drucken"; }

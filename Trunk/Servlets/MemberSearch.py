@@ -48,10 +48,10 @@ class MemberSearch(SearchTemplate):
     fields = {
         'accountNb':{'title':'MNr','width':'5%','type':''},
         'newAccountNb':{'title':'Neu','width':'5%','type':'','format':'"%s"[2:]'},
-        'firstName':{'title':'Vorname','width':'20%','type':''},
-        'lastName':{'title':'Nachname','width':'20%','type':''},
+        'firstName':{'title':'Vorname','width':'18%','type':''},
+        'lastName':{'title':'Nachname','width':'18%','type':''},
         'birthDate':{'title':'Geburtstag','width':'10%','type':'date'},
-        'telefonPrivate':{'title':'Telefon','width':'15%','type':''},
+        'telefonPrivate':{'title':'Telefon','width':'19%','type':''},
         'startFrom':{'title':'Ein','width':'10%','type':'date'},
         'endsAt':{'title':'Aus','width':'10%','type':'date'}
     }
@@ -60,6 +60,6 @@ class MemberSearch(SearchTemplate):
 
     linkFields = ['accountNb','newAccountNb']
     linkPattern = 'MemberView?accountNb='
-
+    
     def search(self, pattern='', context=''):
         return Member.search(pattern,context)

@@ -32,7 +32,7 @@
 #import Libs.misc
 #from mx import DateTime
 
-#extends SiteContent
+#extends Libs.SiteContent
 
 #implements writeContent
 ##################################################################################
@@ -67,15 +67,13 @@
     #end if
 #end for
 
-<table width="100%">
-    #if $storeObjects.count()
-        #set $entry = $storeObjects[0]   
-        ##
-        ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
-        ## Geldbeträge und Datum
-        ##
-        #set $attrs = $entry.allAttrs()
-        #set $attrs['_neighbours'] = $neighbours
-        $writeRecord($attrs)
-    #end if
-</table>
+#if $storeObjects.count()
+    #set $entry = $storeObjects[0]   
+    ##
+    ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
+    ## Geldbeträge und Datum
+    ##
+    #set $attrs = $entry.allAttrs()
+    #set $attrs['_neighbours'] = $neighbours
+    $writeRecord($attrs)
+#end if

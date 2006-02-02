@@ -34,6 +34,8 @@ from SqlObjects.Member import Member
 
 class MemberLedgerSearch(SearchTemplate):
     
+    section = 'member'
+    
     activeMenuPoint = 'Member'
     activeSubmenuPoint = ''
     tableStore = 'Member'
@@ -48,10 +50,10 @@ class MemberLedgerSearch(SearchTemplate):
     fields = {
       'accountNb':{'title':'MNr','width':'5%','type':''},
       'newAccountNb':{'title':'Neu','width':'5%','type':''},
-      'firstName':{'title':'Vorname','width':'20%','type':''},
-      'lastName':{'title':'Nachname','width':'20%','type':''},
+      'firstName':{'title':'Vorname','width':'17%','type':''},
+      'lastName':{'title':'Nachname','width':'19%','type':''},
       'birthDate':{'title':'Geburtstag','width':'10%','type':'date'},
-      'telefonPrivate':{'title':'Telefon','width':'15%','type':''},
+      'telefonPrivate':{'title':'Telefon','width':'19%','type':''},
       'startFrom':{'title':'Ein','width':'10%','type':'date'},
       'endsAt':{'title':'Aus','width':'10%','type':'date'}
     }

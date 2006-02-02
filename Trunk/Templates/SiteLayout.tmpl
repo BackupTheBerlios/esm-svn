@@ -39,6 +39,7 @@
 ##################################################################################
 
 #attr role = 'viewer'
+#attr section = ''
 
 #attr title = "E-Sportmanager"
 #attr language="de"
@@ -91,6 +92,10 @@
     onmouseover="$tooltip_options return escape(${item}())"
 #end def
 
+#def tooltipString(item)
+    onmouseover="$tooltip_options return escape('${item}')"
+#end def
+
 ##################################################################################
 ##
 ## initialize global variables
@@ -130,13 +135,20 @@ $checkRole($role)
         
         <link rel="stylesheet" type="text/css" media="screen" href="$getStylesDir/$styleSheet" />
         <link rel="stylesheet" type="text/css" media="screen" href="Styles/_text/${getLanguage('Styles/_text','base.css')}-base.css" />
-        <link rel="stylesheet" type="text/css" media="print" href="$getStylesDir/$printSheet" />
+        ## <link rel="stylesheet" type="text/css" media="print" href="$getStylesDir/$printSheet" />
+        #if $section
+            <link rel="stylesheet" type="text/css" media="screen" href="$getStylesDir/${section}-${styleSheet}" />
+            <link rel="stylesheet" type="text/css" media="screen" href="Styles/_text/${getLanguage('Styles/_text',$section + '.css')}-${section}.css" />
+            <link rel="stylesheet" type="text/css" media="print" href="$getStylesDir/${section}-${printSheet}" />
+        #end if
+        #####################
+        #block StyleSheets        
+        #end block
+        #####################
         
         <script src="Javascript/${getLanguage('Javascript','base.js')}-base.js" type="text/javascript"></script>
-      
         #####################
         #block Javascript
-        
         #end block
         #####################
 
@@ -252,7 +264,6 @@ $checkRole($role)
                     <div id="esmHome" class="footerItem"><a href="$esmLink" target="_blank" $tooltip("ttHome")><span id="labelHome"/></a></div>
                 </div>
             </div>
-        
         </div>
         
         ##
@@ -269,7 +280,6 @@ $checkRole($role)
         ## support tooltips using http://www.walterzorn.de/tooltip
         ##
         <script src="Javascript/wz_tooltip.js" type="text/javascript"></script>
-    
     </body>
 
 </html>

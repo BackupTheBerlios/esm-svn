@@ -34,26 +34,96 @@ from SqlObjects.Member import Member
 
 class MemberView(ViewMemberTemplate):
     
+    section = 'member'
+    
     activeMenuPoint = 'Member'
     activeSubmenuPoint = 'MemberView'
-    searchPage = 'MemberSearch'
+
     transferPrefix = 'MI'
     
     subMenuPoints = [
-      {'tmpl':'MemberView','condition':1,'title':'Info','link':''},
-      {'tmpl':'MemberLedger','condition':1,'title':'Konto','link':'MemberLedger?account=%s#echo $request.field("accountNb","")[:-1] #0' % transferPrefix},
-      {'tmpl':'MemberNew','condition':1,'title':'Neues Mitglied','link':'MemberNew','role':'editor'},
-      {'tmpl':'MemberNewFamily','condition':1,'title':'Neues Fam.mitgl.','link':'MemberNew?accountNb=#echo $request.field("accountNb","")[:-1] #0','role':'editor'},
-      {'tmpl':'MemberModify','condition':'self.request().field("accountNb","")[-1:] == "0"','title':'Ändern','link':'MemberModify?accountNb=$request.field("accountNb","")','role':'editor'},
-      {'tmpl':'MemberOfFamilyModify','condition':'self.request().field("accountNb","")[-1:] != "0"','title':'Ändern','link':'MemberOfFamilyModify?accountNb=$request.field("accountNb","")','role':'editor'},
-      {'tmpl':'MemberAustritt','condition':1,'title':'Austritt','link':'MemberAustritt?accountNb=$request.field("accountNb","")','role':'editor'},
-      {'tmpl':'MemberReactivate','condition':'self.request().field("accountNb","")[-1:] == "0"','title':'Reaktivierung','link':'MemberReactivate?accountNb=$request.field("accountNb","")','role':'editor'},
-      {'tmpl':'MemberReactivate2','condition':'self.request().field("accountNb","")[-1:] != "0"','title':'Reaktivierung','link':'MemberReactivate2?accountNb=$request.field("accountNb","")','role':'editor'},
-      {'tmpl':'MemberFee','condition':'self.request().field("accountNb","")[-1:] == "0"','title':'Beitrag ändern','link':'MemberFee?accountNb=$request.field("accountNb","")','role':'editor'},
-      {'tmpl':'MemberToFamily','condition':'self.request().field("accountNb","")[-1:] == "0"','title':'Zur Familie','link':'MemberToFamily?MitgliedsNr=$request.field("accountNb","")','role':'editor'},
-      {'tmpl':'MemberToSingle','condition':'self.request().field("accountNb","")[-1:] != "0"','title':'Einzelmitgliedschaft','link':'MemberToSingle?MitgliedsNr=$request.field("accountNb","")','role':'editor'},
-      {'tmpl':'MemberToPersonal','condition':1,'title':'Neuer Mitarbeiter','link':'MemberToPersonal?MitgliedsNr=$request.field("accountNb","")','role':'editor'},
-      {'tmpl':'MemberPrintEintritt','condition':1,'title':'Eintrittsschreiben','link':'MemberPrintEintritt?MitgliedsNr=$request.field("accountNb","")','role':'editor'},
+      {'tmpl':'MemberView',
+        'condition':1,
+        'title':'Info',
+        'link':''
+      },
+      {'tmpl':'MemberLedger',
+        'condition':1,
+        'title':'Account',
+        'link':'MemberLedger?account=%s#echo $request.field("accountNb","")[:-1] #0' % transferPrefix
+      },
+      {'tmpl':'MemberNew',
+        'condition':1,
+        'title':'MemberNew',
+        'link':'MemberNew',
+        'role':'editor'
+      },
+      {'tmpl':'MemberNewFamily',
+        'condition':1,
+        'title':'MemberNewFamily',
+        'link':'MemberNew?accountNb=#echo $request.field("accountNb","")[:-1] #0',
+        'role':'editor'
+      },
+      {'tmpl':'MemberModify',
+        'condition':'self.request().field("accountNb","")[-1:] == "0"',
+        'title':'MemberModify',
+        'link':'MemberModify?accountNb=$request.field("accountNb","")',
+        'role':'editor'
+      },
+      {'tmpl':'MemberOfFamilyModify',
+        'condition':'self.request().field("accountNb","")[-1:] != "0"',
+        'title':'Ändern',
+        'link':'MemberOfFamilyModify?accountNb=$request.field("accountNb","")',
+        'role':'editor'
+      },
+      {'tmpl':'MemberAustritt',
+        'condition':1,
+        'title':'MemberAustritt',
+        'link':'MemberAustritt?accountNb=$request.field("accountNb","")',
+        'role':'editor'
+      },
+      {'tmpl':'MemberReactivate',
+        'condition':'self.request().field("accountNb","")[-1:] == "0"',
+        'title':'MemberReactivate',
+        'link':'MemberReactivate?accountNb=$request.field("accountNb","")',
+        'role':'editor'
+      },
+      {'tmpl':'MemberReactivate2',
+        'condition':'self.request().field("accountNb","")[-1:] != "0"',
+        'title':'MemberReactivate',
+        'link':'MemberReactivate2?accountNb=$request.field("accountNb","")',
+        'role':'editor'
+      },
+      {'tmpl':'MemberFee',
+        'condition':'self.request().field("accountNb","")[-1:] == "0"',
+        'title':'MemberFee',
+        'link':'MemberFee?accountNb=$request.field("accountNb","")',
+        'role':'editor'
+      },
+      {'tmpl':'MemberToFamily',
+        'condition':'self.request().field("accountNb","")[-1:] == "0"',
+        'title':'MemberToFamily',
+        'link':'MemberToFamily?MitgliedsNr=$request.field("accountNb","")',
+        'role':'editor'
+      },
+      {'tmpl':'MemberToSingle',
+        'condition':'self.request().field("accountNb","")[-1:] != "0"',
+        'title':'MemberToSingle',
+        'link':'MemberToSingle?MitgliedsNr=$request.field("accountNb","")',
+        'role':'editor'
+      },
+      {'tmpl':'MemberToPersonal',
+        'condition':1,
+        'title':'MemberToPersonal',
+        'link':'MemberToPersonal?MitgliedsNr=$request.field("accountNb","")',
+        'role':'editor'
+      },
+      {'tmpl':'MemberPrintEintritt',
+        'condition':1,
+        'title':'MemberPrintEintritt',
+        'link':'MemberPrintEintritt?MitgliedsNr=$request.field("accountNb","")',
+        'role':'editor'
+      },
     ]
     
     viewTitle = 'Mitglied'

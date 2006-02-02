@@ -35,6 +35,13 @@
   If you want to substitute a label by an icon, this should be done in the
   style sheet as an icon should normally be language independant.
 */
+
+*.empty:after { content:""; }
+*.error:after {
+    content:'*';
+    color:red;
+}
+
 #labelEsmTitle:after { content:"E-Sportmanager"; }
 #labelEsmSubtitle:after { content:"Die ultimative Vereinsverwaltung"; }
 #labelHelpTitle:after { content:"Hinweis"; }
@@ -65,6 +72,9 @@
 #labelButtonSearch:after { content:""; }
 #labelButtonOK:after { content:"Ok"; }
 
+/*
+  login page
+*/
 #labelHelpLogin:after { content:"Bitte autorisieren Sie sich. Trainer/Personal geben im Feld Mitgliedsnr. bitte zusätzlich noch den Prefix 'TR' an, z.B. 'TR10'."; }
 #labelFormLoginTitle:after { content:"Anmelden"; }
 #labelFormLoginUsername:after { content:"Mitgliedsnr"; }
@@ -75,7 +85,19 @@
 #labelErrorWrongUsername:after { content:"Die angegebene Mitgliedsnr ist nicht korrekt"; }
 #labelErrorWrongPassword:after { content:"Das angegebene Kennwort ist nicht korrekt"; }
 
+/*
+  new password page
+*/
 #labelHelpNewPassword:after { content:"Bitte geben Sie Ihre Mitgliedsnr. an. Trainer/Personal geben im Feld Mitgliedsnr. bitte zusätzlich noch den Prefix 'TR' an, z.B. 'TR10'."; }
 #labelFormNewPasswordTitle:after { content:"Neues Passwort anfordern"; }
 #labelFormNewPasswordUsername:after { content:"Mitgliedsnr"; }
 #labelHintNewPassword:after { content:"Ihr neues Passwort wird Ihnen per Mail zugesendet."; }
+
+/*
+  search result tables
+*/
+#labelHelpSearch:after { content:"Zum Suchen können Muster angegeben werden. So kann * einen beliebigen Text ersetzen, während ? ein beliebiges Zeichen findet."; }
+#labelMoveToStart:after { content:"<<-"; }
+#labelMoveToEnd:after { content:"->>"; }
+#labelMovePageUp:after { content:"<-"; }
+#labelMovePageDown:after { content:"->"; }

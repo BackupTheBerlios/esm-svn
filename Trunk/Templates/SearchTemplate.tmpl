@@ -31,30 +31,27 @@
 #import string
 #import Libs.misc
 
-#extends SiteContent
+#extends Libs.SiteContent
 
 #implements writeContent
 ##################################################################################
 
-#attr bodyTagAttribs = {'text':'black',"onload":"document.search.search.focus()"}
-
+## TODO: How to overwrite an attribute in a python class used in a block
 #attr fieldkeys = []
 #attr fields = {}
 
 #attr linkFields = []
 #attr linkPattern = ''
 
-#attr rows = 25
-
-#attr alphaSearchFields = []
-#attr numericSearchFields = []
-#attr searchPage = ''
-#attr sortField = ''
+#attr rows = 24
 
 #attr tableTitle = ''
 
-#attr helpText = 'Zum Suchen können Muster angegeben werden. So kann * einen ' + \
-  'beliebigen Text ersetzen, während ? ein beliebiges Zeichen findet.'
+#attr helpText = '<span id="labelHelpSearch" />'
+
+#def cursor()
+    onload="document.searchForm.search.focus()"
+#end def
 
 ##################################################################################
 
@@ -82,84 +79,115 @@
 #end if
 
 ##
+## navigation between the pages
+##
+<div id=pageNavigation>
+    #if $index != 0
+        <div id="moveToStart" class="hasMove">
+            <a href="$name?index=0&amp;search=$searchPattern"><span id="labelMoveToStart" /></a>
+        </div>
+    #else
+        <div id="moveToStart" class="hasNoMove">
+            <span id="labelMoveToStart"/>
+        </div>
+    #end if
+    #if $index != $prevIndex
+        <div id="movePageUp" class="hasMove">
+            <a href="$name?index=$prevIndex&amp;search=$searchPattern"><span id="labelMovePageUp" /></a>
+        </div>
+    #else
+        <div id="movePageUp" class="hasNoMove">
+            <span id="labelMovePageUp" />
+        </div>
+    #end if
+    #if $nextIndex < $count
+        <div id="movePageDown" class="hasMove">
+            <a href="$name?index=$nextIndex&amp;search=$searchPattern"><span id="labelMovePageDown" /></a>
+        </div>
+    #else
+        <div id="movePageDown" class="hasNoMove">
+            <span id="labelMovePageDown" />
+        </div>
+    #end if
+    #if ($lastIndex > 0) and ($nextIndex <= $lastIndex)
+        <div id="moveToEnd" class="hasMove">
+            <a href="$name?index=$lastIndex&amp;search=$searchPattern"><span id="labelMoveToEnd" /></a>
+        </div>
+    #else
+        <div id="moveToEnd" class="hasNoMove">
+            <span id="labelMoveToEnd" />
+        </div>
+    #end if
+</div>
+
+##
 ## title of table
 ##
-<table width="100%">
-    <tr bgcolor="yellow" valign=top>
-      <th>
-        #if $index != 0
-          <a href="$name?index=0&search=$searchPattern"><img src="images/start.png" border=0></a>
-        #end if
-        #if $index != $prevIndex
-          <a href="$name?index=$prevIndex&search=$searchPattern"><img src="images/left.png" border=0></a>
-        #end if
-        &nbsp;
-        $tableTitle
-        &nbsp;
-        #if $nextIndex < $count
-          <a href="$name?index=$nextIndex&search=$searchPattern"><img src="images/right.png" border=0></a>
-        #end if
-        #if $lastIndex > 0 and $nextIndex <= $lastIndex
-          <a href="$name?index=$lastIndex&search=$searchPattern"><img src="images/end.png" border=0></a>
-        #end if
-      </th>
-    </tr>
-</table>
-
-<table width="100%">
-
+<div id=searchTable>
     ##
     ## Spalten-Überschrift
     ##
-    <tr bgcolor="yellow" valign=top>
-      #for $field in $fieldkeys
-      <td width="$fields[$field].width">
-        $fields[$field].title
-      </td>
-      #end for
-      <td>&nbsp;</td>
-    </tr>
+    <div class="searchHeader">
+        #for $field in $fieldkeys
+            <div id="header$field" class="searchHeaderItem" style="width:$fields[$field].width">
+                <span id="labelSearch$field" />
+            </div>
+        #end for
+    </div>
     
+    #set $evenEntry = False
     #for $entries in $storeObjects[$index:$endIndex]:
     
+      #set $evenEntry = not $evenEntry
+      #if $evenEntry
+        #set $evenEntryClass = "evenEntry"
+      #else
+        #set $evenEntryClass = "oddEntry"
+      #end if
+
       ##
       ## Tabellenzeile ausgeben, wobei folgende Datentypen korrekt formatiert werden:
       ## Geldbeträge und Datum
       ##
       #set $attrs = $entries.allAttrs()
-      <tr bgcolor="lightblue">
+      <div class="searchEntry $evenEntryClass">
       #for $field in $fieldkeys
         #if $attrs[$field] == None
-          <td>
+          <div class="searchItem $field" style="width:$fields[$field].width">
           #set $content = '&nbsp;'
         #elif $fields[$field].type == 'currency'
-          <td align="right">
+          <div class="searchItem $field currency" style="width:$fields[$field].width">
           #if $attrs[$field] != 0.0
             #set $content = string.replace('%5.2f' % $attrs[$field],'.',',')
+          #else
+            #set $content = '&nbsp;'
           #end if
         #elif $fields[$field].type == 'date'
-          <td>
           #try
+              <div class="searchItem $field date" style="width:$fields[$field].width">
               #set $content = $attrs[$field].strftime($dateFormat)
           #except
-              #set $content = "** Error **"
+              <div class="searchItem $field ErrorValue" style="width:$fields[$field].width">
+              #set $content = '&nbsp;'
           #end try
-        #else
-          <td>
+        #elif $string.strip(str($attrs[$field]))
+          <div class="searchItem $field" style="width:$fields[$field].width">
           #set $content = $attrs[$field]
+        #else
+          <div class="searchItem $field" style="width:$fields[$field].width">
+          #set $content = '&nbsp;'
         #end if
         #if $fields[$field].has_key('format') and $content
             #set $content = eval($fields[$field]["format"] % $content)
         #end if
         #if $field in $linkFields
-            <a href='$linkPattern$content'>$content</a>
+            <a class="SearchValue" href='$linkPattern$content'><span>$content</span></a>
         #else
-            $content
+            <span class="SearchValue">$content</span>
         #end if
-        </td>
+        </div>
       #end for
-      <td>&nbsp;</td>
-    </tr>
+      </div>
     #end for
 
-</table>
+</div>
