@@ -82,6 +82,10 @@ Copyright (C) 2005 Jan Gottschick
     <if test="${property::exists('sys.env._HOME')}">
         <property name="install.home" value="${sys.env._HOME}" />
     </if>
+    <property name="install.libs" value="${install.context}-bin/Libs"/>
+    <if test="${property::exists('sys.env._HOME')}">
+        <property name="install.libs" value="${sys.env._HOME}/Libs/${product}" />
+    </if>
     <property name="install.servlets" value="${install.context}-bin"/>
     <if test="${property::exists('sys.env._HOME')}">
         <property name="install.servlets" value="${sys.env._HOME}/${install.context}" />
@@ -112,6 +116,7 @@ Copyright (C) 2005 Jan Gottschick
          <exec program="${python}/python.exe" commandline="${webware}/bin/MakeAppWorkDir.py -c ${install.context} ${install.home}"/>
          <echo message="Created working directory." level="Error" />
          <mkdir dir="${install.servlets}" />
+         <mkdir dir="${install.libs}" />
          <exec program="${python}/python.exe" commandline="${webware}/MiddleKit/Design/Generate.py --db MySQL --model ${product}" workingdir="Middle"/>
          <delete file="${install.servlets}/Main.py" />
    </target>
@@ -154,9 +159,9 @@ Copyright (C) 2005 Jan Gottschick
     </target>
     
     <target name="install" description="install all files in webware directory"
-        depends="required.software,install.workdir,install.configure,install.javascript,install.styles,install.libs,install.templates,install.servlets,install.sqlobjects">
+        depends="required.software,install.workdir,install.configure,install.javascript,install.styles,install.libraries,install.templates,install.servlets,install.sqlobjects">
         
-        <copy todir="${install.home}/Libs">
+        <copy todir="${install.libs}">
             <fileset>
                 <include name="generate_password.py" />
                 <include name="product-*.config" />
@@ -229,8 +234,8 @@ Copyright (C) 2005 Jan Gottschick
         </copy>
     </target>
 
-    <target name="install.libs">
-        <copy todir="${install.home}/Libs">
+    <target name="install.libraries">
+        <copy todir="${install.libs}">
             <fileset basedir="Libs">
                 <include name="*.py" />
             </fileset>
@@ -260,28 +265,8 @@ Copyright (C) 2005 Jan Gottschick
                 </exec>
             </do>
         </foreach>
-        <copy todir="${install.servlets}">
+        <copy todir="${install.libs}">
             <fileset basedir="Templates">
-                <include name="*.py" />
-            </fileset>
-        </copy>
-        
-        <foreach item="File" property="filename">
-            <in>
-                <items basedir="Templates/Libs">
-                    <include name="*.tmpl" />
-                </items>
-            </in>
-            <do>
-                <regex pattern="^(?'basename'.*)\.(?'extension'\w+)$" input="${filename}" />
-                <exec program="python" if="${file::up-to-date(basename+'.py',basename+'.tmpl') or (file::exists(basename+'.py') == false)}">
-                    <arg value="${cheetah}" />
-                    <arg value="${filename}" />
-                </exec>
-            </do>
-        </foreach>
-        <copy todir="${install.home}/Libs">
-            <fileset basedir="Templates/Libs">
                 <include name="*.py" />
             </fileset>
         </copy>
